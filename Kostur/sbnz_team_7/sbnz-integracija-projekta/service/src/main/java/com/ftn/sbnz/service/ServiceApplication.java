@@ -4,15 +4,10 @@ import java.util.Arrays;
 
 import javax.swing.text.Document;
 
+import com.ftn.sbnz.config.MongoConfig;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-
-import com.mongodb.*;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieScanner;
@@ -23,9 +18,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication()
-@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
+@ComponentScan("com.ftn.sbnz")
 public class ServiceApplication  {
 	
 	private static Logger log = LoggerFactory.getLogger(ServiceApplication.class);

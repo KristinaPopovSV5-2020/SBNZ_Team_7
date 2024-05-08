@@ -23,7 +23,9 @@ import com.ftn.sbnz.model.models.Admin;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.util.TokenUtils;
 
-@RestController
+import org.springframework.stereotype.Controller;
+
+@Controller
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class LoginController {
 

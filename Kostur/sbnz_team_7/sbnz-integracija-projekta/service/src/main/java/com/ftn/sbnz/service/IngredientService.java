@@ -10,7 +10,7 @@ import com.ftn.sbnz.repository.IIngredientRepository;
 @Service
 public class IngredientService {
 
-
+    @Autowired
     private IIngredientRepository ingredientRepository;
 
 

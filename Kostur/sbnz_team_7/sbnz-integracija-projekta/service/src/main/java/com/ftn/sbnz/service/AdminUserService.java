@@ -11,7 +11,7 @@ import com.ftn.sbnz.repository.IUserRepository;
 @Service
 public class AdminUserService implements UserDetailsService{
 
-
+    @Autowired
     private IUserRepository userRepository;
 
 

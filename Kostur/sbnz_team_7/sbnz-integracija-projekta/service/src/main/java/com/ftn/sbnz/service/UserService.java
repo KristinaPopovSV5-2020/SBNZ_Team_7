@@ -3,6 +3,7 @@ package com.ftn.sbnz.service;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
-
+    @Autowired
     private IUserRepository userRepository;
 
     public User findOne(ObjectId id){
