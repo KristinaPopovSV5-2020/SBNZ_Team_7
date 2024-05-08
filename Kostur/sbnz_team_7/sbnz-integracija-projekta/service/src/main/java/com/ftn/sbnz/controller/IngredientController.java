@@ -24,7 +24,7 @@ public class IngredientController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Boolean> addIngredient(@RequestBody IngredientDTO ingredientDTO) {
- 
+
         Ingredient savedIngredient = ingredientService.save(ingredientDTO);
 
 
