@@ -2,7 +2,10 @@ package com.ftn.sbnz.model.models;
 
 import javax.persistence.*;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 @Entity
+@Document(collection = "feedbacks")
 public class Feedback {
 
     @Id

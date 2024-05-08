@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 @Entity
+@Document(collection = "ingredients")
 public class Ingredient {
 
     @Id
