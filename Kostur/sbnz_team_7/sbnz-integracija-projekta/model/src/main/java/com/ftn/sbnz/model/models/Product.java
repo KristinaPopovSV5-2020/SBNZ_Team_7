@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import javax.persistence.*;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
@@ -14,10 +16,8 @@ import com.ftn.sbnz.model.models.enums.SkinType;
 @Document(collection = "products")
 public class Product {
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @MongoId
+	private ObjectId id;
 
     private double price;
 
@@ -51,7 +51,7 @@ public class Product {
         this.ingredients = new ArrayList<Ingredient>();
     }
 
-    public Product(Long id, double price, String instruction, boolean vegan, List<SkinType> skinTypes,
+    public Product(ObjectId id, double price, String instruction, boolean vegan, List<SkinType> skinTypes,
             List<SkinBenefit> benefits, List<Feedback> reviews, List<Ingredient> ingredients) {
         this.id = id;
         this.price = price;
@@ -63,11 +63,11 @@ public class Product {
         this.ingredients = ingredients;
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

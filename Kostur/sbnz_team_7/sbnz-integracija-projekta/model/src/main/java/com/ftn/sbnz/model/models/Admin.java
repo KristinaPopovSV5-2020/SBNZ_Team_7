@@ -2,7 +2,6 @@ package com.ftn.sbnz.model.models;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -14,11 +13,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftn.sbnz.model.models.enums.SkinType;
 
 @Entity
-@Document(collection = "users")
-public class User implements UserDetails{
+@Document(collection = "admin")
+public class Admin implements UserDetails  {
 
     @MongoId
 	private ObjectId id;
@@ -26,39 +24,23 @@ public class User implements UserDetails{
     private String username;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private SkinType skinType;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<Ingredient> allergens;
-
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 
-    public Timestamp getLastPasswordResetDate() {
-        return lastPasswordResetDate;
-    }
 
-
-    public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
-        this.lastPasswordResetDate = lastPasswordResetDate;
-    }
-
-
-    public User(){
+    public Admin(){
         super();
     }
-    
 
-    public User(ObjectId id, String username, String password, SkinType skinType, List<Ingredient> allergens) {
+    public Admin(ObjectId id, String username, String password, List<Role> roles) {
         super();
         this.id = id;
         this.username = username;
         this.password = password;
-        this.skinType = skinType;
-        this.allergens = allergens;
+        this.roles = roles;
     }
+
+    
 
     @JsonIgnore
     @Override
@@ -81,6 +63,33 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() { return true; }
 
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_username", referencedColumnName = "username"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 
 
     public ObjectId getId() {
@@ -91,68 +100,22 @@ public class User implements UserDetails{
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public Timestamp getLastPasswordResetDate() {
+        return lastPasswordResetDate;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        Timestamp now = new Timestamp(new Date().getTime());
-        this.password = password;
-    }
-
-
-    public SkinType getSkinType() {
-        return skinType;
-    }
-
-    public void setSkinType(SkinType skinType) {
-        this.skinType = skinType;
-    }
-
-    public List<Ingredient> getAllergens() {
-        return allergens;
-    }
-
-    public void setAllergens(List<Ingredient> allergens) {
-        this.allergens = allergens;
-    }
-
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
-    }
-
-    
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_username", referencedColumnName = "username"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
 
     public List<Role> getRoles() {
         return roles;
     }
 
-
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-    
 
 
-
-    
-
-    
     
 }

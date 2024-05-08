@@ -2,16 +2,16 @@ package com.ftn.sbnz.model.models;
 
 import javax.persistence.*;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Entity
 @Document(collection = "feedbacks")
 public class Feedback {
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @MongoId
+	ObjectId id;
 
 
     @ManyToOne
@@ -27,7 +27,7 @@ public class Feedback {
     }
     
 
-    public Feedback(Long id, Product product, Long userId, Integer rating) {
+    public Feedback(ObjectId id, Product product, Long userId, Integer rating) {
         super();
         this.id = id;
         this.product = product;
@@ -35,11 +35,11 @@ public class Feedback {
         this.rating = rating;
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

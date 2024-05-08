@@ -4,16 +4,16 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Entity
 @Document(collection = "ingredients")
 public class Ingredient {
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @MongoId
+	private ObjectId id;
 
     private String name;
 
@@ -30,7 +30,7 @@ public class Ingredient {
 
     
 
-    public Ingredient(Long id, String name, boolean allergen, boolean special) {
+    public Ingredient(ObjectId id, String name, boolean allergen, boolean special) {
         this.id = id;
         this.name = name;
         this.allergen = allergen;
@@ -39,11 +39,11 @@ public class Ingredient {
 
 
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
