@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.dto.IngredientDTO;
 import com.ftn.sbnz.model.models.Ingredient;
-import com.ftn.sbnz.repository.IIngredientRepository;
+import com.ftn.sbnz.repository.IngredientRepository;
 
 @Service
 public class IngredientService {
 
     @Autowired
-    private IIngredientRepository ingredientRepository;
+    private IngredientRepository ingredientRepository;
 
 
     public Ingredient save(IngredientDTO ingredientDTO) {

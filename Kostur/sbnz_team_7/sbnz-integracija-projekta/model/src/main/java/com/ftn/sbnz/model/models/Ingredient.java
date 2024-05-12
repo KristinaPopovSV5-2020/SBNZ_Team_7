@@ -4,11 +4,12 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
+
 @Document(collection = "ingredients")
 public class Ingredient {
 
@@ -21,7 +22,6 @@ public class Ingredient {
 
     private boolean special;
 
-    @ManyToMany(mappedBy = "ingredients")
     private List<Product> products;
 
     public Ingredient() {

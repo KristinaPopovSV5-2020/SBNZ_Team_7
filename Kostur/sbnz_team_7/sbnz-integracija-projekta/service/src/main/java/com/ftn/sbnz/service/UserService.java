@@ -5,33 +5,33 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ftn.sbnz.dto.UserDTO;
+import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinType;
-import com.ftn.sbnz.repository.IIngredientRepository;
-import com.ftn.sbnz.repository.IRoleRepository;
+import com.ftn.sbnz.repository.IngredientRepository;
+import com.ftn.sbnz.repository.RoleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.ftn.sbnz.model.models.User;
-import com.ftn.sbnz.model.models.Role;
-import com.ftn.sbnz.repository.IUserRepository;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.model.models.user.Role;
+import com.ftn.sbnz.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private IRoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private IIngredientRepository ingredientRepository;
+    private IngredientRepository ingredientRepository;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
 

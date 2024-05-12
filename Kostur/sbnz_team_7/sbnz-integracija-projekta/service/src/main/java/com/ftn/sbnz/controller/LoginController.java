@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.ftn.sbnz.dto.LoginDTO;
-import com.ftn.sbnz.dto.LoginTokenDTO;
+import com.ftn.sbnz.dto.user.LoginDTO;
+import com.ftn.sbnz.dto.user.LoginTokenDTO;
 import com.ftn.sbnz.exception.BadRequestException;
-import com.ftn.sbnz.model.models.Admin;
-import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.models.user.Admin;
+import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.util.TokenUtils;
 
 import org.springframework.stereotype.Controller;

@@ -2,11 +2,11 @@ package com.ftn.sbnz.model.models;
 
 import javax.persistence.*;
 
+import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
 @Document(collection = "feedbacks")
 public class Feedback {
 
@@ -14,8 +14,6 @@ public class Feedback {
 	ObjectId id;
 
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
     private Long userId;

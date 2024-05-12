@@ -1,9 +1,11 @@
-package com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models.products;
 
 import java.util.ArrayList;
 
 import javax.persistence.*;
 
+import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.Ingredient;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -12,55 +14,45 @@ import java.util.List;
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
 import com.ftn.sbnz.model.models.enums.SkinType;
 
-@Entity
 @Document(collection = "products")
 public class Product {
 
     @MongoId
-	private ObjectId id;
+    private ObjectId id;
 
+    private String path;
     private double price;
-
     private String instruction;
-
     private boolean vegan;
-
-    //@ElementCollection(targetClass = SkinType.class)
-    @Enumerated(EnumType.STRING)
     private List<SkinType> skinTypes;
- 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cream_id")
     private List<SkinBenefit> benefits;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Feedback> reviews;
-
-    @ManyToMany
-    @JoinTable(
-        name = "product_ingredient",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
     private List<Ingredient> ingredients;
+
 
     public Product() {
         this.skinTypes = new ArrayList<SkinType>();
         this.benefits = new ArrayList<SkinBenefit>();
-        this.reviews = new ArrayList<Feedback>();
         this.ingredients = new ArrayList<Ingredient>();
     }
 
     public Product(ObjectId id, double price, String instruction, boolean vegan, List<SkinType> skinTypes,
-            List<SkinBenefit> benefits, List<Feedback> reviews, List<Ingredient> ingredients) {
+                   List<SkinBenefit> benefits, List<Ingredient> ingredients) {
         this.id = id;
         this.price = price;
         this.instruction = instruction;
         this.vegan = vegan;
         this.skinTypes = skinTypes;
         this.benefits = benefits;
-        this.reviews = reviews;
         this.ingredients = ingredients;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public ObjectId getId() {
@@ -111,13 +103,6 @@ public class Product {
         this.benefits = benefits;
     }
 
-    public List<Feedback> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Feedback> reviews) {
-        this.reviews = reviews;
-    }
 
     public List<Ingredient> getIngredients() {
         return ingredients;
@@ -128,6 +113,7 @@ public class Product {
     }
 
 
-    
-    
+
+
+
 }

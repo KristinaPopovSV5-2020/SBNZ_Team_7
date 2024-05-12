@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models.user;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;

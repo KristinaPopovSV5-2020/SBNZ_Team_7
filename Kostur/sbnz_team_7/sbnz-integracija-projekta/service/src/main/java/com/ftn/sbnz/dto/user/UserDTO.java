@@ -1,4 +1,4 @@
-package com.ftn.sbnz.dto;
+package com.ftn.sbnz.dto.user;
 
 import java.util.List;
 

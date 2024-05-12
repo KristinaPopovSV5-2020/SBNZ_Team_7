@@ -3,12 +3,10 @@ package com.ftn.sbnz.repository;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.ftn.sbnz.model.models.Ingredient;
+import com.ftn.sbnz.model.models.Feedback;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IIngredientRepository extends MongoRepository<Ingredient, ObjectId>{
-
-    Ingredient findIngredientByName(String name);
+public interface FeedbackRepository extends MongoRepository<Feedback, ObjectId>{
     
 }

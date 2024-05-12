@@ -6,13 +6,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ftn.sbnz.repository.IUserRepository;
+import com.ftn.sbnz.repository.UserRepository;
 
 @Service
 public class AdminUserService implements UserDetailsService{
 
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
 
     @Override

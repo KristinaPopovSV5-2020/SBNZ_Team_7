@@ -1,5 +1,5 @@
 package com.ftn.sbnz.controller;
-import com.ftn.sbnz.dto.UserDTO;
+import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
