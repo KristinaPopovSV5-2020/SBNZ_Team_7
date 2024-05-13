@@ -31,6 +31,7 @@ public class ObjectMapper {
             System.out.println(ingredientIds);
             product.setIngredientIds(ingredientIds);
         }
+        product.setName(productDTO.getName());
         product.setPath(productDTO.getPath());
         return product;
     }
