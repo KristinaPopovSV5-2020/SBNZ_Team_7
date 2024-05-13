@@ -33,10 +33,10 @@ public class User implements UserDetails{
 
     private List<Ingredient> allergens;
 
-    public Set<ObjectId> getAllergenIds() {
+    public List<ObjectId> getAllergenIds() {
         return allergens.stream()
                 .map(Ingredient::getId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
     private Timestamp lastPasswordResetDate;
 

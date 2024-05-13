@@ -31,6 +31,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private KieContainer kieContainer;
 
+
+
     @Override
     public List<Product> recommendProductsForUser(ObjectId userId) {
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
@@ -41,10 +43,10 @@ public class RecommendationServiceImpl implements RecommendationService {
             List<RecommendedProduct> recommendedProducts = new ArrayList<>();
             kieSession.setGlobal("recommendedProducts", recommendedProducts);
             kieSession.insert(user);
-            allProducts.forEach(product -> kieSession.insert(new RecommendedProduct(product, "Initial")));
+            allProducts.forEach(kieSession::insert);
+            int fired = kieSession.fireAllRules();
 
-            kieSession.fireAllRules();
-
+            System.out.println("ispaljeno" + fired);
 
             return recommendedProducts.stream()
                     .map(RecommendedProduct::getProduct)
@@ -55,6 +57,4 @@ public class RecommendationServiceImpl implements RecommendationService {
             kieSession.dispose();
         }
     }
-
-
 }

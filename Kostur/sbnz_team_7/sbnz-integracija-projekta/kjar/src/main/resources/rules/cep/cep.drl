@@ -3,17 +3,22 @@ import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.facts.RecommendedProduct;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
 
 global java.util.List recommendedProducts;
 
 rule "Recommend products based on skin type"
     salience 10
     when
-        $user : User($skinType : skinType)
-        $product : Product(skinTypes contains $skinType)
+        $user : User($skinType : skinType, $allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
+        $product : Product(skinTypes contains $skinType, $ingredientIds : ingredientIds != null)
     then
+        System.out.println("1");
+        System.out.println("User Allergens: " + $allergenIds);
+        System.out.println("Product Ingredients: " + $ingredientIds);
         insertLogical(new RecommendedProduct($product, "Perfect for this skin type"));
 end
+
 
 
 rule "Eliminate products containing allergens"
@@ -22,18 +27,20 @@ rule "Eliminate products containing allergens"
         $user : User($allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
         $rp : RecommendedProduct($product : product)
         $ingredientIds : Set(ObjectId) from $product.getIngredientIds()
-        eval($ingredientIds.removeAll($allergenIds))
+        eval(!Collections.disjoint($ingredientIds, $allergenIds))
     then
+        System.out.println("Retracting product due to allergens: " + $product.getName());
         retract($rp);
 end
 
 
 
 rule "Add remaining recommended products to global list"
-    salience 1  
+    salience 1
     when
         $rp : RecommendedProduct()
     then
+        System.out.println("2");
         recommendedProducts.add($rp);
         retract($rp);
 end
