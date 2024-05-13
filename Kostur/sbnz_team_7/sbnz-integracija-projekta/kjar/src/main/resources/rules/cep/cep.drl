@@ -1,1 +1,14 @@
-package cep;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.user.User;
+import java.util.List;
+
+
+global java.util.List recommendedProducts;
+
+rule "Preporuči proizvode prema tipu kože"
+    when
+        $user : User($skinType : skinType)
+        $product : Product(skinTypes contains $skinType)
+    then
+        recommendedProducts.add($product); 
+end

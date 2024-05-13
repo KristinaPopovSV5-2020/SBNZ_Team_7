@@ -18,7 +18,7 @@ public class ProductDTO {
     private boolean vegan;
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
-    private List<Ingredient> ingredients;
+    private List<String> ingredientIds;
 
 
     public String getId() {
@@ -78,12 +78,12 @@ public class ProductDTO {
         this.benefits = benefits;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<String> getIngredientIds() {
+        return ingredientIds;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredientIds(List<String> ingredientIds) {
+        this.ingredientIds = ingredientIds;
     }
 
     public ProductDTO() {}
@@ -96,6 +96,10 @@ public class ProductDTO {
         this.vegan = product.isVegan();
         this.skinTypes = new ArrayList<>(product.getSkinTypes());
         this.benefits = new ArrayList<>(product.getBenefits());
-        this.ingredients = new ArrayList<>(product.getIngredients());
+        if (product.getIngredientIds() != null) {
+            this.ingredientIds = product.getIngredientIds().stream()
+                    .map(ObjectId::toString)
+                    .collect(Collectors.toList());
+        }
     }
 }

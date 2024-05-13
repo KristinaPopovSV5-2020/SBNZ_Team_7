@@ -27,25 +27,21 @@ public class Product {
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
 
-    private List<Ingredient> ingredients;
+    private List<ObjectId> ingredientIds;
 
+    public List<ObjectId> getIngredientIds() {
+        return ingredientIds;
+    }
+
+    public void setIngredientIds(List<ObjectId> ingredientIds) {
+        this.ingredientIds = ingredientIds;
+    }
 
     public Product() {
         this.skinTypes = new ArrayList<SkinType>();
         this.benefits = new ArrayList<SkinBenefit>();
-        this.ingredients = new ArrayList<Ingredient>();
     }
 
-    public Product(ObjectId id, double price, String instruction, boolean vegan, List<SkinType> skinTypes,
-                   List<SkinBenefit> benefits, List<Ingredient> ingredients) {
-        this.id = id;
-        this.price = price;
-        this.instruction = instruction;
-        this.vegan = vegan;
-        this.skinTypes = skinTypes;
-        this.benefits = benefits;
-        this.ingredients = ingredients;
-    }
 
     public String getPath() {
         return path;
@@ -103,14 +99,6 @@ public class Product {
         this.benefits = benefits;
     }
 
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
 
 
 

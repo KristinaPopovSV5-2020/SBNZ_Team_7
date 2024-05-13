@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftn.sbnz.model.models.enums.SkinType;
 
-@Entity
 @Document(collection = "users")
 public class User implements UserDetails{
 
@@ -28,14 +27,10 @@ public class User implements UserDetails{
     private String username;
     private String password;
 
-    @Enumerated(EnumType.STRING)
     private SkinType skinType;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
     private List<Ingredient> allergens;
 
-    @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 
     public Timestamp getLastPasswordResetDate() {
