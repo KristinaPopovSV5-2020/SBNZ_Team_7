@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Document(collection = "ingredients")
 public class Ingredient {
 
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     @MongoId
 	private ObjectId id;
 

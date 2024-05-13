@@ -1,14 +1,39 @@
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.facts.RecommendedProduct;
 import java.util.List;
-
+import java.util.Set;
 
 global java.util.List recommendedProducts;
 
-rule "Preporuči proizvode prema tipu kože"
+rule "Recommend products based on skin type"
+    salience 10
     when
         $user : User($skinType : skinType)
         $product : Product(skinTypes contains $skinType)
     then
-        recommendedProducts.add($product); 
+        insertLogical(new RecommendedProduct($product, "Perfect for this skin type"));
+end
+
+
+rule "Eliminate products containing allergens"
+    salience 5
+    when
+        $user : User($allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
+        $rp : RecommendedProduct($product : product)
+        $ingredientIds : Set(ObjectId) from $product.getIngredientIds()
+        eval($ingredientIds.removeAll($allergenIds))
+    then
+        retract($rp);
+end
+
+
+
+rule "Add remaining recommended products to global list"
+    salience 1  
+    when
+        $rp : RecommendedProduct()
+    then
+        recommendedProducts.add($rp);
+        retract($rp);
 end

@@ -1,5 +1,7 @@
 package com.ftn.sbnz.service.impl;
 
+
+import com.ftn.sbnz.facts.RecommendedProduct;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -25,22 +28,33 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private KieSession cepKsession;
 
+    @Autowired
+    private KieContainer kieContainer;
+
     @Override
     public List<Product> recommendProductsForUser(ObjectId userId) {
-        User user = userRepository.findById(userId).orElseThrow();      // TODO: handle exception
-        List<Product> allProducts = productService.findAll();
+        KieSession kieSession = kieContainer.newKieSession("cepKsession");
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            List<Product> allProducts = productService.findAll();
 
-        List<Product> products = new ArrayList<>();
-        cepKsession.setGlobal("recommendedProducts", products);
-        cepKsession.insert(user);
-        allProducts.forEach(cepKsession::insert);
+            List<RecommendedProduct> recommendedProducts = new ArrayList<>();
+            kieSession.setGlobal("recommendedProducts", recommendedProducts);
+            kieSession.insert(user);
+            allProducts.forEach(product -> kieSession.insert(new RecommendedProduct(product, "Initial")));
 
-        cepKsession.fireAllRules();
+            kieSession.fireAllRules();
 
-        List<Product> recommendedProducts = (List<Product>) cepKsession.getGlobal("recommendedProducts");
 
-        cepKsession.dispose();
+            return recommendedProducts.stream()
+                    .map(RecommendedProduct::getProduct)
+                    .collect(Collectors.toList());
 
-        return recommendedProducts;
+
+        } finally {
+            kieSession.dispose();
+        }
     }
+
+
 }

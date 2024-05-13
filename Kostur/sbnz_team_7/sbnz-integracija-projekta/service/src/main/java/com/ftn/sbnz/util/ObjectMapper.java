@@ -23,10 +23,12 @@ public class ObjectMapper {
         product.setSkinTypes(productDTO.getSkinTypes());
         product.setBenefits(productDTO.getBenefits());
         if (productDTO.getIngredientIds() != null) {
+            System.out.println(productDTO.getIngredientIds());
             List<ObjectId> ingredientIds = productDTO.getIngredientIds().stream()
                     .map(ObjectId::new)
                     .filter(id -> ingredientRepository.existsById(id))
                     .collect(Collectors.toList());
+            System.out.println(ingredientIds);
             product.setIngredientIds(ingredientIds);
         }
         product.setPath(productDTO.getPath());

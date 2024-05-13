@@ -1,5 +1,7 @@
 package com.ftn.sbnz.dto.product;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
 import com.ftn.sbnz.model.models.enums.SkinType;
@@ -18,6 +20,7 @@ public class ProductDTO {
     private boolean vegan;
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
+
     private List<String> ingredientIds;
 
 

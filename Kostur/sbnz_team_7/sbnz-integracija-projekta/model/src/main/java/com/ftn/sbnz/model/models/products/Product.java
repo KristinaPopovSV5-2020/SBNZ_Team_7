@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ftn.sbnz.model.ObjectIdListSerializer;
+import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.Ingredient;
 import org.bson.types.ObjectId;
@@ -17,20 +20,30 @@ import com.ftn.sbnz.model.models.enums.SkinType;
 @Document(collection = "products")
 public class Product {
 
+    @JsonSerialize(using = ObjectIdSerializer.class)
     @MongoId
     private ObjectId id;
 
+    private String name;
     private String path;
     private double price;
     private String instruction;
     private boolean vegan;
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
-
+    @JsonSerialize(using = ObjectIdListSerializer.class)
     private List<ObjectId> ingredientIds;
 
     public List<ObjectId> getIngredientIds() {
         return ingredientIds;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setIngredientIds(List<ObjectId> ingredientIds) {

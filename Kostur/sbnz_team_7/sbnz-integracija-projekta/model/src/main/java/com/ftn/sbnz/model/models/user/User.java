@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -31,6 +33,11 @@ public class User implements UserDetails{
 
     private List<Ingredient> allergens;
 
+    public Set<ObjectId> getAllergenIds() {
+        return allergens.stream()
+                .map(Ingredient::getId)
+                .collect(Collectors.toSet());
+    }
     private Timestamp lastPasswordResetDate;
 
     public Timestamp getLastPasswordResetDate() {
@@ -130,10 +137,6 @@ public class User implements UserDetails{
 
     
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_username", referencedColumnName = "username"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
     public List<Role> getRoles() {
@@ -144,12 +147,12 @@ public class User implements UserDetails{
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-    
 
 
 
-    
 
-    
-    
+
+
+
+
 }
