@@ -8,7 +8,7 @@ import java.util.Collections;
 global java.util.List recommendedProducts;
 
 rule "Recommend products based on skin type"
-    salience 10
+    salience 100
     when
         $user : User($skinType : skinType, $allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
         $product : Product(skinTypes contains $skinType, $ingredientIds : ingredientIds != null)
@@ -22,14 +22,12 @@ end
 
 
 rule "Eliminate products containing allergens"
-    salience 5
+    salience 50
     when
         $user : User($allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
-        $rp : RecommendedProduct($product : product)
-        $ingredientIds : Set(ObjectId) from $product.getIngredientIds()
-        eval(!Collections.disjoint($ingredientIds, $allergenIds))
+        $rp : RecommendedProduct($product : getProduct())
+        eval(!Collections.disjoint($product.getIngredientIds(), $allergenIds))
     then
-        System.out.println("Retracting product due to allergens: " + $product.getName());
         retract($rp);
 end
 
