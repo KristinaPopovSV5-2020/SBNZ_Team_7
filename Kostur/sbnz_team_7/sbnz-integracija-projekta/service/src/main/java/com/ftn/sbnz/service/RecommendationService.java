@@ -9,4 +9,6 @@ import java.util.List;
 @Service
 public interface RecommendationService {
     List<Product> recommendProductsForUser(ObjectId userId);
+
+    List<Product> recommendProductsBasedOnProblemsAndHabitsForUser(ObjectId objectId, List<String> skinProblems, List<String> lifestyleHabits);
 }

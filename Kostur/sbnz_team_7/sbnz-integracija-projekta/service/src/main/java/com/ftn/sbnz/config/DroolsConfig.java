@@ -1,5 +1,7 @@
 package com.ftn.sbnz.config;
 
+import org.kie.api.KieBase;
+import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,4 +22,10 @@ public class DroolsConfig {
     public KieSession cepKsession() {
         return kieContainer.newKieSession("cepKsession");
     }
+
+    @Bean
+    public KieSession forwardKsession() {
+        return kieContainer.newKieSession("forwardKsession");
+    }
+
 }
