@@ -3,6 +3,7 @@ package com.ftn.sbnz.service.impl;
 
 import com.ftn.sbnz.dto.BudgetDTO;
 import com.ftn.sbnz.dto.product.RecommendedDTO;
+import com.ftn.sbnz.dto.product.ScoreReasonDTO;
 import com.ftn.sbnz.facts.RecommendedProduct;
 import com.ftn.sbnz.model.models.enums.LifestyleHabits;
 import com.ftn.sbnz.model.models.enums.SkinIssue;
@@ -66,7 +67,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public List<Product> recommendProductsBasedOnProblemsAndHabitsForUser(ObjectId userId, List<String> skinProblems, List<String> lifestyleHabits) {
+    public List<RecommendedDTO> recommendProductsBasedOnProblemsAndHabitsForUser(ObjectId userId, List<String> skinProblems, List<String> lifestyleHabits) {
         KieSession kieSession = kieContainer.newKieSession("forwardKsession");
         try {
             User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -100,31 +101,34 @@ public class RecommendationServiceImpl implements RecommendationService {
             System.out.println("ispaljeno" + fired);
 
             // Mapa za praćenje proizvoda i njihovih skorova
-            Map<Product, Double> productScores = new HashMap<>();
+            Map<Product, ScoreReasonDTO> productScores = new HashMap<>();
             for (RecommendedProduct rp : recommendedProducts) {
                 Product product = rp.getProduct();
                 // Ako proizvod već postoji u mapi, ažuriraj skor
                 if (productScores.containsKey(product)) {
-                    double currentScore = productScores.get(product);
-                    productScores.put(product, currentScore + rp.getScore());
+                    ScoreReasonDTO scoreReasonDTO = productScores.get(product);
+                    double currentScore = scoreReasonDTO.getScore();
+                    String currentReason = scoreReasonDTO.getReason();
+                    scoreReasonDTO.setScore(currentScore + rp.getScore());
+                    scoreReasonDTO.setReason(currentReason + ", " + rp.getReason());
+                    productScores.put(product, scoreReasonDTO);
                     System.out.println("VEC SADRZI");
                     System.out.println(currentScore + rp.getScore());
                 } else {
                     // Inače dodaj proizvod u mapu sa trenutnim skorom
-                    productScores.put(product, rp.getScore());
+                    productScores.put(product, new ScoreReasonDTO(rp.getScore(), rp.getReason()));
                     System.out.println("NE SADRZI");
                     System.out.println(rp.getScore());
                 }
             }
 
-            // Sortiranje mape po vrednosti (skoru)
-            List<Entry<Product, Double>> sortedEntries = productScores.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // Sortiranje opadajuće po vrednosti
+            List<Entry<Product, ScoreReasonDTO>> sortedEntries = productScores.entrySet().stream()
+                    .sorted(Comparator.comparing(entry -> entry.getValue(), Comparator.comparingDouble(ScoreReasonDTO::getScore).reversed()))
                     .collect(Collectors.toList());
 
-            // Kreiranje liste proizvoda iz sortiranih unosa mape
-            List<Product> sortedProducts = sortedEntries.stream()
-                    .map(Entry::getKey)
+            // Kreiranje liste RecommendedDTO iz sortiranih unosa mape
+            List<RecommendedDTO> sortedProducts = sortedEntries.stream()
+                    .map(entry -> new RecommendedDTO(entry.getKey(), entry.getValue().getScore(), entry.getValue().getReason()))
                     .collect(Collectors.toList());
 
             return sortedProducts;
@@ -134,5 +138,5 @@ public class RecommendationServiceImpl implements RecommendationService {
             kieSession.dispose();
         }
     }
-    
+
 }

@@ -31,10 +31,10 @@ public class RecommendationController {
 
     // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
     @PostMapping("/products/problems-habits")
-    public ResponseEntity<List<Product>> recommendProductsBasedOnSkinProblemsAndHabits(@RequestParam String userId, @RequestBody Map<String, List<String>> requestBody) {
+    public ResponseEntity<List<RecommendedDTO>> recommendProductsBasedOnSkinProblemsAndHabits(@RequestParam String userId, @RequestBody Map<String, List<String>> requestBody) {
         List<String> skinProblems = requestBody.get("skinProblems");
         List<String> lifestyleHabits = requestBody.get("lifestyleHabits");
-        List<Product> recommendedProducts = recommendationService.recommendProductsBasedOnProblemsAndHabitsForUser(new ObjectId(userId), skinProblems, lifestyleHabits);
+        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsBasedOnProblemsAndHabitsForUser(new ObjectId(userId), skinProblems, lifestyleHabits);
         return ResponseEntity.ok(recommendedProducts);
     }
 }

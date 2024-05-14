@@ -135,4 +135,22 @@ public class RecommendedDTO {
         this.score = recommendedProduct.getScore();
         this.reason = recommendedProduct.getReason();
     }
+
+    public RecommendedDTO(Product product, Double score, String reason) {
+        this.id = product.getId().toString();
+        this.path = product.getPath();
+        this.price = product.getPrice();
+        this.instruction = product.getInstruction();
+        this.vegan = product.isVegan();
+        this.skinTypes = new ArrayList<>(product.getSkinTypes());
+        this.benefits = new ArrayList<>(product.getBenefits());
+        if (product.getIngredientIds() != null) {
+            this.ingredientIds = product.getIngredientIds().stream()
+                    .map(ObjectId::toString)
+                    .collect(Collectors.toList());
+        }
+        this.name = product.getName();
+        this.score = score;
+        this.reason = reason;
+    }
 }
