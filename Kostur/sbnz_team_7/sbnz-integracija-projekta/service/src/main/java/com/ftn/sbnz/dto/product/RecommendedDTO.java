@@ -1,8 +1,6 @@
 package com.ftn.sbnz.dto.product;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ftn.sbnz.model.ObjectIdSerializer;
-import com.ftn.sbnz.model.models.Ingredient;
+import com.ftn.sbnz.facts.RecommendedProduct;
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
 import com.ftn.sbnz.model.models.enums.SkinType;
 import com.ftn.sbnz.model.models.products.Product;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductDTO {
+public class RecommendedDTO {
     private String id;
     private String path;
     private double price;
@@ -21,6 +19,26 @@ public class ProductDTO {
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
     private String name;
+
+    private double score;
+
+    private String reason;
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public String getName() {
         return name;
@@ -98,9 +116,9 @@ public class ProductDTO {
         this.ingredientIds = ingredientIds;
     }
 
-    public ProductDTO() {}
+    public RecommendedDTO() {}
 
-    public ProductDTO(Product product) {
+    public RecommendedDTO(Product product, RecommendedProduct recommendedProduct) {
         this.id = product.getId().toString();
         this.path = product.getPath();
         this.price = product.getPrice();
@@ -114,5 +132,7 @@ public class ProductDTO {
                     .collect(Collectors.toList());
         }
         this.name = product.getName();
+        this.score = recommendedProduct.getScore();
+        this.reason = recommendedProduct.getReason();
     }
 }

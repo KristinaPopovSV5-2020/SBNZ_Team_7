@@ -1,5 +1,7 @@
 package com.ftn.sbnz.controller;
 
+import com.ftn.sbnz.dto.BudgetDTO;
+import com.ftn.sbnz.dto.product.RecommendedDTO;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.service.RecommendationService;
 import org.bson.types.ObjectId;
@@ -22,8 +24,8 @@ public class RecommendationController {
 
     // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> recommendProducts(@RequestParam String userId) {
-        List<Product> recommendedProducts = recommendationService.recommendProductsForUser(new ObjectId(userId));
+    public ResponseEntity<List<RecommendedDTO>> recommendProducts(@RequestParam String userId, @RequestBody BudgetDTO budgetDTO) {
+        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsForUser(new ObjectId(userId), budgetDTO);
         return ResponseEntity.ok(recommendedProducts);
     }
 

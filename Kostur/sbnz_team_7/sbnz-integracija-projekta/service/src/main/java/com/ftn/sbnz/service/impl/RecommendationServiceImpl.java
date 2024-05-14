@@ -1,6 +1,8 @@
 package com.ftn.sbnz.service.impl;
 
 
+import com.ftn.sbnz.dto.BudgetDTO;
+import com.ftn.sbnz.dto.product.RecommendedDTO;
 import com.ftn.sbnz.facts.RecommendedProduct;
 import com.ftn.sbnz.model.models.enums.LifestyleHabits;
 import com.ftn.sbnz.model.models.enums.SkinIssue;
@@ -38,7 +40,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 
     @Override
-    public List<Product> recommendProductsForUser(ObjectId userId) {
+    public List<RecommendedDTO> recommendProductsForUser(ObjectId userId, BudgetDTO budgetDTO) {
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
         try {
             User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -47,15 +49,16 @@ public class RecommendationServiceImpl implements RecommendationService {
             List<RecommendedProduct> recommendedProducts = new ArrayList<>();
             kieSession.setGlobal("recommendedProducts", recommendedProducts);
             kieSession.insert(user);
+
+            kieSession.insert(budgetDTO);
             allProducts.forEach(kieSession::insert);
             int fired = kieSession.fireAllRules();
+            System.out.println(fired);  //  debugging :)
 
-            System.out.println("ispaljeno" + fired);
 
             return recommendedProducts.stream()
-                    .map(RecommendedProduct::getProduct)
+                    .map(recommendedProduct -> new RecommendedDTO(recommendedProduct.getProduct(), recommendedProduct))
                     .collect(Collectors.toList());
-
 
         } finally {
             kieSession.dispose();
@@ -131,6 +134,5 @@ public class RecommendationServiceImpl implements RecommendationService {
             kieSession.dispose();
         }
     }
-
-
+    
 }
