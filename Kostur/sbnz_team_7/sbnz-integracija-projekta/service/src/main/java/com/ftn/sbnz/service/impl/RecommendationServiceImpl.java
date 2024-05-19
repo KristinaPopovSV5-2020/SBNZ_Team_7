@@ -42,8 +42,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private KieContainer kieContainer;
 
-    private static final Logger logger = LoggerFactory.getLogger(RecommendationServiceImpl.class);
-
 
     @Override
     public List<RecommendedDTO> recommendProductsForUser(ObjectId userId, BudgetDTO budgetDTO) {
@@ -109,8 +107,6 @@ public class RecommendationServiceImpl implements RecommendationService {
             int fired = forwardKsession.fireAllRules();
 
             System.out.println("ispaljeno" + fired);
-            logger.info("Number of rules fired: {}", fired);
-
 
             return calculateScoreAndSorted(recommendedProducts);
 
