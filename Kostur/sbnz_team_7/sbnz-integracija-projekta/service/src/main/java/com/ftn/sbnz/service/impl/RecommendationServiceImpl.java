@@ -18,8 +18,6 @@ import org.bson.types.ObjectId;
 import org.kie.api.KieBase;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +43,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<RecommendedDTO> recommendProductsForUser(ObjectId userId, BudgetDTO budgetDTO) {
-        KieSession kieSession = kieContainer.newKieSession("cepKsession");
+        KieSession kieSession = kieContainer.newKieSession("forwardBudgetKsession");
         try {
             User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
             List<Product> allProducts = productService.findAll();

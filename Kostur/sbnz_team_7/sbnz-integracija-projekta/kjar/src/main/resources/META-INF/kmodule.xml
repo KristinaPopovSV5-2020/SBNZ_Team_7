@@ -8,4 +8,7 @@
     <kbase name="forwardkBase" eventProcessingMode="stream" packages="forward">
         <ksession name="forwardKsession"/>
     </kbase>
+    <kbase name="forwardBudgetKbase" eventProcessingMode="stream" packages="forward_budget">
+        <ksession name="forwardBudgetKsession"/>
+    </kbase>
 </kmodule>
