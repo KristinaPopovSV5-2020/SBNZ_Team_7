@@ -26,6 +26,11 @@ public class DroolsConfig {
     }
 
     @Bean
+    public KieSession forwardBudgetKsession() {
+        return kieContainer.newKieSession("forwardBudgetKsession");
+    }
+
+    @Bean
     public KieSession cepKsession() {
         return kieContainer.newKieSession("cepKsession");
     }
