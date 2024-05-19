@@ -1,40 +1,37 @@
-package com.ftn.sbnz.model.models;
-
-import javax.persistence.*;
+package com.ftn.sbnz.model.models.products;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ftn.sbnz.model.ObjectIdSerializer;
-import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Document(collection = "feedbacks")
-public class Feedback {
+@Document(collection = "shopping")
+public class Shopping {
 
+    @JsonSerialize(using = ObjectIdSerializer.class)
     @MongoId
-	ObjectId id;
-
+    private ObjectId id;
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId productId;
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId userId;
 
-    private Integer rating;
+    private LocalDateTime dateTime;
 
-    public Feedback(){
+    public Shopping(){
         super();
     }
-    
 
-    public Feedback(ObjectId id, ObjectId product, ObjectId userId, Integer rating) {
+
+    public Shopping(ObjectId productId, ObjectId userId, LocalDateTime dateTime) {
         super();
-        this.id = id;
-        this.productId = product;
+        this.productId = productId;
         this.userId = userId;
-        this.rating = rating;
+        this.dateTime = dateTime;
     }
 
     public ObjectId getId() {
@@ -45,12 +42,12 @@ public class Feedback {
         this.id = id;
     }
 
-    public ObjectId getProduct() {
+    public ObjectId getProductId() {
         return productId;
     }
 
-    public void setProduct(ObjectId product) {
-        this.productId = product;
+    public void setProductId(ObjectId productId) {
+        this.productId = productId;
     }
 
     public ObjectId getUserId() {
@@ -61,25 +58,24 @@ public class Feedback {
         this.userId = userId;
     }
 
-    public Integer getRating() {
-        return rating;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Feedback feedback = (Feedback) o;
-        return Objects.equals(id, feedback.id) && Objects.equals(productId, feedback.productId) && Objects.equals(userId, feedback.userId) && Objects.equals(rating, feedback.rating);
+        Shopping shopping = (Shopping) o;
+        return Objects.equals(id, shopping.id) && Objects.equals(productId, shopping.productId) && Objects.equals(userId, shopping.userId) && Objects.equals(dateTime, shopping.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, userId, rating);
+        return Objects.hash(id, productId, userId, dateTime);
     }
 }
