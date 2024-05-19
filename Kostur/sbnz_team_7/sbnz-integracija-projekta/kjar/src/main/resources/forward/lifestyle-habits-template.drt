@@ -1,0 +1,30 @@
+template header
+    habit
+    benefit
+    message
+    salience
+
+package forward;
+import com.ftn.sbnz.model.models.enums.LifestyleHabits;
+import com.ftn.sbnz.model.models.user_input.LifestyleHabitsInput;
+import com.ftn.sbnz.facts.RecommendedProduct;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.enums.SkinBenefit;
+import java.util.List;
+import java.util.Set;
+
+template "lifestyle-rules"
+
+rule "Recommend products for @{habit}"
+salience @{salience}
+when
+    $lifestyleHabits: LifestyleHabitsInput(habits contains LifestyleHabits.@{habit})
+    $product: Product(benefits contains SkinBenefit.@{benefit})
+then
+    System.out.println("@{message}");
+    insert(new RecommendedProduct($product, "Perfect for @{habit}",5));
+    modify($lifestyleHabits) {
+        getHabits().remove(LifestyleHabits.@{habit});
+    }
+end
+end template
