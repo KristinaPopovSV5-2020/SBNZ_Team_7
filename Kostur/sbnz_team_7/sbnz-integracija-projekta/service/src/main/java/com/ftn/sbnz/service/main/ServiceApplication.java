@@ -1,7 +1,12 @@
 package com.ftn.sbnz.service.main;
 
+import java.io.InputStream;
 import java.util.Arrays;
 
+import com.ftn.sbnz.service.impl.RecommendationServiceImpl;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.objects.ArrayDataProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
