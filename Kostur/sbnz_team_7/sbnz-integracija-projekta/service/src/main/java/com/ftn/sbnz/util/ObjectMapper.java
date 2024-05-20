@@ -1,12 +1,15 @@
 package com.ftn.sbnz.util;
 
+import com.ftn.sbnz.dto.product.FeedbackDTO;
 import com.ftn.sbnz.dto.product.ProductDTO;
+import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.repository.IngredientRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,5 +37,17 @@ public class ObjectMapper {
         product.setName(productDTO.getName());
         product.setPath(productDTO.getPath());
         return product;
+    }
+
+    public static Feedback feedbackToEntity(FeedbackDTO feedbackDTO, ObjectId userId){
+        if (feedbackDTO == null){
+            return null;
+        }
+        Feedback feedback = new Feedback();
+        feedback.setProduct(new ObjectId(feedbackDTO.getProductId()));
+        feedback.setUserId(userId);
+        feedback.setRating(feedbackDTO.getRating());
+        feedback.setDateTime(LocalDateTime.now());
+        return feedback;
     }
 }
