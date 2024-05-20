@@ -1,1 +1,48 @@
 package cep;
+
+import com.ftn.sbnz.model.models.products.Shopping;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.dto.product.FeedbackDTO;
+import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.RatingHelper;
+import java.time.LocalDateTime;
+import org.bson.types.ObjectId;
+import java.time.Duration
+import java.util.Objects;
+
+global com.ftn.sbnz.helper.DroolsHelper droolsHelper;
+
+rule "Check Review Eligibility"
+salience 100
+when
+    $shopping : Shopping(dateTime != null, $productId: productId)
+    eval(Duration.between($shopping.getDateTime(), LocalDateTime.now()).toHours() >= 72)
+    eval(Duration.between($shopping.getDateTime(), LocalDateTime.now()).toDays() <= 30)
+    User(id == $shopping.getUserId())
+    $feedback: FeedbackDTO(productId.equals($productId.toString()), rated : isRated() == false)
+    $rating: RatingHelper(canRate: getCanRate() == false)
+then
+    System.out.println("MOZE");
+    modify($feedback){
+        setRated(true);
+    }
+    modify($rating){
+        setCanRate(true);
+    }
+    update($feedback);
+end
+
+rule "Check if the user rated the product only once"
+salience 99
+when
+     $feedbackDTO: FeedbackDTO($p: productId,rated : isRated() == true)
+     $user: User($userId: id)
+     $feedback: Feedback(userId == $userId)
+     eval($feedback.getProduct().equals(droolsHelper.toObjectId($p)))
+     $rating: RatingHelper(canRate: getCanRate() == true)
+then
+    modify($rating){
+            setCanRate(false);
+        }
+    System.out.println("NE MOZE - vec je ocenjeno");
+end
