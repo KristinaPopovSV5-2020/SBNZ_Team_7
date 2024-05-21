@@ -29,6 +29,7 @@ public class RecommendationController {
         return ResponseEntity.ok(recommendedProducts);
     }
 
+
     // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
     @PostMapping("/products/problems-habits")
     public ResponseEntity<List<RecommendedDTO>> recommendProductsBasedOnSkinProblemsAndHabits(@RequestParam String userId, @RequestBody Map<String, List<String>> requestBody) {

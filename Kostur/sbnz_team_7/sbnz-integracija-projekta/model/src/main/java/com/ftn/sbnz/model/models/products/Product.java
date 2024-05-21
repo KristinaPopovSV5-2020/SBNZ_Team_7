@@ -10,6 +10,7 @@ import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.Ingredient;
 import org.bson.types.ObjectId;
+import org.kie.api.definition.type.Position;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -31,6 +32,17 @@ public class Product {
     private boolean vegan;
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
+    @Position(1)
+    private ObjectId categoryId;
+
+    public ObjectId getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(ObjectId categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @JsonSerialize(using = ObjectIdListSerializer.class)
     private List<ObjectId> ingredientIds;
 
