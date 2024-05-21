@@ -1,1 +1,70 @@
 package backward;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.products.Category;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
+import java.util.List;
+global java.util.List foundProducts;
+import org.bson.types.ObjectId;
+import com.ftn.sbnz.facts.CategoryFact;
+import com.ftn.sbnz.facts.DescendantCategory;
+
+global List<ObjectId> categoryIds;
+
+global List<Product> foundProducts;
+
+query "isContainedIn" (ObjectId x, ObjectId y)
+    Category(x, y;)
+    or
+    (
+        Category( z, y;)
+        and
+        isContainedIn(x, z;)
+    )
+end
+
+
+
+
+rule "Find all subcategories"
+    salience 10
+    when
+        $categoryFact: CategoryFact($objectId: objectId)
+        isContainedIn($value, $objectId;)
+    then
+        System.out.println("dati valueeee: " + $value);
+        insert(new DescendantCategory($value));
+end
+
+rule "Add initial category"
+    salience 9
+    when
+        $categoryFact: CategoryFact($objectId: objectId)
+    then
+        System.out.println("Initial category ID: " + $objectId);
+        insert(new DescendantCategory($objectId));
+end
+
+
+rule "Find all products"
+    salience 1
+    when
+        $descendant: DescendantCategory($id: id)
+        $product: Product(categoryId == $id)
+    then
+
+        System.out.println("Pronadjeni produkt: " + $product.getId());
+        foundProducts.add($product);
+
+end
+
+
+
+// rule "Find all"
+//     when
+//         $categoryFact: CategoryFact($objectId: objectId)
+//         $descendant : Category(id == $categoryId) from isContainedIn(value, $objectId;)
+//         $product : Product()
+//     then
+//         System.out.println("Product found: " + $product.getId());
+// end

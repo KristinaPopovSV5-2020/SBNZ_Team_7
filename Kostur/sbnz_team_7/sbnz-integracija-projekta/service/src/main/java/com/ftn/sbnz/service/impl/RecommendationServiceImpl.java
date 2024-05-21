@@ -33,6 +33,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private ProductService productService;
 
+
     @Autowired
     private KieBase forwardKieBase;
 

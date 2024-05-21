@@ -1,14 +1,15 @@
 package com.ftn.sbnz.util;
 
 
-import com.ftn.sbnz.dto.product.ProductCategoryDTO;
-import com.ftn.sbnz.model.models.products.ProductCategory;
+import com.ftn.sbnz.model.models.products.Category;
 import com.ftn.sbnz.service.CategoryService;
+import com.ftn.sbnz.service.impl.CategoryServiceImpl;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 @Component
 public class CategoryLoader implements CommandLineRunner {
 
@@ -22,9 +23,9 @@ public class CategoryLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (scriptEnabled) {
             // Dodavanje glavnih kategorija
-            ObjectId creamsId = addCategoryIfNotExists(new ProductCategoryDTO("Creams", 1, null));
-            ObjectId lotionsId = addCategoryIfNotExists(new ProductCategoryDTO("Lotions", 1, null));
-            ObjectId serumsId = addCategoryIfNotExists(new ProductCategoryDTO("Serums", 1, null));
+            ObjectId creamsId = addCategoryIfNotExists("Creams", null);
+            ObjectId lotionsId = addCategoryIfNotExists("Lotions", null);
+            ObjectId serumsId = addCategoryIfNotExists("Serums", null);
 
             // Dodavanje podkategorija za svaku glavnu kategoriju
             addAgeAndUsageCategories(creamsId, "Creams");
@@ -35,9 +36,9 @@ public class CategoryLoader implements CommandLineRunner {
         }
     }
 
-    private ObjectId addCategoryIfNotExists(ProductCategoryDTO dto) {
-        ProductCategory savedCategory = categoryService.save(dto);
-        return savedCategory.getId();
+    private ObjectId addCategoryIfNotExists(String name, ObjectId parent) {
+        Category category = new Category(new ObjectId(), name, parent);
+        return categoryService.save(category).getId();
     }
 
     private void addAgeAndUsageCategories(ObjectId parentId, String parentName) {
@@ -45,11 +46,10 @@ public class CategoryLoader implements CommandLineRunner {
         String[] usageTimes = {"day", "night", "day&night"};
 
         for (String ageGroup : ageGroups) {
-            ObjectId ageGroupId = addCategoryIfNotExists(new ProductCategoryDTO(ageGroup, 2, parentId));
+            ObjectId ageGroupId = addCategoryIfNotExists(ageGroup, parentId);
             for (String usageTime : usageTimes) {
-                addCategoryIfNotExists(new ProductCategoryDTO(usageTime, 3, ageGroupId));
+                addCategoryIfNotExists(usageTime, ageGroupId);
             }
         }
     }
 }
-
