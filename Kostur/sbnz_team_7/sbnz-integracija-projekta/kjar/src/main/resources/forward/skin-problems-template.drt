@@ -1,0 +1,31 @@
+template header
+    problem
+    benefit
+    salience
+    message
+
+
+package forward;
+import com.ftn.sbnz.model.models.user_input.SkinProblems;
+import com.ftn.sbnz.model.models.enums.SkinIssue;
+import com.ftn.sbnz.facts.RecommendedProduct;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.enums.SkinBenefit;
+import java.util.List;
+import java.util.Set;
+
+template "skinproblem-rules"
+
+rule "Recommend products for @{problem}"
+salience @{salience}
+when
+    $skinProblems: SkinProblems(problems contains SkinIssue.@{problem})
+    $product: Product(benefits contains SkinBenefit.@{benefit})
+then
+    System.out.println("@{message}");
+    insert(new RecommendedProduct($product, "Perfect for @{problem}",5));
+    modify($skinProblems) {
+        getProblems().remove(SkinIssue.@{problem});
+    }
+end
+end template

@@ -1,4 +1,4 @@
-package cep;
+package forward_budget;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.facts.RecommendedProduct;
