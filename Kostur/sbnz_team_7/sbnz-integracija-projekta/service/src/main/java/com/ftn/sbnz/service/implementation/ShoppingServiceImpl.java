@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.impl;
+package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.model.models.products.Shopping;
@@ -14,11 +14,16 @@ import java.util.List;
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
 
+
+    private final ShoppingRepository shoppingRepository;
+
     @Autowired
-    private ShoppingRepository shoppingRepository;
+    public ShoppingServiceImpl(ShoppingRepository shoppingRepository) {
+        this.shoppingRepository = shoppingRepository;
+    }
 
     @Override
-    public Shopping save(String productId, ObjectId userId){
+    public Shopping save(String productId, ObjectId userId) {
 
         ObjectId objectId;
         try {
@@ -26,7 +31,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("Invalid productId format");
         }
-        Shopping shopping = new Shopping(objectId,userId, LocalDateTime.now());
+        Shopping shopping = new Shopping(objectId, userId, LocalDateTime.now());
         return shoppingRepository.save(shopping);
 
 

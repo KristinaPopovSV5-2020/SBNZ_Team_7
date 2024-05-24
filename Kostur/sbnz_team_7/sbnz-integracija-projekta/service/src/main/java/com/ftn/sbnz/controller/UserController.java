@@ -1,7 +1,8 @@
 package com.ftn.sbnz.controller;
+
 import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.exception.BadRequestException;
-import com.ftn.sbnz.service.UserService;
+import com.ftn.sbnz.service.implementation.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,15 @@ import java.io.IOException;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
 
     @PostMapping(consumes = "application/json", value = "/api/user/register")
     public ResponseEntity<Boolean> saveUser(@RequestBody UserDTO userDTO) throws IOException {
-        if (userService.saveUser(userDTO) == null){
-            throw  new BadRequestException("User with email already exists!");
+        if (userService.saveUser(userDTO) == null) {
+            throw new BadRequestException("User with email already exists!");
         }
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
-    
+
 }

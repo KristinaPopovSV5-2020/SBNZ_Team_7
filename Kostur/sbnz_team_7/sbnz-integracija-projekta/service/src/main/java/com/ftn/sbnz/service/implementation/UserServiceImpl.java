@@ -1,29 +1,28 @@
-package com.ftn.sbnz.service;
+package com.ftn.sbnz.service.implementation;
+
+import com.ftn.sbnz.dto.user.UserDTO;
+import com.ftn.sbnz.model.models.Ingredient;
+import com.ftn.sbnz.model.models.enums.SkinType;
+import com.ftn.sbnz.model.models.user.Role;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.repository.IngredientRepository;
+import com.ftn.sbnz.repository.RoleRepository;
+import com.ftn.sbnz.repository.UserRepository;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ftn.sbnz.dto.user.UserDTO;
-import com.ftn.sbnz.model.models.Ingredient;
-import com.ftn.sbnz.model.models.enums.SkinType;
-import com.ftn.sbnz.repository.IngredientRepository;
-import com.ftn.sbnz.repository.RoleRepository;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import com.ftn.sbnz.model.models.user.User;
-import com.ftn.sbnz.model.models.user.Role;
-import com.ftn.sbnz.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
@@ -33,9 +32,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private IngredientRepository ingredientRepository;
 
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6, new SecureRandom());
 
-    public User findOne(ObjectId id){
+    public User findOne(ObjectId id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -43,7 +42,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    
 
     public User save(User user) {
         return userRepository.save(user);
@@ -55,7 +53,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User saveUser(UserDTO userDTO) throws IOException {
-        if (loadUserByUsername(userDTO.getUsername()) != null){
+        if (loadUserByUsername(userDTO.getUsername()) != null) {
             return null;
         }
         User user = new User();
@@ -64,7 +62,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
         user.setSkinType(SkinType.valueOf(userDTO.getSkinType()));
         List<Ingredient> allergens = new ArrayList<>();
-        for (String allergen: userDTO.getAllergens() ){
+        for (String allergen : userDTO.getAllergens()) {
             allergens.add(ingredientRepository.findIngredientByName(allergen));
         }
         user.setAllergens(allergens);
@@ -75,13 +73,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails user = userRepository.findByUsername(username);
         if (user == null) {
-            return  null;
+            return null;
         } else {
             return user;
         }

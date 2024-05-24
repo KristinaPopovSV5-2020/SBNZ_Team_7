@@ -122,7 +122,8 @@
 			<artifactId>drools-templates</artifactId>
 			<version>${drools.version}</version>
 		</dependency>
-	</dependencies>
+
+    </dependencies>
 
 	<build>
 		<plugins>

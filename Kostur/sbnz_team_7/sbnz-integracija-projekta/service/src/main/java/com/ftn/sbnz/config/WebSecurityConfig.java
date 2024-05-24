@@ -1,5 +1,9 @@
 package com.ftn.sbnz.config;
 
+import com.ftn.sbnz.security.RestAuthenticationEntryPoint;
+import com.ftn.sbnz.security.TokenAuthenticationFilter;
+import com.ftn.sbnz.service.implementation.AdminUserServiceImpl;
+import com.ftn.sbnz.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,18 +19,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import com.ftn.sbnz.security.RestAuthenticationEntryPoint;
-import com.ftn.sbnz.security.TokenAuthenticationFilter;
-import com.ftn.sbnz.service.AdminUserService;
-import com.ftn.sbnz.util.TokenUtils;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
     @Bean
-    public AdminUserService userDetailsService() {
-        return new AdminUserService();
+    public AdminUserServiceImpl userDetailsService() {
+        return new AdminUserServiceImpl();
     }
 
     @Bean
@@ -68,12 +68,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable() // Disable CSRF protection as it's not needed for stateless authentication
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created by Spring Security
-        .and()
-        .authorizeRequests()
-        .anyRequest().permitAll() // Allow all requests without authentication
-        .and()
-        .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), BasicAuthenticationFilter.class); // Your custom filter
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created by Spring Security
+                .and()
+                .authorizeRequests()
+                .anyRequest().permitAll() // Allow all requests without authentication
+                .and()
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), BasicAuthenticationFilter.class); // Your custom filter
 
         return http.build();
     }
