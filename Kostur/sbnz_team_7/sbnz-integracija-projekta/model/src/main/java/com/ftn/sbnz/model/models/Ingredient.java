@@ -1,15 +1,13 @@
 package com.ftn.sbnz.model.models;
 
-import java.util.List;
-
-import javax.persistence.*;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+
+import java.util.List;
 
 
 @Document(collection = "ingredients")
@@ -18,11 +16,11 @@ public class Ingredient {
 
     @JsonSerialize(using = ObjectIdSerializer.class)
     @MongoId
-	private ObjectId id;
+    private ObjectId id;
 
     private String name;
 
-    private boolean allergen; 
+    private boolean allergen;
 
     private boolean special;
 
@@ -32,7 +30,6 @@ public class Ingredient {
         super();
     }
 
-    
 
     public Ingredient(ObjectId id, String name, boolean allergen, boolean special) {
         this.id = id;
@@ -40,7 +37,6 @@ public class Ingredient {
         this.allergen = allergen;
         this.special = special;
     }
-
 
 
     public ObjectId getId() {
@@ -102,5 +98,5 @@ public class Ingredient {
         return true;
     }
 
-    
+
 }

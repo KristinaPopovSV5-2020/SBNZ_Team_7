@@ -16,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/api/ingredient", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IngredientController {
 
+
+    private final IngredientServiceImpl ingredientService;
+
     @Autowired
-    private IngredientServiceImpl ingredientService;
+    public IngredientController(IngredientServiceImpl ingredientService) {
+        this.ingredientService = ingredientService;
+    }
 
 
     @RequestMapping(value = "", method = RequestMethod.POST)

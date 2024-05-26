@@ -1,0 +1,34 @@
+package cep_customer_bonuses;
+
+import com.ftn.sbnz.model.models.products.Shopping;
+import com.ftn.sbnz.model.models.Feedback;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Date;
+
+rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
+    when
+        $shopping: Shopping()
+        $feedbacks: List() from collect(
+            Feedback(userId == $shopping.userId) over window:time(7d)
+        )
+        eval($feedbacks.size() >= 3)
+    then
+
+        modify($shopping) {setDiscount(0.05);}
+        System.out.println("Shopping event " + $shopping.getId() + " gets a 5% discount for user " + $shopping.getUserId() + " giving feedback on different products.");
+end
+
+
+// rule "Apply 50% discount for buying at least 3 product with the same benefit in last 30 days"
+//     when
+//     then
+// end
+
+rule "Test rule"
+    when
+        $shopping: Shopping()
+    then
+        System.out.println("Test rule triggered for shopping event: " + $shopping.getId());
+end

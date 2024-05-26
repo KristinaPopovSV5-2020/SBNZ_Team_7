@@ -11,4 +11,6 @@ public interface ShoppingService {
     Shopping save(String productId, ObjectId userId);
 
     List<Shopping> findAll();
+
+    void deleteAll();
 }

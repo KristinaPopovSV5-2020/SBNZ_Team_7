@@ -21,24 +21,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/api/feedback")
 public class FeedbackController {
 
-    @Autowired
-    private FeedbackService feedbackService;
 
+    private final FeedbackService feedbackService;
+
+    @Autowired
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
+    }
 
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Boolean> addFeedback(@RequestBody FeedbackDTO feedbackDTO){
+    public ResponseEntity<Boolean> addFeedback(@RequestBody FeedbackDTO feedbackDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        if (user == null){
+        if (user == null) {
             throw new NotFoundException("User does not exist!");
         }
         Feedback feedback = feedbackService.save(feedbackDTO, user.getId());
-        if (feedback == null){
+        if (feedback == null) {
             throw new BadRequestException("You cannot rate the product!");
         }
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
-    
+
 }

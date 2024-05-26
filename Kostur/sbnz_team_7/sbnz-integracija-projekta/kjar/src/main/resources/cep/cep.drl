@@ -9,15 +9,16 @@ import java.time.LocalDateTime;
 import org.bson.types.ObjectId;
 import java.time.Duration
 import java.util.Objects;
-
+import java.time.ZoneId;
+import java.time.Duration;
 global com.ftn.sbnz.helper.DroolsHelper droolsHelper;
 
 rule "Check Review Eligibility"
 salience 100
 when
     $shopping : Shopping(dateTime != null, $productId: productId)
-    eval(Duration.between($shopping.getDateTime(), LocalDateTime.now()).toHours() >= 72)
-    eval(Duration.between($shopping.getDateTime(), LocalDateTime.now()).toDays() <= 30)
+    // eval(Duration.between($shopping.getDateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now()).toHours() >= 72)
+    eval(Duration.between($shopping.getDateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now()).toDays() <= 30)
     User(id == $shopping.getUserId())
     $feedback: FeedbackDTO(productId.equals($productId.toString()), rated : isRated() == false)
     $rating: RatingHelper(canRate: getCanRate() == false)

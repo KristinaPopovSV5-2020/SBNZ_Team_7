@@ -1,4 +1,5 @@
 package com.ftn.sbnz.controller;
+
 import com.ftn.sbnz.dto.product.ProductDTO;
 import com.ftn.sbnz.dto.product.ProductSearchDTO;
 import com.ftn.sbnz.model.models.products.Product;
@@ -9,20 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/api/products",produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/products", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
 
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    public ProductController(ProductService productService, CategoryService categoryService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
+    }
 
 
     @PostMapping(value = "")
@@ -37,7 +43,6 @@ public class ProductController {
         List<ProductDTO> productDTOS = categoryService.searchBackward(searchDTO);
         return ResponseEntity.ok(productDTOS);
     }
-
 
 
 }
