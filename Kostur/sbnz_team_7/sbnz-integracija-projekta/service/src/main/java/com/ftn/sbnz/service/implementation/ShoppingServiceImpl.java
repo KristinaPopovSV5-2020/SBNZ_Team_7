@@ -25,7 +25,6 @@ public class ShoppingServiceImpl implements ShoppingService {
     public ShoppingServiceImpl(ShoppingRepository shoppingRepository, EventHandler eventHandler) {
         this.shoppingRepository = shoppingRepository;
         this.eventHandler = eventHandler;
-
     }
 
     @Override

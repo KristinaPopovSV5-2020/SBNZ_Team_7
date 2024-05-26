@@ -24,6 +24,7 @@ public class EventHandler {
     private final ShoppingRepository shoppingRepository;
     private final FeedbackRepository feedbackRepository;
 
+
     @Autowired
     public EventHandler(KieContainer kieContainer, ShoppingRepository shoppingRepository, FeedbackRepository feedbackRepository) {
         this.kieContainer = kieContainer;
@@ -50,7 +51,9 @@ public class EventHandler {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
 
-        List<Feedback> feedbacks = getFeedbacksByUserId(shoppingEvent.getUserId(), shoppingEvent.getProductId());
+        List<Feedback> feedbacks = getFeedbacksByUserId(shoppingEvent.getUserId());
+        List<Shopping> shoppings = getShoppingsByUserId(shoppingEvent.getUserId());
+
         System.out.println("Number of feedbacks: " + feedbacks.size());
 
         feedbacks.forEach(feedback -> {
@@ -60,8 +63,17 @@ public class EventHandler {
             System.out.println("Inserted feedback at: " + feedback.getDateTime());
         });
 
+        shoppings.forEach(shopping -> {
+            long timeDiff = shopping.getDateTime().getTime() - clock.getCurrentTime();
+            clock.advanceTime(timeDiff, TimeUnit.MILLISECONDS);
+            shopping.setIsNew(false); // Postavi stare kupovine na false
+            kieSession.insert(shopping);
+            System.out.println("Inserted shopping at: " + shopping.getDateTime());
+        });
+
         long shoppingTimeDiff = shoppingEvent.getDateTime().getTime() - clock.getCurrentTime();
         clock.advanceTime(shoppingTimeDiff, TimeUnit.MILLISECONDS);
+        shoppingEvent.setIsNew(true); // Postavi novu kupovinu na true
         kieSession.insert(shoppingEvent);
         System.out.println("Inserted shopping event at: " + shoppingEvent.getDateTime());
 
@@ -73,9 +85,11 @@ public class EventHandler {
     }
 
 
-    private List<Feedback> getFeedbacksByUserId(ObjectId userId, ObjectId productId) {
+    private List<Feedback> getFeedbacksByUserId(ObjectId userId) {
         return feedbackRepository.findByUserId(userId);
     }
 
-
+    private List<Shopping> getShoppingsByUserId(ObjectId userId) {
+        return shoppingRepository.findByUserId(userId);
+    }
 }

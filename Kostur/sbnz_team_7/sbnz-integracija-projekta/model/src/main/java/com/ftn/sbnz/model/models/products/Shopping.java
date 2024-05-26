@@ -30,6 +30,16 @@ public class Shopping implements Serializable {
 
     private Date dateTime;
 
+    private boolean isNew;
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setIsNew(boolean aNew) {
+        isNew = aNew;
+    }
+
     private double discount = 0.0;
 
     public Shopping() {

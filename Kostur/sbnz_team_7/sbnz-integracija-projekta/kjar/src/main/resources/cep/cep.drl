@@ -47,3 +47,6 @@ then
         }
     System.out.println("NE MOZE - vec je ocenjeno");
 end
+
+
+
