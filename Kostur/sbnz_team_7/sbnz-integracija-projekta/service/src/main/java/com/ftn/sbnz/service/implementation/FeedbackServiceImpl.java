@@ -71,4 +71,9 @@ public class FeedbackServiceImpl implements FeedbackService {
             kieSession.dispose();
         }
     }
+
+    @Override
+    public void deleteAll() {
+        feedbackRepository.deleteAll();
+    }
 }

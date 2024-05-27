@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,13 @@ public class FeedbackController {
             throw new BadRequestException("You cannot rate the product!");
         }
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "")
+    public ResponseEntity<Boolean> deleteAll() {
+        feedbackService.deleteAll();
+        return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
+
     }
 
 }

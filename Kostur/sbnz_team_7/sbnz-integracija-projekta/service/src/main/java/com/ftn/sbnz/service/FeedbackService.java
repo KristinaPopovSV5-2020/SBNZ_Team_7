@@ -8,4 +8,6 @@ import org.bson.types.ObjectId;
 
 public interface FeedbackService {
     Feedback save(FeedbackDTO feedbackDTO, ObjectId userId);
+
+    void deleteAll();
 }

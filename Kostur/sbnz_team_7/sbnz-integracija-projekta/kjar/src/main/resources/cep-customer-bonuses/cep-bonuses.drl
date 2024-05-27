@@ -6,9 +6,22 @@ import com.ftn.sbnz.model.models.products.Product;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Date;
+import org.bson.types.ObjectId;
+
+declare RecentShopping
+    userId: ObjectId
+    shoppingEvents: List
+end
+
+global java.util.List matchingProductList;
+global com.ftn.sbnz.model.models.products.Shopping currentShopping;
 
 rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
+    ruleflow-group "discount-rules"
+    salience 200
     when
         $shopping: Shopping(isNew() == true)
         $feedbacks: List() from collect(
@@ -16,37 +29,66 @@ rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
         )
         eval($feedbacks.size() >= 3)
     then
-
-        modify($shopping) {setDiscount(0.05);}
+        double currentDiscount = $shopping.getDiscount();
+        double newDiscount = currentDiscount + 0.05;
+        modify($shopping) {setDiscount(newDiscount);}
         System.out.println("Shopping event " + $shopping.getId() + " gets a 5% discount for user " + $shopping.getUserId() + " giving feedback on different products.");
 end
 
-
-
-
-
-rule "Apply 50% discount for buying 3 products with any of the same benefits in last 30 days"
+rule "Collect recent purchases"
+    ruleflow-group "collection-rules"
+    salience 100
     when
-        $shopping: Shopping($userId: userId, isNew()==true)
-        $shoppingEvents: List() from collect(
-        Shopping(userId == $userId) over window:time(30d)
+        $shopping: Shopping($userId: userId, isNew() == true)
+        $recentShoppingEvents: List() from collect(
+            Shopping(userId == $userId, this != $shopping) over window:time(30d)
         )
     then
-        System.out.println($shoppingEvents.size());
+        insert(new RecentShopping($userId, $recentShoppingEvents));
+end
+
+rule "Collect products with shared benefits"
+    ruleflow-group "collection-rules"
+    salience 50
+    when
+        $recentShopping: RecentShopping($userId: userId, $shoppingEvents: shoppingEvents)
+        $shopping: Shopping(userId == $userId, isNew() == true, $productId: productId)
+        $product: Product(id == $productId, $benefits: benefits)
+        $purchase: Shopping() from $shoppingEvents
+        eval($purchase != $shopping)
+        $otherProduct: Product(id == $purchase.productId, $otherBenefits: benefits)
+        eval(haveCommonBenefit($benefits, $otherBenefits))
+    then
+        matchingProductList.add($product);   
 end
 
 
 
+rule "Apply 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
+    ruleflow-group "discount-rules"
+    salience 10
+    when
+        eval(matchingProductList.size() >= 3)
+    then    
+        Shopping $shopping = (Shopping) currentShopping;
+        for (Object product : matchingProductList) {
+            Product prod = (Product) product;
+            System.out.println("Product ID: " + prod.getId());
+        }    
+        double currentDiscount = $shopping.getDiscount();
+        double newDiscount = currentDiscount + 0.5;
+        modify($shopping) {setDiscount(newDiscount);}
+        System.out.println("Shopping event " + $shopping.getId() + " gets an additional 50% discount. New discount: " + newDiscount);
+end
 
-// iteracija kroz proizvode koje je kupio, akumulira se, provjerava svaka prednost
 
-// rule "Collect Purchases in last 30 days"
-//     when 
-//         $shoppingEvents: List() from collect(
-//             Shopping(userId == $userId, productId != $productId) over window:time(30d)
-//             $otherProduct: Product(id == productId) from productId == Shopping.productId,
-//             eval($otherProduct.getBenefits().stream().anyMatch(benefit -> $benefits.contains(benefit)))
-//         )
-//     then
+function boolean haveCommonBenefit(List benefits1, List benefits2) {
+    for (Object benefit : benefits1) {
+        if (benefits2.contains(benefit)) {
+            return true;
+        }
+    }
+    return false;
+}
 
-// end
+
