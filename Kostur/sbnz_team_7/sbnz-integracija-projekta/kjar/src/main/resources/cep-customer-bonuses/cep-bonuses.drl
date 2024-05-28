@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Date;
 import org.bson.types.ObjectId;
+import com.ftn.sbnz.model.models.Discount;
+
 
 declare RecentShopping
     userId: ObjectId
@@ -18,6 +20,7 @@ end
 
 global java.util.List matchingProductList;
 global com.ftn.sbnz.model.models.products.Shopping currentShopping;
+global com.ftn.sbnz.service.DiscountService discountService;
 
 rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
     ruleflow-group "discount-rules"
@@ -28,11 +31,14 @@ rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
             Feedback(userId == $shopping.userId) over window:time(7d)
         )
         eval($feedbacks.size() >= 3)
+        not Discount(userId == $shopping.userId, value == 0.05,  
+                     dateCreated >= (new Date().time - 7 * 24 * 60 * 60 * 1000))
     then
-        double currentDiscount = $shopping.getDiscount();
-        double newDiscount = currentDiscount + 0.05;
-        modify($shopping) {setDiscount(newDiscount);}
-        System.out.println("Shopping event " + $shopping.getId() + " gets a 5% discount for user " + $shopping.getUserId() + " giving feedback on different products.");
+    
+        Discount discount = new Discount($shopping.getUserId(), 0.05, new Date(), false);
+        insert(discount);
+        discountService.save(discount);
+        System.out.println("User " + $shopping.getUserId() + " received 5% discount");
 end
 
 rule "Collect recent purchases"
@@ -62,8 +68,6 @@ rule "Collect products with shared benefits"
         matchingProductList.add($product);   
 end
 
-
-
 rule "Apply 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
     ruleflow-group "discount-rules"
     salience 10
@@ -92,3 +96,11 @@ function boolean haveCommonBenefit(List benefits1, List benefits2) {
 }
 
 
+
+
+
+
+
+
+
+//cilj 150 linija :) :D :O

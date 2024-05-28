@@ -1,11 +1,14 @@
 package com.ftn.sbnz.kafka;
 
+import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.products.Shopping;
+import com.ftn.sbnz.repository.DiscountRepository;
 import com.ftn.sbnz.repository.FeedbackRepository;
 import com.ftn.sbnz.repository.ProductRepository;
 import com.ftn.sbnz.repository.ShoppingRepository;
+import com.ftn.sbnz.service.DiscountService;
 import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -28,12 +31,18 @@ public class EventHandler {
     private final FeedbackRepository feedbackRepository;
     private final ProductRepository productRepository;
 
+    private final DiscountService discountService;
+
+    private final DiscountRepository discountRepository;
+
     @Autowired
-    public EventHandler(KieContainer kieContainer, ShoppingRepository shoppingRepository, FeedbackRepository feedbackRepository, ProductRepository productRepository) {
+    public EventHandler(KieContainer kieContainer, ShoppingRepository shoppingRepository, FeedbackRepository feedbackRepository, ProductRepository productRepository, DiscountService discountService, DiscountRepository discountRepository) {
         this.kieContainer = kieContainer;
         this.shoppingRepository = shoppingRepository;
         this.feedbackRepository = feedbackRepository;
         this.productRepository = productRepository;
+        this.discountService = discountService;
+        this.discountRepository = discountRepository;
     }
 
 //    @PostConstruct
@@ -55,20 +64,12 @@ public class EventHandler {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
 
-
         List<Product> matchingProductList = new ArrayList<>();
         kieSession.setGlobal("matchingProductList", matchingProductList);
         kieSession.setGlobal("currentShopping", shoppingEvent);
+        kieSession.setGlobal("discountService", discountService);
 
-
-        insertDataIntoSession(kieSession, shoppingEvent.getUserId(), clock);
-
-
-        long shoppingTimeDiff = shoppingEvent.getDateTime().getTime() - clock.getCurrentTime();
-        clock.advanceTime(shoppingTimeDiff, TimeUnit.MILLISECONDS);
-        shoppingEvent.setIsNew(true); // Postavljam novu kupovinu na true
-        kieSession.insert(shoppingEvent);
-        System.out.println("Inserted shopping event at: " + shoppingEvent.getDateTime());
+        insertDataIntoSession(kieSession, shoppingEvent.getUserId(), clock, shoppingEvent);
 
         kieSession.getAgenda().getAgendaGroup("collection-rules").setFocus();
         int collectionRulesFired = kieSession.fireAllRules();
@@ -82,12 +83,23 @@ public class EventHandler {
         kieSession.dispose();
     }
 
-    private void insertDataIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock) {
+    private void insertDataIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock, Shopping shoppingEvent) {
         insertFeedbacksIntoSession(kieSession, userId, clock);
         insertShoppingsIntoSession(kieSession, userId, clock);
+        insertDiscountsIntoSession(kieSession, userId);
         insertProductsIntoSession(kieSession);
+        insertShoppingEventIntoSession(kieSession, shoppingEvent, clock);
 
     }
+
+    private void insertShoppingEventIntoSession(KieSession kieSession, Shopping shoppingEvent, SessionPseudoClock clock) {
+        long shoppingTimeDiff = shoppingEvent.getDateTime().getTime() - clock.getCurrentTime();
+        clock.advanceTime(shoppingTimeDiff, TimeUnit.MILLISECONDS);
+        shoppingEvent.setIsNew(true); // Postavljam novu kupovinu na true
+        kieSession.insert(shoppingEvent);
+        System.out.println("Inserted shopping event at: " + shoppingEvent.getDateTime());
+    }
+
 
     private void insertFeedbacksIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock) {
         List<Feedback> feedbacks = getFeedbacksByUserId(userId);
@@ -112,6 +124,14 @@ public class EventHandler {
         List<Product> products = productRepository.findAll();
         products.forEach(product -> {
             kieSession.insert(product);
+        });
+    }
+
+
+    private void insertDiscountsIntoSession(KieSession kieSession, ObjectId userId) {
+        List<Discount> discounts = discountRepository.findByUserId(userId);
+        discounts.forEach(discount -> {
+            kieSession.insert(discount);
         });
     }
 
