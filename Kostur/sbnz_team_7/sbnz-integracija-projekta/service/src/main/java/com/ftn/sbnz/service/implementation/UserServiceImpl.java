@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.user.UserDTO;
+import com.ftn.sbnz.model.models.Gift;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinType;
 import com.ftn.sbnz.model.models.user.Role;
@@ -73,6 +74,11 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public void rewardUser(User user, Gift gift) {
+        user.getGifts().add(gift);
+        userRepository.save(user);
+
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

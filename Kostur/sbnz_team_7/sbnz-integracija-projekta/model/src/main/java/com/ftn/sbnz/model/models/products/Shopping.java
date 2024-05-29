@@ -28,6 +28,20 @@ public class Shopping implements Serializable {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId userId;
 
+    private double value;
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
     private Date dateTime;
 
     private boolean isNew;
@@ -40,7 +54,6 @@ public class Shopping implements Serializable {
         isNew = aNew;
     }
 
-    private double discount = 0.0;
 
     public Shopping() {
         super();
@@ -84,14 +97,6 @@ public class Shopping implements Serializable {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-
-    public double getDiscount() {
-        return discount;
     }
 
     @Override

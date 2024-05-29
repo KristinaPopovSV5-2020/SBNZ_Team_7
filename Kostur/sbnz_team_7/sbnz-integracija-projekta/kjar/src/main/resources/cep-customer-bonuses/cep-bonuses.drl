@@ -2,7 +2,10 @@ package cep_customer_bonuses;
 
 import com.ftn.sbnz.model.models.products.Shopping;
 import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.Gift;
 import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.Discount;
+import com.ftn.sbnz.model.models.user.User;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Date;
 import org.bson.types.ObjectId;
+import java.time.temporal.ChronoUnit;
 import com.ftn.sbnz.model.models.Discount;
 
 
@@ -19,10 +23,11 @@ declare RecentShopping
 end
 
 global java.util.List matchingProductList;
-global com.ftn.sbnz.model.models.products.Shopping currentShopping;
 global com.ftn.sbnz.service.DiscountService discountService;
+global com.ftn.sbnz.service.implementation.UserServiceImpl userService;
+global java.util.List allProducts;
 
-rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
+rule "Create 5% discount for at least 3 feedbacks in last 7 days"
     ruleflow-group "discount-rules"
     salience 200
     when
@@ -41,6 +46,7 @@ rule "Apply 5% discount for at least 3 feedbacks in last 7 days"
         System.out.println("User " + $shopping.getUserId() + " received 5% discount");
 end
 
+
 rule "Collect recent purchases"
     ruleflow-group "collection-rules"
     salience 100
@@ -52,6 +58,7 @@ rule "Collect recent purchases"
     then
         insert(new RecentShopping($userId, $recentShoppingEvents));
 end
+
 
 rule "Collect products with shared benefits"
     ruleflow-group "collection-rules"
@@ -68,21 +75,49 @@ rule "Collect products with shared benefits"
         matchingProductList.add($product);   
 end
 
-rule "Apply 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
+
+rule "Create 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
     ruleflow-group "discount-rules"
     salience 10
     when
         eval(matchingProductList.size() >= 3)
+       
+        $shopping: Shopping(isNew() == true)
+        not (
+                $discount: Discount(userId == $shopping.userId, value == 0.5) and
+                eval($discount.getDateCreated().after(new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000)))
+            )
     then    
-        Shopping $shopping = (Shopping) currentShopping;
-        for (Object product : matchingProductList) {
-            Product prod = (Product) product;
-            System.out.println("Product ID: " + prod.getId());
-        }    
-        double currentDiscount = $shopping.getDiscount();
-        double newDiscount = currentDiscount + 0.5;
-        modify($shopping) {setDiscount(newDiscount);}
-        System.out.println("Shopping event " + $shopping.getId() + " gets an additional 50% discount. New discount: " + newDiscount);
+        // for (Object product : matchingProductList) {
+        //     Product prod = (Product) product;
+        //     System.out.println("Product ID: " + prod.getId());
+        // }    
+        Discount discount = new Discount($shopping.getUserId(), 0.5, new Date(), false);
+        insert(discount);
+        discountService.save(discount);
+        System.out.println("User " + $shopping.getUserId() + " received 50% discount");
+end
+
+
+rule "Provide sunscreen testers for frequent high-value shoppers"
+    ruleflow-group "discount-rules"
+    salience 5
+    when
+        $shopping: Shopping(isNew() == true, $userId: userId)
+        $user: User(id == $userId)
+        not (
+            $recentGift: Gift(timeGiven > LocalDateTime.now().minus(1, ChronoUnit.MONTHS)) from $user.getGifts()
+        )
+        Number(intValue >= 5) from accumulate(
+            $recentShopping: Shopping(this != $shopping, value>3000)
+            over window:time(30d),
+            count($recentShopping)
+        )        
+    then
+        Gift sunscreenTester = new Gift("Sunscreen Tester", LocalDateTime.now(), "A thank you for frequent high-value purchases");
+        userService.rewardUser($user, sunscreenTester);
+        insert($user);
+        System.out.println("Eligible for sunscreen tester");
 end
 
 
@@ -97,10 +132,3 @@ function boolean haveCommonBenefit(List benefits1, List benefits2) {
 
 
 
-
-
-
-
-
-
-//cilj 150 linija :) :D :O

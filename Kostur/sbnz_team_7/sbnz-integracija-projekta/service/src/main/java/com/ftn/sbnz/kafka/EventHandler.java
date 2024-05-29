@@ -1,5 +1,6 @@
 package com.ftn.sbnz.kafka;
 
+import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.products.Product;
@@ -9,6 +10,7 @@ import com.ftn.sbnz.repository.FeedbackRepository;
 import com.ftn.sbnz.repository.ProductRepository;
 import com.ftn.sbnz.repository.ShoppingRepository;
 import com.ftn.sbnz.service.DiscountService;
+import com.ftn.sbnz.service.implementation.UserServiceImpl;
 import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -26,6 +29,7 @@ public class EventHandler {
 
 
     private final KieContainer kieContainer;
+    private final UserServiceImpl userService;
 
     private final ShoppingRepository shoppingRepository;
     private final FeedbackRepository feedbackRepository;
@@ -36,8 +40,9 @@ public class EventHandler {
     private final DiscountRepository discountRepository;
 
     @Autowired
-    public EventHandler(KieContainer kieContainer, ShoppingRepository shoppingRepository, FeedbackRepository feedbackRepository, ProductRepository productRepository, DiscountService discountService, DiscountRepository discountRepository) {
+    public EventHandler(KieContainer kieContainer, UserServiceImpl userService, ShoppingRepository shoppingRepository, FeedbackRepository feedbackRepository, ProductRepository productRepository, DiscountService discountService, DiscountRepository discountRepository) {
         this.kieContainer = kieContainer;
+        this.userService = userService;
         this.shoppingRepository = shoppingRepository;
         this.feedbackRepository = feedbackRepository;
         this.productRepository = productRepository;
@@ -60,14 +65,14 @@ public class EventHandler {
 //        }
 //    }
 
-    public void processShoppingEvent(Shopping shoppingEvent) {
+    public Shopping processShoppingEvent(Shopping shoppingEvent) {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
 
         List<Product> matchingProductList = new ArrayList<>();
         kieSession.setGlobal("matchingProductList", matchingProductList);
-        kieSession.setGlobal("currentShopping", shoppingEvent);
         kieSession.setGlobal("discountService", discountService);
+        kieSession.setGlobal("userService", userService);
 
         insertDataIntoSession(kieSession, shoppingEvent.getUserId(), clock, shoppingEvent);
 
@@ -79,16 +84,27 @@ public class EventHandler {
         int discountRulesFired = kieSession.fireAllRules();
         System.out.println("Number of discount rules fired: " + discountRulesFired);
 
-        shoppingRepository.save(shoppingEvent);
+
+        Optional<Product> productOpt = productRepository.findById(shoppingEvent.getProductId());
+        if (productOpt.isPresent()) {
+            shoppingEvent.setValue(productOpt.get().getPrice());
+        } else {
+            throw new BadRequestException("Product not found");
+        }
+
         kieSession.dispose();
+
+        return shoppingEvent;
     }
 
     private void insertDataIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock, Shopping shoppingEvent) {
+        kieSession.insert(userService.findOne(userId));
         insertFeedbacksIntoSession(kieSession, userId, clock);
         insertShoppingsIntoSession(kieSession, userId, clock);
         insertDiscountsIntoSession(kieSession, userId);
         insertProductsIntoSession(kieSession);
         insertShoppingEventIntoSession(kieSession, shoppingEvent, clock);
+
 
     }
 
@@ -132,6 +148,7 @@ public class EventHandler {
         List<Discount> discounts = discountRepository.findByUserId(userId);
         discounts.forEach(discount -> {
             kieSession.insert(discount);
+            System.out.println("insertovan: " + discount.getValue());
         });
     }
 

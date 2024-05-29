@@ -31,14 +31,14 @@ public class ShoppingController {
 
     @PostMapping(value = "")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Shopping> buyProduct(@RequestParam String productId) {
+    public ResponseEntity<Shopping> buyProduct(@RequestParam String productId, @RequestParam(required = false) String discountId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         if (user == null) {
             throw new NotFoundException("User does not exist!");
         }
 
-        Shopping shopping = shoppingService.save(productId, user.getId());
+        Shopping shopping = shoppingService.save(productId, user.getId(), discountId);
         return new ResponseEntity<>(shopping, HttpStatus.OK);
     }
 

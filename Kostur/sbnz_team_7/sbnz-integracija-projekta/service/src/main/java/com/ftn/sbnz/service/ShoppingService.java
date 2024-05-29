@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ShoppingService {
 
-    Shopping save(String productId, ObjectId userId);
+    Shopping save(String productId, ObjectId userId, String discountId);
 
     List<Shopping> findAll();
 
