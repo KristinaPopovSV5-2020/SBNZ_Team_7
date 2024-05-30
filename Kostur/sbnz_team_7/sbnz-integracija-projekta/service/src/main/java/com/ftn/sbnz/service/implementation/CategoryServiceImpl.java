@@ -1,15 +1,13 @@
-package com.ftn.sbnz.service.impl;
+package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.product.ProductDTO;
 import com.ftn.sbnz.dto.product.ProductSearchDTO;
-import com.ftn.sbnz.dto.product.RecommendedDTO;
 import com.ftn.sbnz.facts.CategoryFact;
 import com.ftn.sbnz.model.models.products.Category;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.repository.CategoryRepository;
 import com.ftn.sbnz.service.CategoryService;
 import com.ftn.sbnz.service.ProductService;
-import org.apache.tomcat.jni.Proc;
 import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -23,14 +21,20 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private KieContainer kieContainer;
+
+    private final CategoryRepository categoryRepository;
+
+    private final KieContainer kieContainer;
+
+
+    private final ProductService productService;
 
     @Autowired
-    private ProductService productService;
-
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductService productService, KieContainer kieContainer) {
+        this.categoryRepository = categoryRepository;
+        this.kieContainer = kieContainer;
+        this.productService = productService;
+    }
 
 
     @Override

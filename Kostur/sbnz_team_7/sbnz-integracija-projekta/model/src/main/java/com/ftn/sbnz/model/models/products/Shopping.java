@@ -3,15 +3,23 @@ package com.ftn.sbnz.model.models.products;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ftn.sbnz.model.ObjectIdSerializer;
 import org.bson.types.ObjectId;
+import org.kie.api.definition.type.Expires;
+import org.kie.api.definition.type.Role;
+import org.kie.api.definition.type.Timestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
+@Role(Role.Type.EVENT)
+@Timestamp("dateTime")
+@Expires("30d")
 @Document(collection = "shopping")
-public class Shopping {
+public class Shopping implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @JsonSerialize(using = ObjectIdSerializer.class)
     @MongoId
     private ObjectId id;
@@ -20,18 +28,43 @@ public class Shopping {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId userId;
 
-    private LocalDateTime dateTime;
+    private double value;
 
-    public Shopping(){
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    private Date dateTime;
+
+    private boolean isNew;
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setIsNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+
+    public Shopping() {
         super();
     }
 
 
-    public Shopping(ObjectId productId, ObjectId userId, LocalDateTime dateTime) {
+    public Shopping(ObjectId productId, ObjectId userId, Date date) {
         super();
         this.productId = productId;
         this.userId = userId;
-        this.dateTime = dateTime;
+        this.dateTime = date;
     }
 
     public ObjectId getId() {
@@ -58,11 +91,11 @@ public class Shopping {
         this.userId = userId;
     }
 
-    public LocalDateTime getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 

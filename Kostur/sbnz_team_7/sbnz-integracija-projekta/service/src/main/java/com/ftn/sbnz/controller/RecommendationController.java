@@ -2,7 +2,6 @@ package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.BudgetDTO;
 import com.ftn.sbnz.dto.product.RecommendedDTO;
-import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.service.RecommendationService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/api/recommendations",produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/recommendations", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RecommendationController {
 
+    private final RecommendationService recommendationService;
+
     @Autowired
-    private RecommendationService recommendationService;
+    public RecommendationController(RecommendationService recommendationService) {
+        this.recommendationService = recommendationService;
+    }
 
 
     // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a

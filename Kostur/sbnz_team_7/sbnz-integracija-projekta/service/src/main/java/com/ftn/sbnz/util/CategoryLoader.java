@@ -3,7 +3,6 @@ package com.ftn.sbnz.util;
 
 import com.ftn.sbnz.model.models.products.Category;
 import com.ftn.sbnz.service.CategoryService;
-import com.ftn.sbnz.service.impl.CategoryServiceImpl;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

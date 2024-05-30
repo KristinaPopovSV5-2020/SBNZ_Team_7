@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.impl;
+package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.product.FeedbackDTO;
 import com.ftn.sbnz.helper.DroolsHelper;
@@ -14,25 +14,32 @@ import com.ftn.sbnz.util.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private ShoppingService shoppingService;
-
-    @Autowired
-    private FeedbackRepository feedbackRepository;
+    private final UserRepository userRepository;
 
 
-    @Autowired
-    private KieContainer kieContainer;
+    private final ShoppingService shoppingService;
+
+
+    private final FeedbackRepository feedbackRepository;
+
+
+    private final KieContainer kieContainer;
+
+    public FeedbackServiceImpl(UserRepository userRepository, ShoppingService shoppingService, FeedbackRepository feedbackRepository, KieContainer kieContainer) {
+        this.userRepository = userRepository;
+        this.shoppingService = shoppingService;
+        this.feedbackRepository = feedbackRepository;
+        this.kieContainer = kieContainer;
+    }
+
     @Override
     public Feedback save(FeedbackDTO feedbackDTO, ObjectId userId) {
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
@@ -54,14 +61,19 @@ public class FeedbackServiceImpl implements FeedbackService {
             System.out.println("Can rate: " + canRate);
 
             if (canRate) {
-                Feedback feedback = ObjectMapper.feedbackToEntity(feedbackDTO,userId);
+                Feedback feedback = ObjectMapper.feedbackToEntity(feedbackDTO, userId);
                 return feedbackRepository.save(feedback);
-            }else{
+            } else {
                 return null;
             }
 
         } finally {
             kieSession.dispose();
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        feedbackRepository.deleteAll();
     }
 }

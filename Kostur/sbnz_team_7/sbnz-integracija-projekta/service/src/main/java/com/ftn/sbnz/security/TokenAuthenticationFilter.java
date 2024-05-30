@@ -1,22 +1,19 @@
 package com.ftn.sbnz.security;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.ftn.sbnz.service.implementation.AdminUserServiceImpl;
+import com.ftn.sbnz.util.TokenUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ftn.sbnz.service.AdminUserService;
-import com.ftn.sbnz.util.TokenUtils;
-
-import io.jsonwebtoken.ExpiredJwtException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 // Filter koji ce presretati SVAKI zahtev klijenta ka serveru
@@ -28,11 +25,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private TokenUtils tokenUtils;
 
-    private AdminUserService userDetailsService;
+    private AdminUserServiceImpl userDetailsService;
 
     protected final Log LOGGER = LogFactory.getLog(getClass());
 
-    public TokenAuthenticationFilter(TokenUtils tokenHelper, AdminUserService userDetailsService) {
+    public TokenAuthenticationFilter(TokenUtils tokenHelper, AdminUserServiceImpl userDetailsService) {
         this.tokenUtils = tokenHelper;
         this.userDetailsService = userDetailsService;
     }

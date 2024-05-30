@@ -1,22 +1,23 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ftn.sbnz.model.ObjectIdSerializer;
-import com.ftn.sbnz.model.models.products.Product;
 import org.bson.types.ObjectId;
+import org.kie.api.definition.type.Role;
+import org.kie.api.definition.type.Timestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
+@Role(Role.Type.EVENT)
+@Timestamp("dateTime")
 @Document(collection = "feedbacks")
 public class Feedback {
 
     @MongoId
-	ObjectId id;
+    ObjectId id;
 
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId productId;
@@ -25,17 +26,17 @@ public class Feedback {
 
     private Integer rating;
 
-    private LocalDateTime dateTime;
+    private Date dateTime;
 
-    public Feedback(){
+    public Feedback() {
         super();
     }
-    
 
-    public Feedback(ObjectId id, ObjectId product, ObjectId userId, Integer rating, LocalDateTime dateTime) {
+
+    public Feedback(ObjectId id, ObjectId productId, ObjectId userId, Integer rating, Date dateTime) {
         super();
         this.id = id;
-        this.productId = product;
+        this.productId = productId;
         this.userId = userId;
         this.rating = rating;
         this.dateTime = dateTime;
@@ -87,11 +88,13 @@ public class Feedback {
         return Objects.hash(id, productId, userId, rating, dateTime);
     }
 
-    public LocalDateTime getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
+
+
 }

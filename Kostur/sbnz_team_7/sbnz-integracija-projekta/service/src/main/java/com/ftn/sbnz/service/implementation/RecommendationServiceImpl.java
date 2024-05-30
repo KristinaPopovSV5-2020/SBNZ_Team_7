@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.impl;
+package com.ftn.sbnz.service.implementation;
 
 
 import com.ftn.sbnz.dto.BudgetDTO;
@@ -28,18 +28,22 @@ import java.util.stream.Collectors;
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductService productService;
 
+    private final UserRepository userRepository;
+
+    private final ProductService productService;
+    
+    private final KieBase forwardKieBase;
+
+    private final KieContainer kieContainer;
 
     @Autowired
-    private KieBase forwardKieBase;
-
-
-    @Autowired
-    private KieContainer kieContainer;
+    public RecommendationServiceImpl(UserRepository userRepository, ProductService productService, KieBase forwardKieBase, KieContainer kieContainer) {
+        this.userRepository = userRepository;
+        this.productService = productService;
+        this.forwardKieBase = forwardKieBase;
+        this.kieContainer = kieContainer;
+    }
 
 
     @Override
@@ -71,7 +75,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public List<RecommendedDTO> recommendProductsBasedOnProblemsAndHabitsForUser(ObjectId userId, List<String> skinProblems, List<String> lifestyleHabits) {
         KieSession forwardKsession = forwardKieBase.newKieSession();
-        try{
+        try {
             User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
             List<Product> allProducts = productService.findAll();
 
@@ -80,10 +84,10 @@ public class RecommendationServiceImpl implements RecommendationService {
             forwardKsession.insert(user);
             allProducts.forEach(forwardKsession::insert);
 
-            if (!skinProblems.isEmpty()){
+            if (!skinProblems.isEmpty()) {
                 SkinProblems skinProblemsInput = new SkinProblems();
                 List<SkinIssue> issues = new ArrayList<>();
-                for (String p : skinProblems){
+                for (String p : skinProblems) {
                     SkinIssue skinIssue = SkinIssue.valueOf(p.toUpperCase());
                     issues.add(skinIssue);
                 }
@@ -91,10 +95,10 @@ public class RecommendationServiceImpl implements RecommendationService {
                 forwardKsession.insert(skinProblemsInput);
             }
 
-            if (!lifestyleHabits.isEmpty()){
+            if (!lifestyleHabits.isEmpty()) {
                 LifestyleHabitsInput lifestyleHabitsInput = new LifestyleHabitsInput();
                 List<LifestyleHabits> habits = new ArrayList<>();
-                for (String h: lifestyleHabits){
+                for (String h : lifestyleHabits) {
                     LifestyleHabits habits1 = LifestyleHabits.valueOf(h.toUpperCase());
                     habits.add(habits1);
                 }
@@ -115,7 +119,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         }
     }
 
-    private List<RecommendedDTO> calculateScoreAndSorted(List<RecommendedProduct> recommendedProducts){
+    private List<RecommendedDTO> calculateScoreAndSorted(List<RecommendedProduct> recommendedProducts) {
         Map<Product, ScoreReasonDTO> productScores = new HashMap<>();
         for (RecommendedProduct rp : recommendedProducts) {
             Product product = rp.getProduct();
