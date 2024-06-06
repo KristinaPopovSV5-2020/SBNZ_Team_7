@@ -99,16 +99,13 @@ public class Shopping implements Serializable {
         this.dateTime = dateTime;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Shopping shopping = (Shopping) o;
-        return Objects.equals(id, shopping.id) && Objects.equals(productId, shopping.productId) && Objects.equals(userId, shopping.userId) && Objects.equals(dateTime, shopping.dateTime);
+        return Double.compare(value, shopping.value) == 0 && isNew == shopping.isNew && Objects.equals(id, shopping.id) && Objects.equals(productId, shopping.productId) && Objects.equals(userId, shopping.userId) && Objects.equals(dateTime, shopping.dateTime);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productId, userId, dateTime);
-    }
 }
