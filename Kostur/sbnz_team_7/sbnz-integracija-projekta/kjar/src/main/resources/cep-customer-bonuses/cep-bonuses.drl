@@ -75,6 +75,7 @@ rule "Collect products with shared benefits"
         matchingProductList.add($product);   
 end
 
+// dodati provjeru za usera!!
 
 rule "Create 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
     ruleflow-group "discount-rules"
@@ -117,7 +118,7 @@ rule "Provide sunscreen testers for frequent high-value shoppers"
         Gift sunscreenTester = new Gift("Sunscreen Tester", LocalDateTime.now(), "A thank you for frequent high-value purchases");
         userService.rewardUser($user, sunscreenTester);
         insert($user);
-        System.out.println("Eligible for sunscreen tester");
+        System.out.println("Deserves sunscreen tester :))))))");
 end
 
 

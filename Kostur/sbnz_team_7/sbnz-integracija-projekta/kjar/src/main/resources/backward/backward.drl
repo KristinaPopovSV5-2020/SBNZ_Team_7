@@ -25,7 +25,6 @@ end
 
 
 
-
 rule "Find all subcategories"
     salience 10
     when
