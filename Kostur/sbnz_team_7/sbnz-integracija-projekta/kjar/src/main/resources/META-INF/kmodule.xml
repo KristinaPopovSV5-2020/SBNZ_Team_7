@@ -14,4 +14,7 @@
     <kbase name="forwardBudgetKbase" eventProcessingMode="stream" packages="forward_budget">
         <ksession name="forwardBudgetKsession"/>
     </kbase>
+    <kbase name="reportsKbase" eventProcessingMode="stream" packages="reports">
+        <ksession name="reportsKsession" clockType="pseudo"/>
+    </kbase>
 </kmodule>

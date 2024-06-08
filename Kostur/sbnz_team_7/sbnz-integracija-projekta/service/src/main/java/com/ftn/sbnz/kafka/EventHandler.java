@@ -1,14 +1,11 @@
 package com.ftn.sbnz.kafka;
 
-import com.ftn.sbnz.dto.product.FeedbackDTO;
 import com.ftn.sbnz.exception.BadRequestException;
-import com.ftn.sbnz.facts.RecommendedProduct;
 import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.RatingHelper;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.products.Shopping;
-import com.ftn.sbnz.model.models.reports.FeedbackReport;
 import com.ftn.sbnz.repository.DiscountRepository;
 import com.ftn.sbnz.repository.FeedbackRepository;
 import com.ftn.sbnz.repository.ProductRepository;
@@ -16,7 +13,6 @@ import com.ftn.sbnz.repository.ShoppingRepository;
 import com.ftn.sbnz.service.DiscountService;
 import com.ftn.sbnz.service.ProductService;
 import com.ftn.sbnz.service.implementation.UserServiceImpl;
-import com.ftn.sbnz.util.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -25,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +102,7 @@ public class EventHandler {
         return shoppingEvent;
     }
 
-    public List<FeedbackReport> processFeedbackReport(){
+    public boolean processCheckFeedbackReport(){
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
         try {
             SessionPseudoClock clock = kieSession.getSessionClock();
@@ -124,24 +119,16 @@ public class EventHandler {
             Boolean canGenerateReport = ratingHelper.getCanGenerateReport();
             System.out.println("Can generate report: " + canGenerateReport);
             if (canGenerateReport){
-                Collection<?> objects = kieSession.getObjects();
-                List<FeedbackReport> feedbackReports = new ArrayList<>();
-
-                for (Object obj : objects) {
-                    if (obj instanceof FeedbackReport) {
-                        FeedbackReport report = (FeedbackReport) obj;
-                        feedbackReports.add(report);
-                    }
-                }
-                return feedbackReports;
+                return true;
             }else {
-                return null;
+                return false;
             }
         }finally {
             kieSession.dispose();
         }
 
     }
+
     public Feedback processFeedbackEvent(Feedback feedbackEvent){
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
         try {
@@ -226,7 +213,7 @@ public class EventHandler {
         });
     }
 
-    private void insertAllFeedbacksIntoSession(KieSession kieSession, SessionPseudoClock clock) {
+    public void insertAllFeedbacksIntoSession(KieSession kieSession, SessionPseudoClock clock) {
         List<Feedback> feedbacks = getAllFeedbacks();
         feedbacks.forEach(feedback -> {
             long timeDiff = feedback.getDateTime().getTime() - clock.getCurrentTime();
@@ -236,7 +223,7 @@ public class EventHandler {
         });
     }
 
-    private void insertShoppingsIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock) {
+    public void insertShoppingsIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock) {
         List<Shopping> shoppings = getShoppingsByUserId(userId);
         shoppings.forEach(shopping -> {
             long timeDiff = shopping.getDateTime().getTime() - clock.getCurrentTime();
