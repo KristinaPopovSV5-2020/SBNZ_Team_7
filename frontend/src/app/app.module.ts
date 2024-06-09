@@ -10,10 +10,11 @@ import { LayoutModule   } from './modules/layout/layout.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { Interceptor } from './modules/auth/interceptor/interceptor.interceptor';
+import { PagesModule } from './modules/pages/pages.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -32,6 +33,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     AuthModule,
     UserModule,
     BrowserAnimationsModule,
+    PagesModule,
+    HttpClientModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,
