@@ -6,6 +6,7 @@
       <p class="title">Sign Up</p>
       <form class="form" [formGroup]="signupForm">
         <mat-error *ngIf="hasError">Please complete all fields!</mat-error>
+        <mat-error *ngIf="hasErrorUser">User with email already exists!</mat-error>
         <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
             <input style=" text-indent: 10px;" formControlName="username" type="text" matInput>
@@ -46,11 +47,11 @@
             </mat-radio-group>
         </div>
         <h2>Select allergen(s): </h2>
-        <section class="example-section" formControlName="allergens">
-            <ng-container *ngFor="let allergen of allergensFromDatabase">
-                <mat-checkbox class="example-margin">{{ allergen.name }} [formControl]="allergenFormControl"</mat-checkbox>
+        <section class="example-section" >
+            <ng-container *ngFor="let allergen of allergensFromDatabase; let i = index">
+                <mat-checkbox class="example-margin" (change)="onAllergenChange($event, allergen)">{{ allergen.name }}</mat-checkbox>
             </ng-container>
-        </section><br>
+        </section>
     </form>
     <button class="button" style="margin-top: 10px;" mat-button (click)="signup()">Confirm</button>
   </div>

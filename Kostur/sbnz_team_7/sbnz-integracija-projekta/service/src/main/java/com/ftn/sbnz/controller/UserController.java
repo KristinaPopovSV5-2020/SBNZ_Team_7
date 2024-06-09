@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping(consumes = "application/json", value = "/api/user/register")
     public ResponseEntity<Boolean> saveUser(@RequestBody UserDTO userDTO) throws IOException {
         if (userService.saveUser(userDTO) == null) {
-            throw new BadRequestException("User with email already exists!");
+            throw new BadRequestException("User with username already exists!");
         }
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
