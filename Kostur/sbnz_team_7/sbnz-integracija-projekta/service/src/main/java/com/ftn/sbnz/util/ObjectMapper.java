@@ -42,10 +42,11 @@ public class ObjectMapper {
             return null;
         }
         Feedback feedback = new Feedback();
-        feedback.setProduct(new ObjectId(feedbackDTO.getProductId()));
+        feedback.setProductId(new ObjectId(feedbackDTO.getProductId()));
         feedback.setUserId(userId);
         feedback.setRating(feedbackDTO.getRating());
         feedback.setDateTime(new Date());
+        feedback.setNew(true);
         return feedback;
     }
 }

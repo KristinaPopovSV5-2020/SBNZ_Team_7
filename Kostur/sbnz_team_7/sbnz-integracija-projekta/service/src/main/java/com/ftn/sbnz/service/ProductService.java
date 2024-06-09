@@ -10,6 +10,7 @@ public interface ProductService {
 
     Product save(ProductDTO productDTO);
 
+    Product save(Product product);
     List<Product> findAll();
 
 

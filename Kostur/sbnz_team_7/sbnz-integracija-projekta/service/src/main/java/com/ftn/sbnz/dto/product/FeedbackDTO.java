@@ -8,17 +8,15 @@ public class FeedbackDTO {
 
     private Integer rating;
 
-    private boolean rated;
 
     public FeedbackDTO(){
         super();
     }
 
 
-    public FeedbackDTO(String productId, Integer rating, boolean rated) {
+    public FeedbackDTO(String productId, Integer rating) {
         this.productId = productId;
         this.rating = rating;
-        this.rated = rated;
     }
 
     public String getProductId() {
@@ -37,24 +35,17 @@ public class FeedbackDTO {
         this.rating = rating;
     }
 
-    public boolean isRated() {
-        return rated;
-    }
-
-    public void setRated(boolean rated) {
-        this.rated = rated;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FeedbackDTO that = (FeedbackDTO) o;
-        return rated == that.rated && Objects.equals(productId, that.productId) && Objects.equals(rating, that.rating);
+        return  Objects.equals(productId, that.productId) && Objects.equals(rating, that.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId, rating, rated);
+        return Objects.hash(productId, rating);
     }
 }

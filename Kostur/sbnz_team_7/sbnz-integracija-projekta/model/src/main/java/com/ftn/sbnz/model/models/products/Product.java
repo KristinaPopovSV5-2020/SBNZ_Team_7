@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
+import java.util.Objects;
+
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
 import com.ftn.sbnz.model.models.enums.SkinType;
 
@@ -32,6 +34,8 @@ public class Product {
     private boolean vegan;
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
+
+    private boolean popular;
     @Position(1)
     private ObjectId categoryId;
 
@@ -65,6 +69,7 @@ public class Product {
     public Product() {
         this.skinTypes = new ArrayList<SkinType>();
         this.benefits = new ArrayList<SkinBenefit>();
+        this.popular = false;
     }
 
 
@@ -124,9 +129,24 @@ public class Product {
         this.benefits = benefits;
     }
 
+    public boolean isPopular() {
+        return popular;
+    }
 
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Double.compare(price, product.price) == 0 && vegan == product.vegan && popular == product.popular && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(path, product.path) && Objects.equals(instruction, product.instruction) && Objects.equals(skinTypes, product.skinTypes) && Objects.equals(benefits, product.benefits) && Objects.equals(categoryId, product.categoryId) && Objects.equals(ingredientIds, product.ingredientIds);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, path, price, instruction, vegan, skinTypes, benefits, popular, categoryId, ingredientIds);
+    }
 }

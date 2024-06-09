@@ -1,0 +1,133 @@
+package reports;
+
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.RatingHelper;
+import com.ftn.sbnz.model.models.reports.FeedbackReport;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.dto.reports.FeedbackNADto;
+import java.time.LocalDateTime;
+import org.bson.types.ObjectId;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import com.ftn.sbnz.facts.FeedbackStatus;
+import com.ftn.sbnz.dto.reports.FeedbackGlobal;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.drools.core.common.DefaultFactHandle;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
+
+global String globalUserId;
+global String globalProductId;
+global FeedbackGlobal feedbackGlobal;
+global java.util.List allRatings;
+global String ratingThreshold;
+
+
+
+query checkUserFeedback(Date feedbackDate,String userId)
+    eval(isFeedbackWithinLast30Days(feedbackDate))
+    eval(globalUserId != null)
+    eval(globalUserId.equals(userId))
+end
+
+
+rule "Count user feedbacks"
+ruleflow-group "user-feedback-report-rules"
+when
+    $status: FeedbackStatus(processed == false, $feedback: feedback)
+    checkUserFeedback($feedback.getDateTime(),$feedback.userId.toString();)
+then
+    feedbackGlobal.incrementFeedbackCount();
+    modify($status) { setProcessed(true) };
+end
+
+
+query checkFeedbackProduct(String productId)
+    eval(globalProductId != null && globalProductId.equals(productId))
+end
+
+
+rule "Count feedbacks per product and average product rating"
+ruleflow-group "report-fpp-rules"
+when
+     $status: FeedbackStatus(processed == false, $feedback: feedback)
+     checkFeedbackProduct($feedback.productId.toString();)
+then
+    modify($status) { setProcessed(true) };
+    allRatings.add($feedback.getRating());
+end
+
+query getAverageRating(Double averageRating)
+    eval(ratingThreshold != null)
+    eval(averageRating >= Double.parseDouble(ratingThreshold))
+end
+
+rule "Collect high rated products"
+when
+    $product: Product($id: id)
+    $feedbacks: List() from collect(
+         FeedbackStatus(feedback.productId == $id, processed == false)
+    )
+    $averageRating: Double() from accumulate(
+         FeedbackStatus(
+            feedback.productId == $id, feedback.rating != null, $rating: feedback.rating
+        ) from $feedbacks,
+            average($rating)
+    )
+    getAverageRating($averageRating;)
+then
+    insert(new FeedbackNADto($id, $product.getName(),$averageRating));
+end
+
+query "Calculate weekly average rating for each product"
+    $product: Product($id: id)
+    $feedbacks : List() from collect (
+        Feedback(productId == $id) over window:time(7d)
+    )
+    $averageRating: Double() from accumulate(
+         Feedback($rating: rating
+        ) from $feedbacks,
+        average($rating)
+    )
+end
+
+query "Calculate monthly average rating for each product"
+    $product: Product($id: id)
+    $feedbacks : List() from collect (
+        Feedback(productId == $id) over window:time(30d)
+    )
+    $averageRating: Double() from accumulate(
+         Feedback($rating: rating
+        ) from $feedbacks,
+        average($rating)
+    )
+end
+
+query "Calculate yearly average rating for each product"
+    $product: Product($id: id)
+    $feedbacks : List() from collect (
+        Feedback(productId == $id) over window:time(365d)
+    )
+    $averageRating: Double() from accumulate(
+         Feedback($rating: rating
+        ) from $feedbacks,
+        average($rating)
+    )
+end
+
+
+function boolean isFeedbackWithinLast30Days(Date feedbackDate) {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DATE, -30);
+    Date thirtyDaysAgo = cal.getTime();
+    return feedbackDate.after(thirtyDaysAgo) || feedbackDate.equals(thirtyDaysAgo);
+}
+

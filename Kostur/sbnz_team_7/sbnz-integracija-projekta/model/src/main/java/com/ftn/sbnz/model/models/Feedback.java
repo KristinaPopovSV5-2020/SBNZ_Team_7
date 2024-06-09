@@ -28,6 +28,8 @@ public class Feedback {
 
     private Date dateTime;
 
+    private boolean isNew;
+
     public Feedback() {
         super();
     }
@@ -50,12 +52,20 @@ public class Feedback {
         this.id = id;
     }
 
-    public ObjectId getProduct() {
+    public ObjectId getProductId() {
         return productId;
     }
 
 
-    public void setProduct(ObjectId product) {
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public void setProductId(ObjectId product) {
         this.productId = product;
     }
 
@@ -80,12 +90,12 @@ public class Feedback {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Feedback feedback = (Feedback) o;
-        return Objects.equals(id, feedback.id) && Objects.equals(productId, feedback.productId) && Objects.equals(userId, feedback.userId) && Objects.equals(rating, feedback.rating) && Objects.equals(dateTime, feedback.dateTime);
+        return isNew == feedback.isNew && Objects.equals(id, feedback.id) && Objects.equals(productId, feedback.productId) && Objects.equals(userId, feedback.userId) && Objects.equals(rating, feedback.rating) && Objects.equals(dateTime, feedback.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, userId, rating, dateTime);
+        return Objects.hash(id, productId, userId, rating, dateTime, isNew);
     }
 
     public Date getDateTime() {

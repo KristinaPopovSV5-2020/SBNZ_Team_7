@@ -1,7 +1,7 @@
 package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.product.FeedbackDTO;
-import com.ftn.sbnz.helper.DroolsHelper;
+import com.ftn.sbnz.kafka.EventHandler;
 import com.ftn.sbnz.model.models.Feedback;
 import com.ftn.sbnz.model.models.RatingHelper;
 import com.ftn.sbnz.model.models.products.Shopping;
@@ -29,46 +29,29 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 
     private final FeedbackRepository feedbackRepository;
+    private final EventHandler eventHandler;
 
 
     private final KieContainer kieContainer;
 
-    public FeedbackServiceImpl(UserRepository userRepository, ShoppingService shoppingService, FeedbackRepository feedbackRepository, KieContainer kieContainer) {
+    public FeedbackServiceImpl(UserRepository userRepository, ShoppingService shoppingService, FeedbackRepository feedbackRepository, EventHandler eventHandler, KieContainer kieContainer) {
         this.userRepository = userRepository;
         this.shoppingService = shoppingService;
         this.feedbackRepository = feedbackRepository;
+        this.eventHandler = eventHandler;
         this.kieContainer = kieContainer;
     }
 
     @Override
     public Feedback save(FeedbackDTO feedbackDTO, ObjectId userId) {
-        KieSession kieSession = kieContainer.newKieSession("cepKsession");
-        try {
-            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-            List<Shopping> allPurchases = shoppingService.findAll();
-            List<Feedback> allFeedback = feedbackRepository.findAll();
-            kieSession.setGlobal("droolsHelper", new DroolsHelper());
-            RatingHelper ratingHelper = new RatingHelper();
-            kieSession.insert(ratingHelper);
-            kieSession.insert(user);
-            allPurchases.forEach(kieSession::insert);
-            allFeedback.forEach(kieSession::insert);
-            kieSession.insert(feedbackDTO);
-            int fired = kieSession.fireAllRules();
-            System.out.println("ispaljeno" + fired);  //  debugging :)
+        Feedback feedback = ObjectMapper.feedbackToEntity(feedbackDTO, userId);
 
-            Boolean canRate = ratingHelper.getCanRate();
-            System.out.println("Can rate: " + canRate);
+        Feedback feedbackEvent = eventHandler.processFeedbackEvent(feedback);
 
-            if (canRate) {
-                Feedback feedback = ObjectMapper.feedbackToEntity(feedbackDTO, userId);
-                return feedbackRepository.save(feedback);
-            } else {
-                return null;
-            }
-
-        } finally {
-            kieSession.dispose();
+        if (feedbackEvent == null){
+            return null;
+        }else{
+            return feedbackRepository.save(feedbackEvent);
         }
     }
 

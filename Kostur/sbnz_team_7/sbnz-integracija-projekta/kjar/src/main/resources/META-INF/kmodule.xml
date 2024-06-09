@@ -14,7 +14,6 @@
     <kbase name="forwardBudgetKbase" eventProcessingMode="stream" packages="forward_budget">
         <ksession name="forwardBudgetKsession"/>
     </kbase>
-    <!--    nova sesija za reports, provjerii da li je ok-->
     <kbase name="reportsKbase" eventProcessingMode="stream" packages="reports">
         <ksession name="reportsKsession" clockType="pseudo"/>
     </kbase>
