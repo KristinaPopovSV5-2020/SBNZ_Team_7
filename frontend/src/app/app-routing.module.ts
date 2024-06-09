@@ -10,9 +10,9 @@ import { AdminHomeComponent } from './modules/pages/admin-home/admin-home.compon
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'home',component: StartpageComponent },
-  {path: 'home-page', component: HomePageComponent},
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: 'home',component: HomePageComponent },
+  {path: 'home-page', component: StartpageComponent},
   {path: 'admin-page', component: AdminHomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},

@@ -83,7 +83,7 @@ export class AuthService {
 
   getUrlPath(): string {
     if (this.getRole() =="User") {
-        return "home";
+        return "home-page";
     }else if (this.getRole() == "Admin") {
       return "admin-page";
       
