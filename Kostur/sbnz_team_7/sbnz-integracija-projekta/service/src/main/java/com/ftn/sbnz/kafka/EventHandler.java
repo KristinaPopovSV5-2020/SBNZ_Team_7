@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -68,12 +69,19 @@ public class EventHandler {
     public Shopping processShoppingEvent(Shopping shoppingEvent) {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
+        List<String> gifts = Arrays.asList(
+                "Sunscreen Tester",
+                "Hydration Serum Tester",
+                "Anti-Ageing Cream Tester",
+                "Exfoliating Scrub Tester",
+                "Brightening Mask Tester"
+        );
 
         List<Product> matchingProductList = new ArrayList<>();
         kieSession.setGlobal("matchingProductList", matchingProductList);
         kieSession.setGlobal("discountService", discountService);
         kieSession.setGlobal("userService", userService);
-
+        kieSession.setGlobal("gifts", gifts);
         insertDataIntoSession(kieSession, shoppingEvent.getUserId(), clock, shoppingEvent);
 
         kieSession.getAgenda().getAgendaGroup("collection-rules").setFocus();

@@ -1,7 +1,9 @@
 package com.ftn.sbnz.controller;
 
-import com.ftn.sbnz.dto.RevenueDTO;
 import com.ftn.sbnz.dto.ThresholdValueDTO;
+import com.ftn.sbnz.dto.reports.DicountUsageReportDTO;
+import com.ftn.sbnz.dto.reports.GiftNameDTO;
+import com.ftn.sbnz.dto.reports.UserGiftReportDTO;
 import com.ftn.sbnz.dto.reports.UserShoppingReportDTO;
 import com.ftn.sbnz.service.ReportService;
 import org.bson.types.ObjectId;
@@ -29,16 +31,32 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<RevenueDTO>> getRevenueData() {
-        List<RevenueDTO> revenueDTOS = reportService.generateRevenueReport();
-        return new ResponseEntity<>(revenueDTOS, HttpStatus.OK);
-    }
 
     @GetMapping("/userShopping")
     public ResponseEntity<UserShoppingReportDTO> getUserShoppingReport(@RequestParam String userId, @RequestBody ThresholdValueDTO thresholdDTO) {
         UserShoppingReportDTO report = reportService.generateUserShoppingReport(new ObjectId(userId), thresholdDTO);
         return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/discounts")
+    public ResponseEntity<DicountUsageReportDTO> getDiscountReport(@RequestParam String userId) {
+        DicountUsageReportDTO report = reportService.generateDiscountUtilizationReport(new ObjectId(userId));
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @GetMapping("/gifts")
+    public ResponseEntity<List<UserGiftReportDTO>> getGiftsReport(@RequestBody GiftNameDTO giftNameDTO) {
+        List<UserGiftReportDTO> dto = reportService.generateGiftReport(giftNameDTO.getGiftName());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/gifts/lastMonth")
+    public ResponseEntity<List<UserGiftReportDTO>> getLastMonthGiftsReport() {
+        List<UserGiftReportDTO> dto = reportService.generateGiftReportIn30Days();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+
     }
 
 
