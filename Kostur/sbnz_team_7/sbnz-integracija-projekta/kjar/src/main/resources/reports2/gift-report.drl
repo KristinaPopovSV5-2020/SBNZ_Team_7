@@ -8,6 +8,9 @@ import java.util.ArrayList;
 global String globalGiftName;
 global Map<User, UserGifts> userGiftsMap;
 import java.time.LocalDateTime;
+
+
+
 query matchGiftName(String giftNamePar)
     eval(globalGiftName.equals(giftNamePar))
 end

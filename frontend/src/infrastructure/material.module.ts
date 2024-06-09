@@ -27,8 +27,9 @@ import { MatDivider, MatDividerModule } from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatNativeDateModule } from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
-
-
+import { MatStepperModule } from '@angular/material/stepper';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -60,7 +61,10 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
-    NgxMaterialTimepickerModule
+    MatStepperModule,
+    NgxMaterialTimepickerModule,
+    BrowserModule,
+    BrowserAnimationsModule,
   ],
   exports:[
     CommonModule,
@@ -91,8 +95,10 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
-    NgxMaterialTimepickerModule
- 
+    NgxMaterialTimepickerModule,
+    MatStepperModule,
+    BrowserModule,
+    BrowserAnimationsModule,
   ]
 
 })
