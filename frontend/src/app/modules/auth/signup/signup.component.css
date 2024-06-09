@@ -1,6 +1,5 @@
 body {
     height: 100vh; /* Postavlja visinu tela na 100% visine vidljivog prozora */
-    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,7 +10,6 @@ body {
     font-size: 25px;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    margin: 5px auto;
 }
 
 /* FOCUS */
@@ -27,7 +25,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     padding: 30px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 20px;
@@ -37,10 +35,16 @@ body {
 .form-container form {
     margin-top: 10px;
     width: 100%;
+    text-align: center;
 }
 .form-container mat-form-field {
-    width: 100%;
+    width: 80%;
+    text-align: center;
     margin-bottom: 1em;
+}
+
+h3{
+    text-align: left;
 }
 
 .form-container button {
@@ -52,4 +56,30 @@ mat-error{
     color: purple;
     margin: 5px auto;
     text-align: center;
+}
+
+.form-container .skin-type-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+.form-container .skin-type-container mat-radio-button {
+    flex: 1;
+}
+
+h2{
+    text-align: left;
+}
+
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dve kolone */
+    gap: 10px; /* Razmak između elemenata */
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }

@@ -27,6 +27,7 @@ import { MatDivider, MatDividerModule } from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatNativeDateModule } from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -55,12 +56,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatSnackBarModule,
     MatTooltipModule,
     MatRadioModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
+    NgxMaterialTimepickerModule,
+    MatCheckboxModule,
     MatStepperModule,
     NgxMaterialTimepickerModule,
     BrowserModule,
@@ -89,13 +92,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatSnackBarModule,
     MatTooltipModule,
     MatRadioModule,
-    ReactiveFormsModule,  
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
     NgxMaterialTimepickerModule,
+    MatCheckboxModule,
     MatStepperModule,
     BrowserModule,
     BrowserAnimationsModule,

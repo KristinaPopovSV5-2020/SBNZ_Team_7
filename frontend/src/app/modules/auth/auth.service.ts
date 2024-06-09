@@ -4,6 +4,7 @@ import { Token } from './model/token';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { User } from './model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,12 @@ export class AuthService {
     });
   private user$ = new BehaviorSubject<string | null>("");
   userState$ = this.user$.asObservable();
+
+  private headersReg = new HttpHeaders({
+    'Access-Control-Allow-Methods':'*',
+    'Content-type':'application/json'
+  });
+
   
   constructor(private http: HttpClient) {
     this.user$.next(this.getRole());
@@ -51,6 +58,7 @@ export class AuthService {
     return null;
   }
 
+
   getId(): number{
     const accessToken: string= localStorage.getItem('user') || '';
     const helper = new JwtHelperService();
@@ -74,13 +82,21 @@ export class AuthService {
   }
 
   getUrlPath(): string {
-    if (this.getRole() =="user") {
+    if (this.getRole() =="User") {
         return "home";
-    }else if (this.getRole() == "admin") {
+    }else if (this.getRole() == "Admin") {
       return "admin";
       
     }
     return "";
+  }
+
+  register(user: User): Observable<any> {
+    return this.http.post<any>(environment.apiHost + 'api/user/register', user,  {headers: this.headersReg});
+  }
+
+  getAllergens():Observable<any>{
+    return this.http.get<any>(environment.apiHost + 'api/ingredient/allergens');
   }
 
 
