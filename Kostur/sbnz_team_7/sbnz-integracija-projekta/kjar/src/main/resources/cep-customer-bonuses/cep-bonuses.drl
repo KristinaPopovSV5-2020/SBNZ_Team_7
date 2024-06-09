@@ -15,7 +15,7 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import java.time.temporal.ChronoUnit;
 import com.ftn.sbnz.model.models.Discount;
-
+import java.util.Random;
 
 declare RecentShopping
     userId: ObjectId
@@ -26,6 +26,8 @@ global java.util.List matchingProductList;
 global com.ftn.sbnz.service.DiscountService discountService;
 global com.ftn.sbnz.service.implementation.UserServiceImpl userService;
 global java.util.List allProducts;
+global List<String> gifts;
+
 
 rule "Create 5% discount for at least 3 feedbacks in last 7 days"
     ruleflow-group "discount-rules"
@@ -75,6 +77,7 @@ rule "Collect products with shared benefits"
         matchingProductList.add($product);   
 end
 
+// dodati provjeru za usera!!
 
 rule "Create 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
     ruleflow-group "discount-rules"
@@ -99,7 +102,7 @@ rule "Create 50% discount when buying a product that has a matching benefit with
 end
 
 
-rule "Provide sunscreen testers for frequent high-value shoppers"
+rule "Provide randomn testers for frequent high-value shoppers"
     ruleflow-group "discount-rules"
     salience 5
     when
@@ -114,10 +117,14 @@ rule "Provide sunscreen testers for frequent high-value shoppers"
             count($recentShopping)
         )        
     then
-        Gift sunscreenTester = new Gift("Sunscreen Tester", LocalDateTime.now(), "A thank you for frequent high-value purchases");
-        userService.rewardUser($user, sunscreenTester);
+        Random random = new Random();
+        int randomIndex = random.nextInt(gifts.size());
+        String selectedGiftName = gifts.get(randomIndex);
+
+        Gift randomTester = new Gift(selectedGiftName, LocalDateTime.now(), "High-value purchases");
+        userService.rewardUser($user, randomTester);
         insert($user);
-        System.out.println("Eligible for sunscreen tester");
+        System.out.println("Gifted " + selectedGiftName + " to user.");
 end
 
 

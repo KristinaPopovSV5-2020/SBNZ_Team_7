@@ -111,4 +111,16 @@ public class Shopping implements Serializable {
     public int hashCode() {
         return Objects.hash(id, productId, userId, dateTime);
     }
+
+    @Override
+    public String toString() {
+        return "Shopping{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", userId=" + userId +
+                ", value=" + value +
+                ", dateTime=" + dateTime +
+                ", isNew=" + isNew +
+                '}';
+    }
 }
