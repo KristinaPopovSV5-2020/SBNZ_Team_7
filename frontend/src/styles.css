@@ -4,3 +4,11 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: url('assets/background.png') no-repeat center center/cover;
+    background-attachment: fixed;
+    color: #333;
+  }
+  
