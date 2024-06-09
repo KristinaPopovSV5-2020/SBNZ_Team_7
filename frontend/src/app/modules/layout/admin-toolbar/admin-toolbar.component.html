@@ -4,11 +4,8 @@
 </head>
 <div style="display: inline-flex;">
     <div id="navigation">
-        <app-link class="vertical" text="Home"  ></app-link>
-        <app-link class="vertical" text="Manage requests"></app-link>
-        <app-link class="vertical" text="Admin" ></app-link>
+        <app-link class="vertical" text="Home" source="admin-page" ></app-link>
         <app-link class="vertical" text="Log out" (click)="logout()" ></app-link>
     </div>
-    <mat-icon class="material-icons-outlined" [routerLink]="['/account']">account_circle</mat-icon>
 </div>
 

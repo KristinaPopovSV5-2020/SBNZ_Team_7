@@ -6,12 +6,14 @@ import { ForwardChaining1Component } from './modules/layout/forward-chaining1/fo
 import { BudgetInputComponent } from './modules/layout/budget-input/budget-input.component';
 import { HomePageComponent } from './modules/pages/home-page/home-page.component';
 import {StartpageComponent} from "./modules/pages/startpage/startpage.component";
+import { AdminHomeComponent } from './modules/pages/admin-home/admin-home.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'home',component: StartpageComponent },
-  {path: 'home-page', component: HomePageComponent},
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: 'home',component: HomePageComponent },
+  {path: 'home-page', component: StartpageComponent},
+  {path: 'admin-page', component: AdminHomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
   { path: 'budget-input', component: BudgetInputComponent },
