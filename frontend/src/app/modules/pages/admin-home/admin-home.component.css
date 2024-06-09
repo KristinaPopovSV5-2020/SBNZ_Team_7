@@ -1,0 +1,129 @@
+:root {
+    --main-color: #F7CAC9;
+    --secondary-color: rgba(255, 255, 255, 0.8);
+    --accent-color: #ff6f61;
+    --text-color: #333;
+    --header-bg: rgba(255, 255, 255, 0.9);
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--main-color);
+    color: var(--text-color);
+  }
+  
+  .homepage-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background: url('assets/background.png') no-repeat center center/cover; */
+    padding: 0 1rem;
+  }
+  
+  .header {
+    margin-top: 200px;
+    text-align: center;
+    padding: 2rem 3rem;
+    background-color: var(--header-bg);
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+  }
+  
+  .header:hover {
+    transform: scale(1.1);
+    
+  }
+  
+  .title {
+    font-size: 60px;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    margin-top: 15px;
+    /* margin-bottom: 2rem; */
+    color: var(--text-color);
+  }
+  
+  .content {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+  }
+  
+  .info-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+    padding: 2rem;
+    background-color: var(--header-bg);
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+    padding-top: 0px;
+  }
+  
+  .info-card {
+    background-color: rgba(255, 255, 255, 0.642);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+  }
+  
+  .info-card:hover {
+    background-color: rgba(255, 255, 255, 0.606);
+    transform: scale(1.05);
+  }
+  
+  .info-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+  }
+  
+  .info-text {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-color);
+  }
+  
+  @media (max-width: 768px) {
+    .info-box {
+      grid-template-columns: 1fr;
+    }
+  
+    .header {
+      padding: 1.5rem 2rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+    }
+  
+    .subtitle {
+      font-size: 1.2rem;
+    }
+  
+    .info-card {
+      padding: 1rem;
+    }
+  
+    .info-title {
+      font-size: 1.2rem;
+    }
+  
+    .info-text {
+      font-size: 0.9rem;
+    }
+  }
+  

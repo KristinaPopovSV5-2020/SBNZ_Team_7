@@ -1,11 +1,14 @@
 package com.ftn.sbnz.service.implementation;
 
+import com.ftn.sbnz.dto.user.AdminDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.model.models.Gift;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinType;
+import com.ftn.sbnz.model.models.user.Admin;
 import com.ftn.sbnz.model.models.user.Role;
 import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.repository.AdminRepository;
 import com.ftn.sbnz.repository.IngredientRepository;
 import com.ftn.sbnz.repository.RoleRepository;
 import com.ftn.sbnz.repository.UserRepository;
@@ -32,6 +35,9 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6, new SecureRandom());
 
@@ -88,5 +94,17 @@ public class UserServiceImpl implements UserDetailsService {
         } else {
             return user;
         }
+    }
+
+    public Admin saveAdmin(AdminDTO userDTO) {
+        Admin admin = new Admin();
+        admin.setUsername(userDTO.getUsername());
+        String encodedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        admin.setPassword(encodedPassword);
+        Role role = roleRepository.findRoleByName("Admin");
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        admin.setRoles(roles);
+        return adminRepository.save(admin);
     }
 }

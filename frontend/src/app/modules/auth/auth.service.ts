@@ -85,7 +85,7 @@ export class AuthService {
     if (this.getRole() =="User") {
         return "home";
     }else if (this.getRole() == "Admin") {
-      return "admin";
+      return "admin-page";
       
     }
     return "";
