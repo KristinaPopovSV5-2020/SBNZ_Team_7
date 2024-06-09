@@ -16,7 +16,7 @@ export class AdminToolbarComponent {
   logout() {
     localStorage.removeItem('user');
     this.authService.setUser();
-    this.router.navigate(['login']);
+    this.router.navigate(['home-page']);
   }
 
 
