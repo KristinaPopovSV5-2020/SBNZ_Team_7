@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import org.kie.api.time.SessionPseudoClock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,82 +64,53 @@ public class ReportServiceImpl implements ReportService {
     private final UserRepository userRepository;
 
     private final EventHandler eventHandler;
-  
-    private final KieContainer kieContainer;
+
     private final ShoppingRepository shoppingRepository;
-    private final UserRepository userRepository;
+
     private final DiscountRepository discountRepository;
 
-    public ReportServiceImpl(KieContainer kieContainer, ProductRepository productRepository, ProductService productService, FeedbackRepository feedbackRepository, UserRepository userRepository, EventHandler eventHandler) {
+    public ReportServiceImpl(KieContainer kieContainer, ProductRepository productRepository, ProductService productService, FeedbackRepository feedbackRepository, UserRepository userRepository, EventHandler eventHandler, ShoppingRepository shoppingRepository, DiscountRepository discountRepository) {
         this.kieContainer = kieContainer;
         this.productRepository = productRepository;
         this.productService = productService;
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.eventHandler = eventHandler;
+        this.shoppingRepository = shoppingRepository;
+        this.discountRepository = discountRepository;
     }
 
-    @Override
-    public List<FeedbackReport> getFeedbackReport(String period) {
-        boolean canGenerateWeekly = false;
-        List<FeedbackReport> rankedReports = new ArrayList<>();
-        if (period.equals("7d")){
-            boolean canGenerateReport = eventHandler.processCheckFeedbackReport();
-            canGenerateWeekly = canGenerateReport;
-        }
-        if (canGenerateWeekly || !period.equals("7d")) {
-            KieSession kieSession = kieContainer.newKieSession("reportsKsession");
-            SessionPseudoClock clock = kieSession.getSessionClock();
-            eventHandler.insertAllFeedbacksIntoSession(kieSession,clock);
-            insertProductsIntoSession(kieSession);
-
-            String queryName;
-            switch (period) {
-                case "7d":
-                    queryName = "Calculate weekly average rating for each product";
-                    break;
-                case "30d":
-                    queryName = "Calculate monthly average rating for each product";
-                    break;
-                case "365d":
-                    queryName = "Calculate yearly average rating for each product";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid period: " + period);
-            }
-
-            QueryResults results = kieSession.getQueryResults(queryName);
-            for (QueryResultsRow row : results) {
-                Product product = (Product) row.get("$product");
-                List<Feedback> feedbacks = (List<Feedback>) row.get("$feedbacks");
-                double average = (double) row.get("$averageRating");
-
-                FeedbackReport feedbackReport = new FeedbackReport(product.getId(), feedbacks, average);
-                rankedReports.add(feedbackReport);
-            }
-
-        }
-
-        if (rankedReports == null) {
-            return null;
-        } else {
-            rankedReports.sort(Comparator.comparingDouble(FeedbackReport::getAverageRating).reversed());
-            return rankedReports;
-        }
-
-    }
-
-    @Override
-    public FeedbackUserDTO getUserFeedbackReport(String userId) {
-        User user = userRepository.findById(new ObjectId(userId)).orElseThrow(() -> new RuntimeException("User not found"));
+    public DicountUsageReportDTO generateDiscountUtilizationReport(ObjectId userId) {
         KieSession kieSession = kieContainer.newKieSession("reportsKsession");
-        SessionPseudoClock clock = kieSession.getSessionClock();
-        insertFeedbackIntoSession(kieSession, clock);
-        kieSession.setGlobal("globalUserId",user.getId().toString());
-        kieSession.setGlobal("feedbackGlobal", new FeedbackGlobal());
-        kieSession.getAgenda().getAgendaGroup("user-feedback-report-rules").setFocus();
+        kieSession.setGlobal("globalUserId", userId.toString());
+        kieSession.getAgenda().getAgendaGroup("discount-rules").setFocus();
+        insertDiscountsIntoSession(kieSession);
+
+        Integer num = kieSession.fireAllRules();
+        System.out.println(num);
 
 
+        DicountUsageReportDTO reportDTO = new DicountUsageReportDTO();
+        QueryResults results = kieSession.getQueryResults("getDiscountUsages");
+        for (QueryResultsRow row : results) {
+            Object usage = row.get("usage");
+            try {
+                Method getNumOfDiscounts = usage.getClass().getMethod("getNumOfDiscounts");
+                Method getNumOfUsed = usage.getClass().getMethod("getNumOfUsed");
+
+                reportDTO.setTotalNumber((Integer) getNumOfDiscounts.invoke(usage));
+                reportDTO.setTotalUsed((Integer) getNumOfUsed.invoke(usage));
+                reportDTO.calculatePercentageUsed();
+
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        kieSession.dispose();
+        return reportDTO;
+    }
 
     public UserShoppingReportDTO generateUserShoppingReport(ObjectId userId, ThresholdValueDTO thresholdDTO) {
         KieSession kieSession = kieContainer.newKieSession("reportsKsession");
@@ -167,99 +137,6 @@ public class ReportServiceImpl implements ReportService {
         kieSession.dispose();
 
         return report;
-    }
-
-
-    public DicountUsageReportDTO generateDiscountUtilizationReport(ObjectId userId) {
-        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
-        kieSession.setGlobal("globalUserId", userId.toString());
-        kieSession.getAgenda().getAgendaGroup("discount-rules").setFocus();
-        insertDiscountsIntoSession(kieSession);
-
-        Integer num = kieSession.fireAllRules();
-        System.out.println(num);
-
-
-        FeedbackGlobal countersResult = (FeedbackGlobal) kieSession.getGlobal("feedbackGlobal");
-        FeedbackUserDTO feedbackUserDTO = new FeedbackUserDTO(user.getId(),user.getUsername(),countersResult.getFeedbackCount());
-
-        kieSession.dispose();
-
-        return feedbackUserDTO;
-    }
-
-    @Override
-    public FeedbackNADto getFeedbackProductReport(String productId) {
-        Product product = productRepository.findById(new ObjectId(productId)).orElseThrow(() -> new RuntimeException("Product not found"));
-        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
-        SessionPseudoClock clock = kieSession.getSessionClock();
-        insertFeedbackIntoSession(kieSession, clock);
-        List<Integer> allRatings = new ArrayList<>();
-        kieSession.setGlobal("allRatings",allRatings);
-        kieSession.setGlobal("globalProductId", productId);
-        kieSession.getAgenda().getAgendaGroup("report-fpp-rules").setFocus();
-        Integer num = kieSession.fireAllRules();
-        System.out.println(num);
-
-        FeedbackNADto feedbackNADto = new FeedbackNADto();
-        feedbackNADto.setName(product.getName());
-        feedbackNADto.setProductId(product.getId());
-        feedbackNADto.setNumberOfProducts(allRatings.size());
-        allRatings = (List<Integer>) kieSession.getGlobal("allRatings");
-        feedbackNADto.setAverage(calculateAverage(allRatings));
-
-        kieSession.dispose();
-        return feedbackNADto;
-    }
-
-    @Override
-    public List<FeedbackNADto> getHighRatedProductsReport(String threshold) {
-        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
-        SessionPseudoClock clock = kieSession.getSessionClock();
-        insertFeedbackIntoSession(kieSession, clock);
-        insertProductsIntoSession(kieSession);
-        kieSession.setGlobal("ratingThreshold", threshold);
-        Integer num = kieSession.fireAllRules();
-        System.out.println(num);
-
-        List<FeedbackNADto> highlyRankedProducts = new ArrayList<>();
-        Collection<?> objects = kieSession.getObjects(new ClassObjectFilter(FeedbackNADto.class));
-        for (Object obj : objects) {
-            FeedbackNADto productRating = (FeedbackNADto) obj;
-            highlyRankedProducts.add(productRating);
-        }
-        kieSession.dispose();
-        return highlyRankedProducts;
-    }
-
-    private void insertFeedbackIntoSession(KieSession kieSession, SessionPseudoClock clock) {
-        List<Feedback> feedbackList = feedbackRepository.findAll();
-        feedbackList.forEach(feedback -> {
-            long timeDiff = feedback.getDateTime().getTime() - clock.getCurrentTime();
-            clock.advanceTime(timeDiff, TimeUnit.MILLISECONDS);
-            FeedbackStatus status = new FeedbackStatus(feedback, false);
-
-
-        DicountUsageReportDTO reportDTO = new DicountUsageReportDTO();
-        QueryResults results = kieSession.getQueryResults("getDiscountUsages");
-        for (QueryResultsRow row : results) {
-            Object usage = row.get("usage");
-            try {
-                Method getNumOfDiscounts = usage.getClass().getMethod("getNumOfDiscounts");
-                Method getNumOfUsed = usage.getClass().getMethod("getNumOfUsed");
-
-                reportDTO.setTotalNumber((Integer) getNumOfDiscounts.invoke(usage));
-                reportDTO.setTotalUsed((Integer) getNumOfUsed.invoke(usage));
-                reportDTO.calculatePercentageUsed();
-
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        kieSession.dispose();
-        return reportDTO;
     }
 
     @Override
@@ -317,6 +194,148 @@ public class ReportServiceImpl implements ReportService {
 
     }
 
+    @Override
+    public List<FeedbackReport> getFeedbackReport(String period) {
+        boolean canGenerateWeekly = false;
+        List<FeedbackReport> rankedReports = new ArrayList<>();
+        if (period.equals("7d")){
+            boolean canGenerateReport = eventHandler.processCheckFeedbackReport();
+            canGenerateWeekly = canGenerateReport;
+        }
+        if (canGenerateWeekly || !period.equals("7d")) {
+            KieSession kieSession = kieContainer.newKieSession("reportsKsession");
+            SessionPseudoClock clock = kieSession.getSessionClock();
+            eventHandler.insertAllFeedbacksIntoSession(kieSession,clock);
+            insertProductsIntoSession(kieSession);
+
+            String queryName;
+            switch (period) {
+                case "7d":
+                    queryName = "Calculate weekly average rating for each product";
+                    break;
+                case "30d":
+                    queryName = "Calculate monthly average rating for each product";
+                    break;
+                case "365d":
+                    queryName = "Calculate yearly average rating for each product";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid period: " + period);
+            }
+
+            QueryResults results = kieSession.getQueryResults(queryName);
+            for (QueryResultsRow row : results) {
+                Product product = (Product) row.get("$product");
+                List<Feedback> feedbacks = (List<Feedback>) row.get("$feedbacks");
+                double average = (double) row.get("$averageRating");
+
+                FeedbackReport feedbackReport = new FeedbackReport(product.getId(), feedbacks, average);
+                rankedReports.add(feedbackReport);
+            }
+
+        }
+
+        if (rankedReports == null) {
+            return null;
+        } else {
+            rankedReports.sort(Comparator.comparingDouble(FeedbackReport::getAverageRating).reversed());
+            return rankedReports;
+        }
+
+    }
+
+    @Override
+    public FeedbackNADto getFeedbackProductReport(String productId) {
+        Product product = productRepository.findById(new ObjectId(productId)).orElseThrow(() -> new RuntimeException("Product not found"));
+        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
+        SessionPseudoClock clock = kieSession.getSessionClock();
+        insertFeedbackIntoSession(kieSession, clock);
+        List<Integer> allRatings = new ArrayList<>();
+        kieSession.setGlobal("allRatings",allRatings);
+        kieSession.setGlobal("globalProductId", productId);
+        kieSession.getAgenda().getAgendaGroup("report-fpp-rules").setFocus();
+        Integer num = kieSession.fireAllRules();
+        System.out.println(num);
+
+        FeedbackNADto feedbackNADto = new FeedbackNADto();
+        feedbackNADto.setName(product.getName());
+        feedbackNADto.setProductId(product.getId());
+        feedbackNADto.setNumberOfProducts(allRatings.size());
+        allRatings = (List<Integer>) kieSession.getGlobal("allRatings");
+        feedbackNADto.setAverage(calculateAverage(allRatings));
+
+        kieSession.dispose();
+        return feedbackNADto;
+    }
+
+    @Override
+    public FeedbackUserDTO getUserFeedbackReport(String userId) {
+        User user = userRepository.findById(new ObjectId(userId)).orElseThrow(() -> new RuntimeException("User not found"));
+        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
+        SessionPseudoClock clock = kieSession.getSessionClock();
+        insertFeedbackIntoSession(kieSession, clock);
+        kieSession.setGlobal("globalUserId",user.getId().toString());
+        kieSession.setGlobal("feedbackGlobal", new FeedbackGlobal());
+        kieSession.getAgenda().getAgendaGroup("user-feedback-report-rules").setFocus();
+
+        Integer num = kieSession.fireAllRules();
+        System.out.println(num);
+
+        FeedbackGlobal countersResult = (FeedbackGlobal) kieSession.getGlobal("feedbackGlobal");
+        FeedbackUserDTO feedbackUserDTO = new FeedbackUserDTO(user.getId(),user.getUsername(),countersResult.getFeedbackCount());
+
+        kieSession.dispose();
+
+        return feedbackUserDTO;
+    }
+
+    @Override
+    public List<FeedbackNADto> getHighRatedProductsReport(String threshold) {
+        KieSession kieSession = kieContainer.newKieSession("reportsKsession");
+        SessionPseudoClock clock = kieSession.getSessionClock();
+        insertFeedbackIntoSession(kieSession, clock);
+        insertProductsIntoSession(kieSession);
+        kieSession.setGlobal("ratingThreshold", threshold);
+        Integer num = kieSession.fireAllRules();
+        System.out.println(num);
+
+        List<FeedbackNADto> highlyRankedProducts = new ArrayList<>();
+        Collection<?> objects = kieSession.getObjects(new ClassObjectFilter(FeedbackNADto.class));
+        for (Object obj : objects) {
+            FeedbackNADto productRating = (FeedbackNADto) obj;
+            highlyRankedProducts.add(productRating);
+        }
+        kieSession.dispose();
+        return highlyRankedProducts;
+    }
+
+    private void insertUsersAndGiftsIntoSession(KieSession kieSession) {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            kieSession.insert(user);
+            user.getGifts().forEach(kieSession::insert);
+        });
+    }
+
+
+    private void insertDiscountsIntoSession(KieSession kieSession) {
+        List<Discount> discounts = discountRepository.findAll();
+        discounts.forEach(discount -> {
+            kieSession.insert(discount);
+        });
+
+    }
+
+    private void insertFeedbackIntoSession(KieSession kieSession, SessionPseudoClock clock) {
+        List<Feedback> feedbackList = feedbackRepository.findAll();
+        feedbackList.forEach(feedback -> {
+            long timeDiff = feedback.getDateTime().getTime() - clock.getCurrentTime();
+            clock.advanceTime(timeDiff, TimeUnit.MILLISECONDS);
+            FeedbackStatus status = new FeedbackStatus(feedback, false);
+            kieSession.insert(status);
+        });
+    }
+
     private void insertShoppingsIntoSession(KieSession kieSession, SessionPseudoClock clock) {
         List<Shopping> shoppings = shoppingRepository.findAll();
         shoppings.forEach(shopping -> {
@@ -327,6 +346,12 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
+    private void insertProductsIntoSession(KieSession kieSession) {
+        List<Product> products = productRepository.findAll();
+        products.forEach(product -> {
+            kieSession.insert(product);
+        });
+    }
 
     public static double calculateAverage(List<Integer> ratings) {
         if (ratings == null || ratings.isEmpty()) {
@@ -341,29 +366,6 @@ public class ReportServiceImpl implements ReportService {
         return (double) sum / ratings.size();
     }
 
-    private void insertProductsIntoSession(KieSession kieSession) {
-        List<Product> products = productRepository.findAll();
-        products.forEach(product -> {
-            kieSession.insert(product);
-        });
-    }
-
-
-    private void insertDiscountsIntoSession(KieSession kieSession) {
-        List<Discount> discounts = discountRepository.findAll();
-        discounts.forEach(discount -> {
-            kieSession.insert(discount);
-        });
-
-    }
-
-    private void insertUsersAndGiftsIntoSession(KieSession kieSession) {
-        List<User> users = userRepository.findAll();
-        users.forEach(user -> {
-            kieSession.insert(user);
-            user.getGifts().forEach(kieSession::insert);
-        });
-    }
 
 
 }
