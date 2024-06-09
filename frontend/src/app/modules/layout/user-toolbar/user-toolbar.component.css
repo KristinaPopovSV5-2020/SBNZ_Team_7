@@ -1,0 +1,17 @@
+#navigation {
+    width: 100%;
+    justify-content: flex-end;
+    text-align: center;
+    margin-top: 8px;
+  }
+  
+  
+  
+  mat-icon{
+  color: rgb(224, 172, 41);
+  font-size: 38px;
+  margin-left: 10px;
+  width: 45px;
+  height: 38px;
+  margin-right: 10px;
+  }
