@@ -1,0 +1,48 @@
+package reports;
+import java.util.List;
+import java.util.ArrayList;
+import com.ftn.sbnz.model.models.products.Shopping;
+import com.ftn.sbnz.dto.reports.UserShoppingReportDTO;
+import com.ftn.sbnz.dto.reports.GlobalCounters;
+import com.ftn.sbnz.dto.ThresholdValueDTO;
+import com.ftn.sbnz.facts.ShoppingStatus;
+import org.bson.types.ObjectId;
+import java.util.Date;
+import java.util.Calendar;
+import org.drools.core.common.DefaultFactHandle;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
+
+
+
+global String globalUserId;
+global GlobalCounters counters;
+global ThresholdValueDTO thresholdValue;
+
+rule "Calculate number and total value of user purchases above defined value"
+when 
+    $status: ShoppingStatus(processed == false, $shopping: shopping)
+    checkShoppingValueAndMatchWithUser($shopping.getDateTime(), $shopping.userId.toString(), $shopping.value, thresholdValue.value, thresholdValue.checkDate;)
+then
+    counters.addValue($shopping.getValue());
+    counters.incrementCount();
+    modify($status) { setProcessed(true) };
+end
+
+
+
+
+query checkShoppingValueAndMatchWithUser(Date shoppingDate, String userId, double value, double threshold, boolean checkDate)
+    eval((!checkDate) || isWithinLast30Days(shoppingDate))
+    eval(value >= threshold)
+    eval(globalUserId.equals(userId))
+end
+
+
+
+function boolean isWithinLast30Days(Date shoppingDate) {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DATE, -30);
+    Date thirtyDaysAgo = cal.getTime();
+    return shoppingDate.after(thirtyDaysAgo) || shoppingDate.equals(thirtyDaysAgo);
+}

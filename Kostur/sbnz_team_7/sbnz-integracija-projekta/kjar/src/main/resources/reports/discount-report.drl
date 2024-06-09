@@ -1,0 +1,75 @@
+package reports;
+import org.bson.types.ObjectId;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.model.models.Discount;
+
+global String globalUserId;
+
+
+
+
+declare DiscountUsage
+    userId: String
+    numOfDiscounts: Integer = 0
+    numOfUsed:Integer = 0
+end
+
+
+rule "Initialize Discount Usage"
+salience 500
+ruleflow-group "discount-rules"
+    when
+        $discount: Discount()
+        not DiscountUsage(userId == $discount.getUserId().toString())
+    then
+        insert(new DiscountUsage($discount.getUserId().toString(), 0, 0));
+end
+
+
+
+
+rule "Assess Total Discounts by User"
+salience 400
+ruleflow-group "discount-rules"
+when
+    $discount: Discount()
+    checkUser($discount.getUserId().toString();)
+    $usage: DiscountUsage(userId== $discount.getUserId().toString())
+then
+
+   modify($usage){
+        setNumOfDiscounts($usage.getNumOfDiscounts() + 1);
+    }
+end
+
+
+
+
+rule "Assess Discount Utilization by User"
+salience 200
+ruleflow-group "discount-rules"
+when
+    $discount: Discount()
+    checkUserAndIfDiscountUsed($discount.getUserId().toString(), $discount.isUsed();)
+    $usage: DiscountUsage(userId == $discount.getUserId().toString())
+then
+    modify($usage){
+        setNumOfUsed($usage.getNumOfUsed() + 1);
+    }
+end
+
+
+
+query checkUser(String userId)
+    eval(globalUserId.equals(userId))
+end
+
+query checkUserAndIfDiscountUsed(String userId, boolean used)
+    eval(globalUserId.equals(userId))
+    eval(used)
+end
+
+
+query "getDiscountUsages"
+    usage : DiscountUsage(userId==globalUserId)
+end

@@ -108,4 +108,20 @@ public class Shopping implements Serializable {
         return Double.compare(value, shopping.value) == 0 && isNew == shopping.isNew && Objects.equals(id, shopping.id) && Objects.equals(productId, shopping.productId) && Objects.equals(userId, shopping.userId) && Objects.equals(dateTime, shopping.dateTime);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, userId, dateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Shopping{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", userId=" + userId +
+                ", value=" + value +
+                ", dateTime=" + dateTime +
+                ", isNew=" + isNew +
+                '}';
+    }
 }

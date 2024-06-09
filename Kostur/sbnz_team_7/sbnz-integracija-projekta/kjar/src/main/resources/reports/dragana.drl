@@ -1,0 +1,174 @@
+package trud.io.kjar;
+import com.sbnz.trud.io.model.*;
+import com.sbnz.trud.io.dto.*;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.lang.Math;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.time.Period;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.time.*;
+
+declare PregnancyWithSymptoms
+id: Integer
+end
+
+declare BirhtWithDisorder
+id: Integer
+end
+
+declare PregnancyWithIllness
+id: Integer
+end
+
+declare CtgWithVariabilityStatus
+id: Integer
+end
+
+declare CtgWithResultStatus
+id: Integer
+end
+
+rule "Find percentage pregnancies with symptoms"
+no-loop
+agenda-group "reports"
+salience 90
+    when
+        $symptomsReport: SymptomsReport($listOfSymptoms: symptoms)
+        $allPregnancies: List() from collect(Pregnancy())
+        $pregnanciesWithSymptoms: List() from collect(PregnancyWithSymptoms())
+    then
+        modify($symptomsReport) {
+        setPercentage($pregnanciesWithSymptoms.size()/ (float)
+        $allPregnancies.size());
+        }
+end
+
+rule "Pregnancy has symptoms"
+lock-on-active
+salience 100
+agenda-group "reports"
+    when
+        $symptomsReport: SymptomsReport()
+        $pregnancy: Pregnancy()
+        matchSymptoms($pregnancy.id, $symptomsReport.symptoms;)
+    then
+        insert(new PregnancyWithSymptoms($pregnancy.getId()));
+end
+
+rule "Find percentage of chromosomal disorder"
+no-loop
+agenda-group "reports"
+salience 90
+    when
+        $chromosomalDisorderReport: ChromosomalDisorderReport()
+        $allBirths: List() from collect(Birth())
+        $birthsWithDisorder: List() from collect(BirhtWithDisorder())
+    then
+        modify($chromosomalDisorderReport) {
+        setPercentage($birthsWithDisorder.size()/ (float) $allBirths.size());
+        }
+end
+
+rule "Birth has disorder"
+lock-on-active
+salience 100
+agenda-group "reports"
+    when
+        $chromosomalDisorderReport: ChromosomalDisorderReport()
+        $birth: Birth()
+        matchChromosomalDisorder($chromosomalDisorderReport.chromosomalDisorder,
+        $birth.chromosomalDisorder;)
+    then
+        insert(new BirhtWithDisorder($birth.getId()));
+end
+
+rule "Find percentage of ctg result status"
+no-loop
+agenda-group "reports"
+salience 90
+    when
+        $ctgReport: CTGResultReport()
+        $allCtgs: List() from collect(CTG())
+        $ctgsWithResultStatus: List() from collect(CtgWithResultStatus())
+    then
+        modify($ctgReport) {
+        setNumberOfCtgs((int) $ctgsWithResultStatus.size()),
+        setPercentage($ctgsWithResultStatus.size()/ (float) $allCtgs.size());
+        };
+end
+
+rule "CTG with result status"
+lock-on-active
+salience 100
+agenda-group "reports"
+    when
+        $ctgReport: CTGResultReport()
+        $ctg: CTG()
+        matchCTGResult($ctgReport.status, $ctg.result;)
+    then
+        insert(new CtgWithResultStatus($ctg.getId()));
+end
+
+
+
+rule "Find percentage of illnesses"
+no-loop
+agenda-group "reports"
+salience 90
+    when
+        $illnessesReport: IllnessesReport()
+        $allPregnancies: List() from collect(Pregnancy())
+        $pregnancyWithIllnesses: List() from collect(PregnancyWithIllness())
+    then
+        modify($illnessesReport) {
+        setPercentage($pregnancyWithIllnesses.size()/ (float)
+        $allPregnancies.size());
+    }
+end
+
+rule "Pregnancy has illnesses"
+lock-on-active
+salience 100
+agenda-group "reports"
+    when
+        $illnessesReport: IllnessesReport()
+        $reportIllnesses: List() from accumulate(String($name: this) from
+        $illnessesReport.illnessesNames;
+        collectList($name))
+        $pregnancy: Pregnancy()
+        $pregnancyIllnesses: List() from accumulate(Illness($name: name) from
+        $pregnancy.illnesses;
+        collectList($name))
+        containsAll($reportIllnesses, $pregnancyIllnesses;)
+    then
+        insert(new PregnancyWithIllness($pregnancy.getId()));
+end
+
+
+query matchChromosomalDisorder(ChromosomalDisorders filter,
+    ChromosomalDisorders birthDisorder)
+    eval(filter == birthDisorder)
+end
+
+query matchSymptoms(Integer _id, List listOfSymptoms)
+    Pregnancy(id == _id, $symptoms: symptoms) and containsAll(listOfSymptoms,
+    $symptoms;)
+end
+
+query matchCTGResult(CTGStatus filter, CTGStatus ctgResult)
+    eval(filter == ctgResult)
+end
+
+query containsAll(Collection s1, Collection s2)
+    $num : Number(intValue == s1.size()) from accumulate(
+        Object(this memberOf s2) from s1,
+        init(int count = 0;),
+        action(count += 1;),
+        result(count)
+    )
+end
+
+
