@@ -8,10 +8,10 @@
       <app-link *ngIf="role === null" class="link" text="Home" source="home"></app-link>
       <app-link *ngIf="role === null" class="link" text="Log in" source="login"></app-link>
       <div class="text-box"  *ngIf="role === null" >
-        <app-link  class="link" text="Sign up" (click)="signup()"></app-link>
+        <app-link  class="link" text="Sign up" source="signup"></app-link>
       </div>
       
-      <app-user-toolbar *ngIf="role === 'user'"></app-user-toolbar>
-      <app-admin-toolbar *ngIf="role === 'admin'"></app-admin-toolbar>
+      <app-user-toolbar *ngIf="role === 'User'"></app-user-toolbar>
+      <app-admin-toolbar *ngIf="role === 'Admin'"></app-admin-toolbar>
   
   </mat-toolbar>

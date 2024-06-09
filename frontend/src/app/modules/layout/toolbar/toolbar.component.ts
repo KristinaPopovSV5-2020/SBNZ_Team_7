@@ -20,13 +20,7 @@ export class ToolbarComponent implements OnInit{
       });
     }
   
-  
     
-    signup(){
-      this.router.navigate(['signup',"user" ]);
-  
-    }
-  
   }
 
 

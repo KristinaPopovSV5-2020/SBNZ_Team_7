@@ -7,6 +7,9 @@ import com.ftn.sbnz.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
@@ -27,6 +30,17 @@ public class IngredientServiceImpl implements IngredientService {
         ingredient.setSpecial(ingredientDTO.isSpecial());
 
         return ingredientRepository.save(ingredient);
+    }
+
+    @Override
+    public List<Ingredient> getAllergens() {
+        List<Ingredient> allergens = new ArrayList<>();
+        for (Ingredient ingredient: ingredientRepository.findAll() ){
+            if (ingredient.isAllergen()){
+                allergens.add(ingredient);
+            }
+        }
+        return allergens;
     }
 
 }

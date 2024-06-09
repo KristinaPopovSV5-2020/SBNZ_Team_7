@@ -6,11 +6,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './modules/shared/shared.module';
-import { LayoutModule } from './modules/layout/layout.module';
+import { LayoutModule   } from './modules/layout/layout.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { Interceptor } from './modules/auth/interceptor/interceptor.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 
@@ -37,7 +38,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     useClass: Interceptor,
     multi: true,
     },
-    DatePipe
+    DatePipe,
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -27,6 +27,7 @@ import { MatDivider, MatDividerModule } from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatNativeDateModule } from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 
@@ -60,7 +61,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    MatCheckboxModule
   ],
   exports:[
     CommonModule,
@@ -91,7 +93,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     MatDividerModule,
     MatTabsModule,
     MatNativeDateModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    MatCheckboxModule
  
   ]
 
