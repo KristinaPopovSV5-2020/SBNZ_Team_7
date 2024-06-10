@@ -11,6 +11,7 @@ import { ProblemsLifestyleInputComponent } from './modules/layout/problems-lifes
 import { ForwardChaining2Component } from './modules/layout/forward-chaining2/forward-chaining2.component';
 import { CategorySelectionComponent } from './modules/layout/category-selection/category-selection.component';
 import { PurchasesHistoryComponent } from './modules/feedback/purchases-history/purchases-history.component';
+import { LeaveFeedbackComponent } from './modules/feedback/leave-feedback/leave-feedback.component';
 
 
 const routes: Routes = [
@@ -25,7 +26,8 @@ const routes: Routes = [
   {path:'recommendation-process-second', component: ForwardChaining2Component},
   {path:'forward-chaining-problems-input', component: ProblemsLifestyleInputComponent},
   {path: 'category-selection', component: CategorySelectionComponent},
-  {path:'purchases-history', component: PurchasesHistoryComponent}
+  {path:'purchases-history', component: PurchasesHistoryComponent},
+  {path:'leave-feedback', component: LeaveFeedbackComponent}
 ];
 
 @NgModule({

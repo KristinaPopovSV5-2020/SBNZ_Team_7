@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ProductDTO } from '../../../dto/Product';
 import { MatTableDataSource } from '@angular/material/table';
 import { FeedbackService } from '../feedback.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -22,7 +22,7 @@ export class PurchasesHistoryComponent implements OnInit, OnDestroy{
   obs!: Observable<any>;
 
 
-  constructor(private fb: FormBuilder, private dialog: MatDialog,private feedbackService: FeedbackService,private changeDetectorRef: ChangeDetectorRef,) {
+  constructor(private fb: FormBuilder, private dialog: MatDialog,private feedbackService: FeedbackService,private changeDetectorRef: ChangeDetectorRef,private router: Router) {
 
   }
 
@@ -35,13 +35,12 @@ export class PurchasesHistoryComponent implements OnInit, OnDestroy{
 
 
   ngOnInit() {
-    this.changeDetectorRef.detectChanges();
-    this.dataSource.paginator = this.paginator;
-    this.obs = this.dataSource.connect();
+  this.changeDetectorRef.detectChanges();
+  this.dataSource.paginator = this.paginator;
+  this.obs = this.dataSource.connect();
     this.feedbackService.getAllUserPurchases()
     .subscribe({
       next: (response) =>{
-        console.log(response);
         for (const value of response) {
           this.elements.push({productId: value.productId, date: value.date,name: value.name, benefits: value.benefits, price: value.price});
         }
@@ -67,6 +66,8 @@ export class PurchasesHistoryComponent implements OnInit, OnDestroy{
   }
 
   leaveFeedback(item: PurchaseHistory){
+    this.feedbackService.setSelectedItem(item);
+    this.router.navigate(['/leave-feedback']);
 
   }
 

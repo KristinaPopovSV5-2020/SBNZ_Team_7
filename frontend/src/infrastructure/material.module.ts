@@ -31,6 +31,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [
@@ -68,6 +69,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgxMaterialTimepickerModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatButtonToggleModule
   ],
   exports:[
     CommonModule,
@@ -103,6 +105,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatStepperModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatButtonToggleModule
   ]
 
 })
