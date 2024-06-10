@@ -1,0 +1,36 @@
+.centered-container{
+    margin: auto;
+    padding: 200px;
+    text-align: center;
+    justify-content: center;
+    display: block;
+    width: 60%;
+    height: 100vh;
+}
+
+
+
+mat-card{
+    margin: 10px 0;
+    background-color: rgba(255, 255, 255, 0.703);
+    border-radius: 16px; 
+    overflow: hidden;
+}
+
+p{
+    font-size: larger;
+}
+
+.button{
+    margin-left: 20px;
+    background-color: #F7CAC9;
+
+}
+
+
+
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* Postavljanje elemenata s obe strane kontejnera */
+    align-items: center; /* Centriranje po vertikali */
+  }

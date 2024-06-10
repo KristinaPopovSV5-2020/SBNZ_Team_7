@@ -12,6 +12,7 @@ import { PurchasesHistoryComponent } from './purchases-history/purchases-history
     CommonModule,
     MaterialModule,
     SharedModule,
-  ]
+  ],
+  exports:[PurchasesHistoryComponent]
 })
 export class FeedbackModule { }
