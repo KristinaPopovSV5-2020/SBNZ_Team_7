@@ -5,12 +5,14 @@ import com.ftn.sbnz.dto.BudgetDTO;
 import com.ftn.sbnz.dto.product.RecommendedDTO;
 import com.ftn.sbnz.dto.product.ScoreReasonDTO;
 import com.ftn.sbnz.facts.RecommendedProduct;
+import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.LifestyleHabits;
 import com.ftn.sbnz.model.models.enums.SkinIssue;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.model.models.user_input.LifestyleHabitsInput;
 import com.ftn.sbnz.model.models.user_input.SkinProblems;
+import com.ftn.sbnz.repository.IngredientRepository;
 import com.ftn.sbnz.repository.UserRepository;
 import com.ftn.sbnz.service.ProductService;
 import com.ftn.sbnz.service.RecommendationService;
@@ -32,17 +34,21 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final UserRepository userRepository;
 
     private final ProductService productService;
-    
+
+    private final IngredientRepository ingredientRepository;
+
     private final KieBase forwardKieBase;
 
     private final KieContainer kieContainer;
 
     @Autowired
-    public RecommendationServiceImpl(UserRepository userRepository, ProductService productService, KieBase forwardKieBase, KieContainer kieContainer) {
+    public RecommendationServiceImpl(UserRepository userRepository, ProductService productService, IngredientRepository ingredientRepository, KieBase forwardKieBase, KieContainer kieContainer) {
         this.userRepository = userRepository;
         this.productService = productService;
+        this.ingredientRepository = ingredientRepository;
         this.forwardKieBase = forwardKieBase;
         this.kieContainer = kieContainer;
+
     }
 
 
@@ -60,17 +66,28 @@ public class RecommendationServiceImpl implements RecommendationService {
             kieSession.insert(budgetDTO);
             allProducts.forEach(kieSession::insert);
             int fired = kieSession.fireAllRules();
-            System.out.println(fired);  //  debugging :)
-
+            System.out.println(fired);  // debugging :)
 
             return recommendedProducts.stream()
-                    .map(recommendedProduct -> new RecommendedDTO(recommendedProduct.getProduct(), recommendedProduct))
+                    .map(recommendedProduct -> {
+                        Product product = recommendedProduct.getProduct();
+                        List<String> ingredientNames = product.getIngredientIds().stream()
+                                .map(id -> ingredientRepository.findById(id).orElseThrow(() -> new RuntimeException("Ingredient not found")))
+                                .map(Ingredient::getName)
+                                .collect(Collectors.toList());
+
+
+//                        productDTO.setIngredientNames(ingredientNames);
+
+                        return new RecommendedDTO(product, ingredientNames, recommendedProduct);
+                    })
                     .collect(Collectors.toList());
 
         } finally {
             kieSession.dispose();
         }
     }
+
 
     @Override
     public List<RecommendedDTO> recommendProductsBasedOnProblemsAndHabitsForUser(ObjectId userId, List<String> skinProblems, List<String> lifestyleHabits) {

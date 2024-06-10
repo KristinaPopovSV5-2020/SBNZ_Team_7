@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/api/recommendations", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "http://localhost:4200")
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
@@ -26,7 +27,7 @@ public class RecommendationController {
 
 
     // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
-    @GetMapping("/products")
+    @PostMapping("/products")
     public ResponseEntity<List<RecommendedDTO>> recommendProducts(@RequestParam String userId, @RequestBody BudgetDTO budgetDTO) {
         List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsForUser(new ObjectId(userId), budgetDTO);
         return ResponseEntity.ok(recommendedProducts);
