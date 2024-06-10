@@ -53,22 +53,22 @@ export class FeedbackReportsThresholdComponent implements OnInit{
       this.changeDetectorRef.detectChanges();
       this.dataSource.paginator = this.paginator;
       this.obs = this.dataSource.connect();
-        this.reportService.getFeedbackReportsThreshold(this.thresholdForm.value.threshold)
-        .subscribe({
-          next: (response) =>{
-            this.elements = [];
-            for (const value of response) {
-              this.elements.push({productId: value.productId, name: value.name,numberOfProducts: value.numberOfProducts, average: value.average});
-            }
-            this.dataSource.data = this.elements;
-            this.generate = true;
+      this.reportService.getFeedbackReportsThreshold(this.thresholdForm.value.threshold)
+      .subscribe({
+        next: (response) =>{
+          this.elements = [];
+          for (const value of response) {
+            this.elements.push({productId: value.productId, name: value.name,numberOfProducts: value.numberOfProducts, average: value.average});
+          }
+          this.dataSource.data = this.elements;
+          this.generate = true;
+        
+          },
+        error: (error) => {
           
-            },
-          error: (error) => {
-            
-          }, 
+        }, 
 
-        })
+      })
     }
 
   }

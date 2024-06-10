@@ -18,3 +18,9 @@ typeCategory: string;
 ageCategory?: string;
 usageCategory?: string;
 }
+
+
+export interface ProductFeedbackDTO{
+  productId: string;
+  name: string;
+}

@@ -1,0 +1,15 @@
+<div class="feedback-container">
+    <form [formGroup]="ratingForm">
+        <mat-button-toggle-group
+          formControlName="rating"
+          class="rating-group"
+          aria-label="Rating"
+          [value]="ratingForm.get('rating')?.value">
+          <mat-button-toggle value="1">1</mat-button-toggle>
+          <mat-button-toggle value="2">2</mat-button-toggle>
+          <mat-button-toggle value="3">3</mat-button-toggle>
+          <mat-button-toggle value="4">4</mat-button-toggle>
+          <mat-button-toggle value="5">5</mat-button-toggle>
+        </mat-button-toggle-group>
+      </form>
+</div>

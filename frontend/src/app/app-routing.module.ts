@@ -37,7 +37,7 @@ const routes: Routes = [
   {path:'leave-feedback', component: LeaveFeedbackComponent},
   {path: 'create-product', component:CreateProductComponent},
   {path: 'report-management', component: ReportMainPageComponent},
-  {path: 'purchase-reports', component: ReportFeedbackPageComponent},
+  {path: 'feedback-reports', component: ReportFeedbackPageComponent},
   {path:'feedback-reports-wmy', component:FeedbackReportsWmyComponent},
   {path:'feedback-reports-count', component:FeedbackReportsCountComponent},
   {path:'feedback-reports-countave-product', component: FeedbackReportsContaveProductComponent},
