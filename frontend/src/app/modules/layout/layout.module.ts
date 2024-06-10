@@ -19,6 +19,6 @@ import { CategorySelectionComponent } from './category-selection/category-select
     MaterialModule,
     SharedModule,
   ],
-  exports: [ToolbarComponent, UserToolbarComponent, AdminToolbarComponent, CategorySelectionComponent, BudgetInputComponent, ForwardChaining1Component]
+  exports: [ToolbarComponent, CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component]
 })
 export class LayoutModule { }

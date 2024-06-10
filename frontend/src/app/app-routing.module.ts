@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'budget-input', component: BudgetInputComponent },
   { path: 'recommendation-process', component: ForwardChaining1Component },
   {path:'recommendation-process-second', component: ForwardChaining2Component},
-  {path:'forward-chaining-problems-input', component: ProblemsLifestyleInputComponent}
+  {path:'forward-chaining-problems-input', component: ProblemsLifestyleInputComponent},
   {path: 'category-selection', component: CategorySelectionComponent}
 ];
 

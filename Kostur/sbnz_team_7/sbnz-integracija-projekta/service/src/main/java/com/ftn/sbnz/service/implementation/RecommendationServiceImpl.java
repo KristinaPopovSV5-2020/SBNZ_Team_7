@@ -76,9 +76,6 @@ public class RecommendationServiceImpl implements RecommendationService {
                                 .map(Ingredient::getName)
                                 .collect(Collectors.toList());
 
-
-//                        productDTO.setIngredientNames(ingredientNames);
-
                         return new RecommendedDTO(product, ingredientNames, recommendedProduct);
                     })
                     .collect(Collectors.toList());

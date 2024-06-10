@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ProductDTO } from '../dto/Product';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpHeaders,HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable,catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ProblemsLifestyleDTO } from '../modules/layout/problems-lifestyle-input/problems-lifestyle-input.component';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BudgetDTO } from '../dto/Budget';
-import { Observable, catchError, throwError } from 'rxjs';
 import { ProductDTO, ProductSearchDTO } from '../dto/Product';
 @Injectable({
   providedIn: 'root'
@@ -15,6 +11,10 @@ import { ProductDTO, ProductSearchDTO } from '../dto/Product';
 export class RecommendationService {
   private apiUrl = `${environment.apiHost}api/`;
   constructor(private http: HttpClient) { }
+
+  private value$ = new BehaviorSubject<any>({});
+  selectedValue$ = this.value$.asObservable();
+
 
 
   getRecommendedProducts(userId: string, budget: BudgetDTO): Observable<ProductDTO[]> {
@@ -35,13 +35,6 @@ export class RecommendationService {
       catchError(this.handleError)
     );
   }
-  private value$ = new BehaviorSubject<any>({});
-  selectedValue$ = this.value$.asObservable();
-
-
-  constructor(private http: HttpClient) { }
-
-
 
   recommendProductsBasedOnSkinProblemsAndHabits(problemsLifestyleDTO: ProblemsLifestyleDTO): Observable<ProductDTO[]> {
     const token = localStorage.getItem('user');
