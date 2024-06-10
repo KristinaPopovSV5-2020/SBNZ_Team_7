@@ -7,7 +7,7 @@
       <h2 class="title">Recommendations Based On</h2>
       <div class="info-card">
         <h3>Skin Type:</h3>
-        <p>Oily</p>
+        <p>{{skinType}}</p>
       </div>
       <div class="info-card">
         <h3>Budget:</h3>
@@ -15,7 +15,12 @@
       </div>
       <div class="info-card">
         <h3>Allergens:</h3>
-        <p>None specified</p>
+        <ng-container *ngIf="allergens.length > 0; else noAllergens">
+            <p *ngFor="let allergen of allergens">{{ allergen }}</p>
+          </ng-container>
+          <ng-template #noAllergens>
+            <p>None specified</p>
+          </ng-template>
       </div>
     </div>
     <div class="product-list">

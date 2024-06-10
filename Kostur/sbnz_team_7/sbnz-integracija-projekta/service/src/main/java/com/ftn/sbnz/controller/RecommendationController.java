@@ -5,7 +5,6 @@ import com.ftn.sbnz.dto.product.RecommendedDTO;
 import com.ftn.sbnz.exception.NotFoundException;
 import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.service.RecommendationService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,15 @@ public class RecommendationController {
     }
 
 
-    // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
     @PostMapping("/products")
-    public ResponseEntity<List<RecommendedDTO>> recommendProducts(@RequestParam String userId, @RequestBody BudgetDTO budgetDTO) {
-        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsForUser(new ObjectId(userId), budgetDTO);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<RecommendedDTO>> recommendProducts(@RequestBody BudgetDTO budgetDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        if (user == null) {
+            throw new NotFoundException("User does not exist!");
+        }
+        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsForUser(user.getId(), budgetDTO);
         return ResponseEntity.ok(recommendedProducts);
     }
 
