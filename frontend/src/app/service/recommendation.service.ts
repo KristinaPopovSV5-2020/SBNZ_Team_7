@@ -8,14 +8,14 @@ import { ProductDTO, ProductSearchDTO } from '../dto/Product';
   providedIn: 'root'
 })
 export class RecommendationService {
-  private apiUrl = `${environment.apiHost}api/recommendations/products`;
+  private apiUrl = `${environment.apiHost}api/`;
   constructor(private http: HttpClient) { }
 
 
   getRecommendedProducts(userId: string, budget: BudgetDTO): Observable<ProductDTO[]> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    const url = `${this.apiUrl}?userId=${userId}`;
+    const url = `${this.apiUrl}recommendations/products?userId=${userId}`;
     return this.http.post<ProductDTO[]>(url, budget, { headers }).pipe(
       catchError(this.handleError)
     );
@@ -25,7 +25,7 @@ export class RecommendationService {
   searchProducts(searchDTO: ProductSearchDTO): Observable<ProductDTO[]> {
     console.log(searchDTO);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const url = `${this.apiUrl}/backward`;
+    const url = `${this.apiUrl}products/backward`;
     return this.http.post<ProductDTO[]>(url, searchDTO, { headers }).pipe(
       catchError(this.handleError)
     );
