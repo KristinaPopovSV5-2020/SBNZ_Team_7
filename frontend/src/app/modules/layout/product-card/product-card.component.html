@@ -16,10 +16,16 @@
           <strong>Skin Types:</strong> {{ product.skinTypes.join(', ') }}
         </div>
         <div class="product-detail">
-          <strong>Benefits:</strong> {{ product.benefits.join(', ') }}
+          <strong>Benefits:</strong> 
+          <ng-container *ngFor="let benefit of product.benefits">
+          {{ formatEnumString(benefit) }}<span *ngIf="benefit !== product.benefits[product.benefits.length - 1]">, </span>
+          </ng-container>
         </div>
         <div class="product-detail">
           <strong>Ingredients:</strong> {{ product.ingredientNames.join(', ') }}
+        </div>
+        <div class="product-detail">
+          <strong style="color: blueviolet;">{{ product.popular ? 'POPULAR' : '' }}</strong>
         </div>
       </div>
     </mat-card-content>

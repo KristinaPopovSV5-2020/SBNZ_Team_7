@@ -56,21 +56,6 @@ public class EventHandler {
         this.productService = productService;
     }
 
-//    @PostConstruct
-//    public void initializeSession() {
-//        this.kieSession = kieContainer.newKieSession("cepBonusKsession");
-//        KieSessionConfiguration config = KieServices.Factory.get().newKieSessionConfiguration();
-//        config.setOption(ClockTypeOption.get("pseudo"));
-//    }
-//
-//
-//    @PreDestroy
-//    public void disposeSession() {
-//        if (kieSession != null) {
-//            kieSession.dispose();
-//        }
-//    }
-
     public Shopping processShoppingEvent(Shopping shoppingEvent) {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();

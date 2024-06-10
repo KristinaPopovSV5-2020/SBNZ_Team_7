@@ -8,7 +8,8 @@ export interface ProductDTO {
     skinTypes: string[];
     benefits: string[];
     ingredientIds: string[];
-    ingredientNames: string[]
+    ingredientNames: string[];
+    popular: boolean;
   }
   
 

@@ -159,7 +159,20 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .sorted(Comparator.comparing(entry -> entry.getValue(), Comparator.comparingDouble(ScoreReasonDTO::getScore).reversed()))
                 .collect(Collectors.toList());
         List<RecommendedDTO> sortedProducts = sortedEntries.stream()
-                .map(entry -> new RecommendedDTO(entry.getKey(), entry.getValue().getScore(), entry.getValue().getReason()))
+                .map(entry -> {
+                    // Izračunajte ingredientNames za svaki product
+                    List<String> ingredientNames = entry.getKey().getIngredientIds().stream()
+                            .map(id -> ingredientRepository.findById(id).orElseThrow(() -> new RuntimeException("Ingredient not found")))
+                            .map(Ingredient::getName)
+                            .collect(Collectors.toList());
+
+                    return new RecommendedDTO(
+                            entry.getKey(),
+                            entry.getValue().getScore(),
+                            entry.getValue().getReason(),
+                            ingredientNames
+                    );
+                })
                 .collect(Collectors.toList());
 
         return sortedProducts;
