@@ -35,18 +35,14 @@ import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import java.util.concurrent.TimeUnit;
 
@@ -306,6 +302,14 @@ public class ReportServiceImpl implements ReportService {
             highlyRankedProducts.add(productRating);
         }
         kieSession.dispose();
+
+        // Sort the list by average rating in descending order
+        Collections.sort(highlyRankedProducts, new Comparator<FeedbackNADto>() {
+            @Override
+            public int compare(FeedbackNADto o1, FeedbackNADto o2) {
+                return Double.compare(o2.getAverage(), o1.getAverage()); // Descending order
+            }
+        });
         return highlyRankedProducts;
     }
 

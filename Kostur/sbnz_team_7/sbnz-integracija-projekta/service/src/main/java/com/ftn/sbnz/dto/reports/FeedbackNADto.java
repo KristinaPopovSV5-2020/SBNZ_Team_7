@@ -1,11 +1,13 @@
 package com.ftn.sbnz.dto.reports;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ftn.sbnz.util.ObjectIdSerializer;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public class FeedbackNADto {
-
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId productId;
 
     private String name;
