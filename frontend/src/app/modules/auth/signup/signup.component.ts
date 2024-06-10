@@ -6,7 +6,6 @@ import { AuthService } from '../auth.service';
 import { validateRePassword } from './custom-validator/validator';
 import { User } from '../model/user';
 import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
-import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-signup',
