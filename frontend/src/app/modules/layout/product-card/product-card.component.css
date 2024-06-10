@@ -2,9 +2,9 @@
     margin: 20px;
     padding:20px;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.703); /* Nežna roza boja */
+    background-color: rgba(255, 255, 255, 0.703); 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 300px; /* Ograničava maksimalnu širinu kartice */
+    max-width: 350px; 
     min-height: 350px;
     height: 350px;
   }
@@ -14,7 +14,7 @@
   mat-card-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #dc8b99; /* Nežna akcentna boja */
+    color: #dc8b99;
   }
   
   mat-card-subtitle {

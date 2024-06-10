@@ -14,8 +14,8 @@ export class BudgetInputComponent implements OnInit {
 
   ngOnInit() {
     this.budgetForm = this.fb.group({
-      minBudget: ['', Validators.required],
-      maxBudget: ['', Validators.required]
+      minValue: ['', Validators.required],
+      maxValue: ['', Validators.required]
     });
   }
 

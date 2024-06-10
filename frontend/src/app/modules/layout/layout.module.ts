@@ -10,15 +10,15 @@ import { ForwardChaining1Component } from './forward-chaining1/forward-chaining1
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProblemsLifestyleInputComponent } from './problems-lifestyle-input/problems-lifestyle-input.component';
 import { ForwardChaining2Component } from './forward-chaining2/forward-chaining2.component';
-
+import { CategorySelectionComponent } from './category-selection/category-selection.component';
 
 @NgModule({
-  declarations: [ToolbarComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component, ProblemsLifestyleInputComponent, ForwardChaining2Component],
+  declarations: [ToolbarComponent, CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component],
   imports: [
     CommonModule,
     MaterialModule,
     SharedModule,
   ],
-  exports: [ToolbarComponent, UserToolbarComponent, AdminToolbarComponent]
+  exports: [ToolbarComponent, UserToolbarComponent, AdminToolbarComponent, CategorySelectionComponent, BudgetInputComponent, ForwardChaining1Component]
 })
 export class LayoutModule { }

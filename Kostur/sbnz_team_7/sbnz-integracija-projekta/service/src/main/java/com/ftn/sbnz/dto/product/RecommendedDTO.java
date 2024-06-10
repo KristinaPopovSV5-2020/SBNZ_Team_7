@@ -24,6 +24,16 @@ public class RecommendedDTO {
 
     private String reason;
 
+    private List<String> ingredientNames;
+
+    public List<String> getIngredientNames() {
+        return ingredientNames;
+    }
+
+    public void setIngredientNames(List<String> ingredientNames) {
+        this.ingredientNames = ingredientNames;
+    }
+
     public double getScore() {
         return score;
     }
@@ -116,9 +126,10 @@ public class RecommendedDTO {
         this.ingredientIds = ingredientIds;
     }
 
-    public RecommendedDTO() {}
+    public RecommendedDTO() {
+    }
 
-    public RecommendedDTO(Product product, RecommendedProduct recommendedProduct) {
+    public RecommendedDTO(Product product, List<String> ingredientNames, RecommendedProduct recommendedProduct) {
         this.id = product.getId().toString();
         this.path = product.getPath();
         this.price = product.getPrice();
@@ -126,11 +137,7 @@ public class RecommendedDTO {
         this.vegan = product.isVegan();
         this.skinTypes = new ArrayList<>(product.getSkinTypes());
         this.benefits = new ArrayList<>(product.getBenefits());
-        if (product.getIngredientIds() != null) {
-            this.ingredientIds = product.getIngredientIds().stream()
-                    .map(ObjectId::toString)
-                    .collect(Collectors.toList());
-        }
+        this.ingredientNames = ingredientNames;
         this.name = product.getName();
         this.score = recommendedProduct.getScore();
         this.reason = recommendedProduct.getReason();

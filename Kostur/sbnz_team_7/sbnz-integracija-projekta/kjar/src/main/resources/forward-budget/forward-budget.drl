@@ -12,7 +12,7 @@ global java.util.List recommendedProducts;
 rule "Recommend products based on skin type"
     salience 100
     when
-        $user : User($skinType : skinType, $allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
+        $user : User($skinType : skinType)
         $product : Product(skinTypes contains $skinType, $ingredientIds : ingredientIds != null)
     then
         System.out.println("1");
@@ -40,6 +40,8 @@ rule "Filter out products outside of budget"
         $rp : RecommendedProduct($product : getProduct())
         eval($product.getPrice() < $minValue || $product.getPrice() > $maxValue)
     then
+        System.out.println($product.getPrice());
+        System.out.println($minValue + " " + $maxValue);
         System.out.println("3");
         retract($rp);
 end
