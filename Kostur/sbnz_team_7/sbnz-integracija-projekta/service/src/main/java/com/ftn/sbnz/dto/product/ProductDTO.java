@@ -30,6 +30,16 @@ public class ProductDTO {
     private List<String> ingredientIds;
     private List<String> ingredientNames;
 
+    private ProductSearchDTO productSearchDTO;
+
+    public ProductSearchDTO getProductSearchDTO() {
+        return productSearchDTO;
+    }
+
+    public void setProductSearchDTO(ProductSearchDTO productSearchDTO) {
+        this.productSearchDTO = productSearchDTO;
+    }
+
     public String getId() {
         return id;
     }

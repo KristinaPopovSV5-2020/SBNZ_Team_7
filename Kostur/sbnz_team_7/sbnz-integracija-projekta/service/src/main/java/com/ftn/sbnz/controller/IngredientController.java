@@ -37,10 +37,18 @@ public class IngredientController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+
     @GetMapping("/allergens")
-    public ResponseEntity<List<Ingredient>> getAllergens(){
+    public ResponseEntity<List<Ingredient>> getAllergens() {
         List<Ingredient> allergens = ingredientService.getAllergens();
         return ResponseEntity.ok(allergens);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<IngredientDTO>> getIngredients() {
+        List<IngredientDTO> ingredients = ingredientService.getAll();
+        return ResponseEntity.ok(ingredients);
+    }
+
 
 }

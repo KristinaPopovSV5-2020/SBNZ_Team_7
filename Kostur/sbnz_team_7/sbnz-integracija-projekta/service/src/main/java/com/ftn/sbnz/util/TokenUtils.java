@@ -1,25 +1,23 @@
 package com.ftn.sbnz.util;
 
 
+import com.ftn.sbnz.model.models.user.Admin;
+import com.ftn.sbnz.model.models.user.Role;
+import com.ftn.sbnz.model.models.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.ftn.sbnz.model.models.user.Role;
-import com.ftn.sbnz.model.models.user.User;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class TokenUtils {
@@ -61,9 +59,9 @@ public class TokenUtils {
      * @param roles
      * @return JWT token
      */
-    public String generateToken(ObjectId id,String username, List<Role> roles) {
+    public String generateToken(ObjectId id, String username, List<Role> roles) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id",id);
+        claims.put("id", id);
         claims.put("sub", username);
         claims.put("role", roles);
         return Jwts.builder()
@@ -80,6 +78,7 @@ public class TokenUtils {
 
     /**
      * Funkcija za utvrđivanje tipa uređaja za koji se JWT kreira.
+     *
      * @return Tip uređaja.
      */
     private String generateAudience() {
@@ -133,6 +132,7 @@ public class TokenUtils {
 
     /**
      * Funkcija za preuzimanje vlasnika tokena (korisničko ime).
+     *
      * @param token JWT token.
      * @return Korisničko ime iz tokena ili null ukoliko ne postoji.
      */
@@ -153,6 +153,7 @@ public class TokenUtils {
 
     /**
      * Funkcija za preuzimanje datuma kreiranja tokena.
+     *
      * @param token JWT token.
      * @return Datum kada je token kreiran.
      */
@@ -239,25 +240,37 @@ public class TokenUtils {
     /**
      * Funkcija za validaciju JWT tokena.
      *
-     * @param token JWT token.
+     * @param token       JWT token.
      * @param userDetails Informacije o korisniku koji je vlasnik JWT tokena.
      * @return Informacija da li je token validan ili ne.
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
-        User user = (User) userDetails;
-        final String username = getUsernameFromToken(token);
+        String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
 
         // Token je validan kada:
-        return (username != null // korisnicko ime nije null
-                && username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
-                && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+        boolean isValid = false;
+
+        if (userDetails instanceof User) {
+            User user = (User) userDetails;
+            isValid = (username != null // korisnicko ime nije null
+                    && username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickim imenom koje pise u bazi
+                    && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+        } else if (userDetails instanceof Admin) {
+            Admin admin = (Admin) userDetails;
+            isValid = (username != null // korisnicko ime nije null
+                    && username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickim imenom koje pise u bazi
+                    && !isCreatedBeforeLastPasswordReset(created, admin.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+        }
+
+        return isValid;
     }
+
 
     /**
      * Funkcija proverava da li je lozinka korisnika izmenjena nakon izdavanja tokena.
      *
-     * @param created Datum kreiranja tokena.
+     * @param created           Datum kreiranja tokena.
      * @param lastPasswordReset Datum poslednje izmene lozinke.
      * @return Informacija da li je token kreiran pre poslednje izmene lozinke ili ne.
      */
@@ -280,7 +293,6 @@ public class TokenUtils {
      * Funkcija za preuzimanje sadržaja AUTH_HEADER-a iz zahteva.
      *
      * @param request HTTP zahtev.
-     *
      * @return Sadrzaj iz AUTH_HEADER-a.
      */
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
