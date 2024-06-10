@@ -14,7 +14,7 @@ export class HomePageComponent {
     if (option === 'skinTypeBudget') {
       this.router.navigate(['/budget-input']);
     } else if (option === 'skinProblemsLifestyle') {
-      this.router.navigate(['/forward-chaining-problems']);
+      this.router.navigate(['/forward-chaining-problems-input']);
     } else if (option === 'specificCriteria') {
       this.router.navigate(['/backward-chaining']);
     }
