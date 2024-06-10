@@ -21,5 +21,11 @@ public class BudgetDTO {
         this.maxValue = maxValue;
     }
 
+    public BudgetDTO() {
+    }
 
+    public BudgetDTO(double minValue, double maxValue) {
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
 }

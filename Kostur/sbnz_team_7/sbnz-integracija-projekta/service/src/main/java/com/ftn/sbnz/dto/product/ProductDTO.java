@@ -1,8 +1,5 @@
 package com.ftn.sbnz.dto.product;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ftn.sbnz.model.ObjectIdSerializer;
-import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinBenefit;
 import com.ftn.sbnz.model.models.enums.SkinType;
 import com.ftn.sbnz.model.models.products.Product;
@@ -31,10 +28,18 @@ public class ProductDTO {
     }
 
     private List<String> ingredientIds;
-
+    private List<String> ingredientNames;
 
     public String getId() {
         return id;
+    }
+
+    public List<String> getIngredientNames() {
+        return ingredientNames;
+    }
+
+    public void setIngredientNames(List<String> ingredientNames) {
+        this.ingredientNames = ingredientNames;
     }
 
     public void setId(String id) {
@@ -98,7 +103,8 @@ public class ProductDTO {
         this.ingredientIds = ingredientIds;
     }
 
-    public ProductDTO() {}
+    public ProductDTO() {
+    }
 
     public ProductDTO(Product product) {
         this.id = product.getId().toString();

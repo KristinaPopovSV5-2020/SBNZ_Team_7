@@ -16,7 +16,7 @@ export class HomePageComponent {
     } else if (option === 'skinProblemsLifestyle') {
       this.router.navigate(['/forward-chaining-problems']);
     } else if (option === 'specificCriteria') {
-      this.router.navigate(['/backward-chaining']);
+      this.router.navigate(['/category-selection']);
     }
   }
 }

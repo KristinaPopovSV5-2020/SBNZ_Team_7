@@ -4,7 +4,7 @@
     <mat-card-content>
       <div class="product-details">
         <div class="product-detail">
-          <strong>Price:</strong> {{ product.price | currency }} din 
+          <strong>Price:</strong> {{ product.price }} din 
         </div>
         <div class="product-detail">
           <strong>Instruction:</strong> {{ product.instruction }}
@@ -19,7 +19,7 @@
           <strong>Benefits:</strong> {{ product.benefits.join(', ') }}
         </div>
         <div class="product-detail">
-          <strong>Ingredients:</strong> {{ product.ingredientIds.join(', ') }}
+          <strong>Ingredients:</strong> {{ product.ingredientNames.join(', ') }}
         </div>
       </div>
     </mat-card-content>

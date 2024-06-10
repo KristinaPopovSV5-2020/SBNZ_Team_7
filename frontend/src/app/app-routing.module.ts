@@ -7,6 +7,7 @@ import { BudgetInputComponent } from './modules/layout/budget-input/budget-input
 import { HomePageComponent } from './modules/pages/home-page/home-page.component';
 import {StartpageComponent} from "./modules/pages/startpage/startpage.component";
 import { AdminHomeComponent } from './modules/pages/admin-home/admin-home.component';
+import { CategorySelectionComponent } from './modules/layout/category-selection/category-selection.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
   { path: 'budget-input', component: BudgetInputComponent },
-  { path: 'recommendation-process', component: ForwardChaining1Component }
+  { path: 'recommendation-process', component: ForwardChaining1Component },
+  {path: 'category-selection', component: CategorySelectionComponent}
 ];
 
 @NgModule({
