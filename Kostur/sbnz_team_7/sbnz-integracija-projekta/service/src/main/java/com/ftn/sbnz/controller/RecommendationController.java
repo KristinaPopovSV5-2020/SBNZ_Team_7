@@ -2,11 +2,16 @@ package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.BudgetDTO;
 import com.ftn.sbnz.dto.product.RecommendedDTO;
+import com.ftn.sbnz.exception.NotFoundException;
+import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.service.RecommendationService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +39,18 @@ public class RecommendationController {
     }
 
 
-    // TODO: ovdje cemo vjr izvlaciti ulogovanog user-a
     @PostMapping("/products/problems-habits")
-    public ResponseEntity<List<RecommendedDTO>> recommendProductsBasedOnSkinProblemsAndHabits(@RequestParam String userId, @RequestBody Map<String, List<String>> requestBody) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<RecommendedDTO>> recommendProductsBasedOnSkinProblemsAndHabits(@RequestBody Map<String, List<String>> requestBody) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        if (user == null) {
+            throw new NotFoundException("User does not exist!");
+        }
+
         List<String> skinProblems = requestBody.get("skinProblems");
         List<String> lifestyleHabits = requestBody.get("lifestyleHabits");
-        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsBasedOnProblemsAndHabitsForUser(new ObjectId(userId), skinProblems, lifestyleHabits);
+        List<RecommendedDTO> recommendedProducts = recommendationService.recommendProductsBasedOnProblemsAndHabitsForUser(user.getId(), skinProblems, lifestyleHabits);
         return ResponseEntity.ok(recommendedProducts);
     }
 }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -106,5 +107,16 @@ public class UserServiceImpl implements UserDetailsService {
         roles.add(role);
         admin.setRoles(roles);
         return adminRepository.save(admin);
+    }
+
+    public List<String> getUserAllergens(User user) {
+        List<Ingredient> allergens = user.getAllergens();
+        if (allergens == null) {
+            return List.of();
+        }
+
+        return allergens.stream()
+                .map(Ingredient::getName)
+                .collect(Collectors.toList());
     }
 }
