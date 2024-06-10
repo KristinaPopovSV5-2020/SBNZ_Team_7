@@ -12,6 +12,8 @@ import { RecommendationService } from '../../../service/recommendation.service';
 export class CategorySelectionComponent {
   categoryForm: FormGroup;
   products: ProductDTO[] = []; 
+  results:boolean = false;
+  selectedCategories: ProductSearchDTO | null = null;
   constructor(private fb: FormBuilder, private recommendationService:RecommendationService, private router: Router) {
     this.categoryForm = this.fb.group({
       typeCategory: [''],
@@ -41,11 +43,17 @@ export class CategorySelectionComponent {
   }
 
   onSubmit() {
-    const selectedCategories: ProductSearchDTO = this.categoryForm.value;
-    this.recommendationService.searchProducts(selectedCategories).subscribe(
+    this.results = true;
+    this.selectedCategories =  this.categoryForm.value;
+    this.recommendationService.searchProducts(this.selectedCategories!).subscribe(
       products => {
-        this.products = products;
-       //  ili mozda ovdje da navigiram na stranicu sa proizvodima, vidicemo :)
+  
+        this.products = products.map(product => ({
+          ...product,
+          skinTypes: product.skinTypes || [],
+          benefits: product.benefits || [],
+          ingredientNames: product.ingredientNames || []
+        }));
       },
       error => {
         console.error('Error fetching products:', error);

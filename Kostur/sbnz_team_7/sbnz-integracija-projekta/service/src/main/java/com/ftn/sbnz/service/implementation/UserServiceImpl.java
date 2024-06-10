@@ -87,6 +87,11 @@ public class UserServiceImpl implements UserDetailsService {
 
     }
 
+
+    public String getUserSkinType(User user) {
+        return user.getSkinType().toString();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails user = userRepository.findByUsername(username);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -35,12 +36,19 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public List<Ingredient> getAllergens() {
         List<Ingredient> allergens = new ArrayList<>();
-        for (Ingredient ingredient: ingredientRepository.findAll() ){
-            if (ingredient.isAllergen()){
+        for (Ingredient ingredient : ingredientRepository.findAll()) {
+            if (ingredient.isAllergen()) {
                 allergens.add(ingredient);
             }
         }
         return allergens;
+    }
+
+    @Override
+    public List<IngredientDTO> getAll() {
+        return ingredientRepository.findAll().stream()
+                .map(IngredientDTO::new)
+                .collect(Collectors.toList());
     }
 
 }

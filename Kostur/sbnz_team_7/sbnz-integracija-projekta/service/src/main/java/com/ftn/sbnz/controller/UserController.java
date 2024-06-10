@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping(value = "/api/user/allergens")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<String>> getUserAllergens(){
+    public ResponseEntity<List<String>> getUserAllergens() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         if (user == null) {
@@ -47,6 +47,19 @@ public class UserController {
         return new ResponseEntity<>(allergens, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/api/user/skinType")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> getUserSkinType() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        if (user == null) {
+            throw new NotFoundException("User does not exist!");
+        }
+
+        String skinType = userService.getUserSkinType(user);
+        return new ResponseEntity<>(skinType, HttpStatus.OK);
+    }
 
 
 }

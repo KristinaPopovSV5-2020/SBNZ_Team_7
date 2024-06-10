@@ -1,25 +1,22 @@
 package com.ftn.sbnz.model.models.user;
 
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Document(collection = "admin")
-public class Admin implements UserDetails  {
+public class Admin extends BaseUser {
 
     @MongoId
-	private ObjectId id;
+    private ObjectId id;
 
     private String username;
     private String password;
@@ -28,7 +25,7 @@ public class Admin implements UserDetails  {
     private Timestamp lastPasswordResetDate;
 
 
-    public Admin(){
+    public Admin() {
         super();
     }
 
@@ -40,7 +37,6 @@ public class Admin implements UserDetails  {
         this.roles = roles;
     }
 
-    
 
     @JsonIgnore
     @Override
@@ -61,7 +57,9 @@ public class Admin implements UserDetails  {
     }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return true;
+    }
 
     public String getUsername() {
         return this.username;
@@ -117,5 +115,4 @@ public class Admin implements UserDetails  {
     }
 
 
-    
 }

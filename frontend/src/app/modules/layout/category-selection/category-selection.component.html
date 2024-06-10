@@ -1,5 +1,5 @@
 <div class="category-selection-container">
-    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!results">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Type Category</mat-label>
         <mat-select formControlName="typeCategory">
@@ -38,24 +38,16 @@
     </form>
 
 
-    <div *ngIf="products.length > 0" class="results-container">
-        <h2>Search Results</h2>
-        <div *ngFor="let product of products" class="product-card">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>{{ product.name }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <p><strong>Type:</strong> {{ product.path }}</p>
-              <p><strong>Price:</strong> {{ product.price }} din</p>
-              <p><strong>Instruction:</strong> {{ product.instruction }}</p>
-              <p><strong>Vegan:</strong> {{ product.vegan ? 'Yes' : 'No' }}</p>
-              <p><strong>Skin Types:</strong> {{ product.skinTypes.join(', ') }}</p>
-              <p><strong>Benefits:</strong> {{ product.benefits.join(', ') }}</p>
-              <p><strong>Ingredients:</strong> {{ product.ingredientNames.join(', ') }}</p>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
+    <div class="results-container" *ngIf="results">
+        <h2 id="title">Results for:
+            {{ selectedCategories?.typeCategory ? selectedCategories!.typeCategory : '' }}
+            {{ selectedCategories?.ageCategory ? ' / ' + selectedCategories!.ageCategory : '' }}
+            {{ selectedCategories?.usageCategory ? ' / ' + selectedCategories!.usageCategory : '' }}
+          </h2>
+        <div class="product-list">
+            <div *ngFor="let product of products">
+              <app-product-card class="product-card" [product]="product"></app-product-card>
+            </div>
+          </div>
   </div>
   

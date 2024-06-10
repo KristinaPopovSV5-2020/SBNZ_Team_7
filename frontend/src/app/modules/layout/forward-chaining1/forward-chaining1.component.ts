@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductDTO } from '../../../dto/Product';
 import { RecommendationService } from '../../../service/recommendation.service';
 import { BudgetDTO } from '../../../dto/Budget';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-forward-chaining1',
@@ -14,11 +15,21 @@ export class ForwardChaining1Component implements OnInit {
   recommendations: ProductDTO[] = [];
   errorMessage: string | null = null;
   budget: BudgetDTO | null = null;
-
-  constructor(private recommendationService:RecommendationService){}
+  allergens: string[] = [];
+  skinType:string = '';
+  constructor(private recommendationService:RecommendationService, private userService: UserService){}
   ngOnInit() {
     const userId = '6651dc2b4758c54a8ec3796e';
     const budgetData = localStorage.getItem('budgetData');
+    this.userService.getUserAllergens().subscribe((allergens) =>{
+      this.allergens = allergens;
+      });
+      console.log(this.allergens);
+    this.userService.getUserSkinType().subscribe((skinType) =>{
+        this.skinType = skinType;
+        });
+        console.log(this.allergens);
+      this
     if (budgetData) {
       this.budget = JSON.parse(budgetData);
       this.simulateProcess(userId, this.budget);
@@ -26,6 +37,9 @@ export class ForwardChaining1Component implements OnInit {
       this.errorMessage = 'Budget data is missing!';
       this.loading = false;
     }
+
+
+
   }
 
 

@@ -19,6 +19,18 @@ export class ToolbarComponent implements OnInit{
         this.role = result;
       });
     }
+
+    navigateHome() {
+      if (this.role == "User") {
+        this.router.navigate(['/home']);
+      }
+      else if (this.role == "Admin"){
+        this.router.navigate(['/admin-page'])
+      
+      } else {
+        this.router.navigate(['/home-page']);
+      }
+    }
   
     
   }

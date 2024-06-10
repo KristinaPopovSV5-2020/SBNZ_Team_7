@@ -29,8 +29,12 @@ export class RecommendationService {
 
   searchProducts(searchDTO: ProductSearchDTO): Observable<ProductDTO[]> {
     console.log(searchDTO);
+
+
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const url = `${this.apiUrl}products/backward`;
+    console.log(url);
+  
     return this.http.post<ProductDTO[]>(url, searchDTO, { headers }).pipe(
       catchError(this.handleError)
     );

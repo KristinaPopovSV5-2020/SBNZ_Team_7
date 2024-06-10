@@ -96,6 +96,10 @@
     margin: 0;
     color: var(--text-color);
   }
+
+  button{
+    border:none
+  }
   
   @media (max-width: 768px) {
     .info-box {
