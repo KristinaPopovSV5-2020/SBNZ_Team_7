@@ -16,6 +16,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { HttpClientModule } from '@angular/common/http';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { ReportModule } from './modules/report/report.module';
 
 
 
@@ -36,7 +37,8 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     BrowserAnimationsModule,
     PagesModule,
     FeedbackModule,
-    HttpClientModule
+    HttpClientModule,
+    ReportModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,

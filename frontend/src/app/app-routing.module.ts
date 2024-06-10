@@ -13,6 +13,7 @@ import { CategorySelectionComponent } from './modules/layout/category-selection/
 import { PurchasesHistoryComponent } from './modules/feedback/purchases-history/purchases-history.component';
 import { LeaveFeedbackComponent } from './modules/feedback/leave-feedback/leave-feedback.component';
 import { CreateProductComponent } from './modules/layout/create-product/create-product.component';
+import { ReportMainPageComponent } from './modules/report/report-main-page/report-main-page.component';
 
 
 const routes: Routes = [
@@ -29,7 +30,8 @@ const routes: Routes = [
   {path: 'category-selection', component: CategorySelectionComponent},
   {path:'purchases-history', component: PurchasesHistoryComponent},
   {path:'leave-feedback', component: LeaveFeedbackComponent},
-  {path: 'create-product', component:CreateProductComponent}
+  {path: 'create-product', component:CreateProductComponent},
+  {path: 'report-management', component: ReportMainPageComponent}
 ];
 
 @NgModule({
