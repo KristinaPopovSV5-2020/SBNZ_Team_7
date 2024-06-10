@@ -30,6 +30,16 @@ public class ProductDTO {
     private List<String> ingredientIds;
     private List<String> ingredientNames;
 
+    private ProductSearchDTO productSearchDTO;
+
+    public ProductSearchDTO getProductSearchDTO() {
+        return productSearchDTO;
+    }
+
+    public void setProductSearchDTO(ProductSearchDTO productSearchDTO) {
+        this.productSearchDTO = productSearchDTO;
+    }
+
     public String getId() {
         return id;
     }
@@ -121,4 +131,17 @@ public class ProductDTO {
         }
         this.name = product.getName();
     }
+
+    public ProductDTO(Product product, List<String> ingredientNames) {
+        this.id = product.getId().toString();
+        this.path = product.getPath();
+        this.price = product.getPrice();
+        this.instruction = product.getInstruction();
+        this.vegan = product.isVegan();
+        this.skinTypes = product.getSkinTypes();
+        this.benefits = product.getBenefits();
+        this.name = product.getName();
+        this.ingredientNames = ingredientNames;
+    }
+
 }

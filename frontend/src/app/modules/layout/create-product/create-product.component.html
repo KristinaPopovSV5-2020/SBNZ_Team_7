@@ -1,0 +1,74 @@
+<div class="page">
+    <div class="product-form-container">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" type="text" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Price</mat-label>
+            <input matInput formControlName="price" type="number" required>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Skin Types</mat-label>
+            <mat-select formControlName="skinTypes" multiple>
+                <mat-option *ngFor="let type of skinTypes" [value]="type">{{ type | titlecase }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Benefits</mat-label>
+            <mat-select formControlName="benefits" multiple>
+                <mat-option *ngFor="let benefit of benefits" [value]="benefit">{{ benefit.replace('_', ' ') | titlecase }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-checkbox formControlName="vegan">Vegan</mat-checkbox>
+        </div>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Ingredients</mat-label>
+                <mat-select formControlName="ingredientIds" multiple>
+                  <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.id">{{ ingredient.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        <div formGroupName="productSearchDTO">
+            <mat-form-field appearance="outline">
+              <mat-label>Type Category</mat-label>
+              <mat-select formControlName="typeCategory" required>
+                <mat-option *ngFor="let type of typeCategories" [value]="type">{{ type }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngIf="productForm.get('productSearchDTO.typeCategory')?.value">
+              <mat-form-field appearance="outline">
+                <mat-label>Age Category</mat-label>
+                <mat-select formControlName="ageCategory">
+                  <mat-option *ngFor="let age of ageCategories" [value]="age">{{ age }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="productForm.get('productSearchDTO.ageCategory')?.value">
+              <mat-form-field appearance="outline">
+                <mat-label>Usage Category</mat-label>
+                <mat-select formControlName="usageCategory">
+                  <mat-option *ngFor="let usage of usageCategories" [value]="usage">{{ usage }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          
+        </div>
+        <mat-form-field appearance="outline">
+            <mat-label>Instruction</mat-label>
+            <textarea matInput formControlName="instruction" required></textarea>
+          </mat-form-field>
+        <div>
+          <button mat-button click="onSubmit()" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

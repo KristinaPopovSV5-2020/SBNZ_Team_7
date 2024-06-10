@@ -3,9 +3,11 @@ package com.ftn.sbnz.service.implementation;
 import com.ftn.sbnz.dto.product.ProductDTO;
 import com.ftn.sbnz.dto.product.ProductSearchDTO;
 import com.ftn.sbnz.facts.CategoryFact;
+import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.products.Category;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.repository.CategoryRepository;
+import com.ftn.sbnz.repository.IngredientRepository;
 import com.ftn.sbnz.service.CategoryService;
 import com.ftn.sbnz.service.ProductService;
 import org.bson.types.ObjectId;
@@ -26,14 +28,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final KieContainer kieContainer;
 
+    private final IngredientRepository ingredientRepository;
 
     private final ProductService productService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductService productService, KieContainer kieContainer) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductService productService, KieContainer kieContainer, IngredientRepository ingredientRepository) {
         this.categoryRepository = categoryRepository;
         this.kieContainer = kieContainer;
         this.productService = productService;
+        this.ingredientRepository = ingredientRepository;
     }
 
 
@@ -46,21 +50,24 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
+
     @Override
     public Category findById(ObjectId id) {
         return categoryRepository.findById(id).orElse(null);
     }
+
     @Override
     public void deleteById(ObjectId id) {
         categoryRepository.deleteById(id);
     }
 
     @Override
-    public void deleteAll(){
+    public void deleteAll() {
         categoryRepository.deleteAll();
     }
+
     @Override
-    public List<ProductDTO> searchBackward(ProductSearchDTO productSearchDTO){
+    public List<ProductDTO> searchBackward(ProductSearchDTO productSearchDTO) {
         KieSession kieSession = kieContainer.newKieSession("bwKsession");
 
         List<Product> foundProducts = new ArrayList<>();
@@ -84,11 +91,15 @@ public class CategoryServiceImpl implements CategoryService {
 
         kieSession.dispose();
 
-
         return foundProducts.stream()
-                .map(ProductDTO::new)
+                .map(product -> {
+                    List<String> ingredientNames = product.getIngredientIds().stream()
+                            .map(id -> ingredientRepository.findById(id).orElseThrow(() -> new RuntimeException("Ingredient not found")))
+                            .map(Ingredient::getName)
+                            .collect(Collectors.toList());
+                    return new ProductDTO(product, ingredientNames);
+                })
                 .collect(Collectors.toList());
-
 
     }
 

@@ -9,4 +9,6 @@ public interface IngredientService {
     Ingredient save(IngredientDTO ingredientDTO);
 
     List<Ingredient> getAllergens();
+
+    List<IngredientDTO> getAll();
 }

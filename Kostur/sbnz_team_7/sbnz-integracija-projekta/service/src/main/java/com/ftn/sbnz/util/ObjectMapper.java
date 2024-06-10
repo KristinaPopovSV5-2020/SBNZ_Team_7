@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class ObjectMapper {
 
-    public static Product productToEntity(ProductDTO productDTO, IngredientRepository ingredientRepository) {
+    public static Product productToEntity(ProductDTO productDTO, IngredientRepository ingredientRepository, CategoryInfo categoryInfo) {
         if (productDTO == null) {
             return null;
         }
@@ -34,6 +34,8 @@ public class ObjectMapper {
         }
         product.setName(productDTO.getName());
         product.setPath(productDTO.getPath());
+        product.setCategoryId(categoryInfo.getLowestCategoryId());
+        product.setPath(categoryInfo.getPath());
         return product;
     }
 
