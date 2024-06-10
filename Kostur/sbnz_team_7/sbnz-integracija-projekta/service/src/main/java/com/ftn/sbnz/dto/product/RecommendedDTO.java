@@ -19,7 +19,7 @@ public class RecommendedDTO {
     private List<SkinType> skinTypes;
     private List<SkinBenefit> benefits;
     private String name;
-
+    private boolean popular;
     private double score;
 
     private String reason;
@@ -129,6 +129,14 @@ public class RecommendedDTO {
     public RecommendedDTO() {
     }
 
+    public boolean isPopular() {
+        return popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
+
     public RecommendedDTO(Product product, List<String> ingredientNames, RecommendedProduct recommendedProduct) {
         this.id = product.getId().toString();
         this.path = product.getPath();
@@ -138,12 +146,13 @@ public class RecommendedDTO {
         this.skinTypes = new ArrayList<>(product.getSkinTypes());
         this.benefits = new ArrayList<>(product.getBenefits());
         this.ingredientNames = ingredientNames;
+        this.popular = product.isPopular();
         this.name = product.getName();
         this.score = recommendedProduct.getScore();
         this.reason = recommendedProduct.getReason();
     }
 
-    public RecommendedDTO(Product product, Double score, String reason) {
+    public RecommendedDTO(Product product, Double score, String reason,List<String> ingredientNames) {
         this.id = product.getId().toString();
         this.path = product.getPath();
         this.price = product.getPrice();
@@ -156,6 +165,8 @@ public class RecommendedDTO {
                     .map(ObjectId::toString)
                     .collect(Collectors.toList());
         }
+        this.ingredientNames = ingredientNames;
+        this.popular = product.isPopular();
         this.name = product.getName();
         this.score = score;
         this.reason = reason;

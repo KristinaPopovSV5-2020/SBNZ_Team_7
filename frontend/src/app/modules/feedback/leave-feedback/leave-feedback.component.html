@@ -1,0 +1,35 @@
+<div class="feedback-container">
+    <form [formGroup]="ratingForm">
+        <div  *ngIf="product">
+            <div class="product-name">
+                <h2>{{ product.name }}</h2>
+              </div>
+              <div class="product-details">
+                <p>Date: {{ product.date | date: 'medium' }}</p>
+              <div class="product-benefits">
+                <p>Benefits:</p>
+                <ul>
+                  <li *ngFor="let benefit of product.benefits">{{ formatEnumString(benefit) }}</li>
+                </ul>
+              </div>
+              <div class="product-price">
+                <p>Price: {{ product.price }} din</p>
+              </div>
+              </div>
+          </div>
+        <label for="rating" class="rating-label">Select a rating:</label>
+        <mat-button-toggle-group
+          formControlName="rating"
+          class="rating-group"
+          aria-label="Rating"
+          [value]="ratingForm.get('rating')?.value">
+          <mat-button-toggle class="rating-value" value="1">1</mat-button-toggle>
+          <mat-button-toggle class="rating-value" value="2">2</mat-button-toggle>
+          <mat-button-toggle class="rating-value" value="3">3</mat-button-toggle>
+          <mat-button-toggle class="rating-value" value="4">4</mat-button-toggle>
+          <mat-button-toggle class="rating-value" value="5">5</mat-button-toggle>
+        </mat-button-toggle-group>
+        <mat-error *ngIf="hasError">{{messageError}}</mat-error>
+        <button class="button" style="margin-top: 10px;" mat-button (click)="confirm()">Leave Feedback</button>
+      </form>
+</div>

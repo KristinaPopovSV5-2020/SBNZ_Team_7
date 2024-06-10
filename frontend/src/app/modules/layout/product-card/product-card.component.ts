@@ -14,4 +14,10 @@ export class ProductCardComponent {
     // Implementacija logike za kupovinu proizvoda
     // alert(`Product ${product.name} has been added to your cart.`);
   }
+
+
+
+  formatEnumString(enumString: string): string {
+    return enumString.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+  }
 }

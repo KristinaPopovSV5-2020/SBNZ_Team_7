@@ -9,7 +9,7 @@ export interface ProductDTO {
     benefits: string[];
     ingredientIds: string[];
     ingredientNames: string[];
-    productSearchDTO: ProductSearchDTO;
+    popular: boolean;
   }
   
 

@@ -30,8 +30,8 @@ export class ForwardChaining2Component {
     this.problemsLifestyleDTO = problemsLifestyleDTO;
 
     if (problemsLifestyleDTO) {
-      this.skinProblems = problemsLifestyleDTO.skinProblems || [];
-      this.lifestyleHabits = problemsLifestyleDTO.lifestyleHabits || [];
+      this.skinProblems = (problemsLifestyleDTO.skinProblems || []).map((problem: string) => this.formatEnumString(problem));
+      this.lifestyleHabits = (problemsLifestyleDTO.lifestyleHabits || []).map((habit: string) => this.formatEnumString(habit));
       this.userService.getUserAllergens().subscribe((allergens) =>{
        this.allergens = allergens;
        });
@@ -75,6 +75,10 @@ export class ForwardChaining2Component {
       }, 
 
     })
+  }
+
+  private formatEnumString(enumString: string): string {
+    return enumString.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   }
 
 }

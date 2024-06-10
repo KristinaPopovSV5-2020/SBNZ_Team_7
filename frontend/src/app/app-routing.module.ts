@@ -10,6 +10,8 @@ import { AdminHomeComponent } from './modules/pages/admin-home/admin-home.compon
 import { ProblemsLifestyleInputComponent } from './modules/layout/problems-lifestyle-input/problems-lifestyle-input.component';
 import { ForwardChaining2Component } from './modules/layout/forward-chaining2/forward-chaining2.component';
 import { CategorySelectionComponent } from './modules/layout/category-selection/category-selection.component';
+import { PurchasesHistoryComponent } from './modules/feedback/purchases-history/purchases-history.component';
+import { LeaveFeedbackComponent } from './modules/feedback/leave-feedback/leave-feedback.component';
 import { CreateProductComponent } from './modules/layout/create-product/create-product.component';
 
 
@@ -25,6 +27,8 @@ const routes: Routes = [
   {path:'recommendation-process-second', component: ForwardChaining2Component},
   {path:'forward-chaining-problems-input', component: ProblemsLifestyleInputComponent},
   {path: 'category-selection', component: CategorySelectionComponent},
+  {path:'purchases-history', component: PurchasesHistoryComponent},
+  {path:'leave-feedback', component: LeaveFeedbackComponent},
   {path: 'create-product', component:CreateProductComponent}
 ];
 
