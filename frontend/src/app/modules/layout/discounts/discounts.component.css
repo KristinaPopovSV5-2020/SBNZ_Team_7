@@ -1,46 +1,39 @@
-.discount-table-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width:60%;
-    margin: 0 auto;
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
+.page {
+  padding: 150px;
+  width: 800px;
+  margin: 0px auto;
+}
 
-  
-  mat-form-field {
-    width: 300px;
-  }
-  
-  table {
-    width: 60%;
-  }
-  
-  .mat-elevation-z8 {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
+.discount-table-container, .gift-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  margin-bottom: 20px;
+}
 
-  .page{
-    padding:150px;
-  }
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
 
+table {
+  width: 90%;
+}
 
-  .used-column-header {
-    width: 50px; 
-  }
+.mat-elevation-z8 {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-  .used-column-cell {
-    width: 50px; 
-  }
-  
+.used-column-header {
+  width: 150px; /* Adjust this width as needed */
+}
+
+.used-column-cell {
+  width: 150px; /* Adjust this width as needed */
+}

@@ -8,3 +8,10 @@ export interface UserGiftReportDTO{
     giftCount:number;
     giftNames:string[]
 }
+
+
+export interface GiftDTO{
+    giftName:string,
+    timeGiven:string,
+    reason:string
+}

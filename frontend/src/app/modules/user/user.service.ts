@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DiscountDTO } from '../../dto/Discount';
 import { UserReportDTO } from '../../dto/User';
+import { GiftDTO } from '../../dto/Gift';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,11 @@ export class UserService {
 
   getUserDiscounts(): Observable<DiscountDTO[]> {
     return this.http.get<DiscountDTO[]>(environment.apiHost + 'api/user/discounts');
+  }
+
+
+  getUserGifts(): Observable<GiftDTO[]> {
+    return this.http.get<GiftDTO[]>(environment.apiHost + 'api/user/gifts');
   }
 
 
