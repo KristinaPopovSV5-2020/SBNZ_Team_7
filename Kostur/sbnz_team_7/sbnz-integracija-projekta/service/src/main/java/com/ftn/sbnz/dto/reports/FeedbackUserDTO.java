@@ -1,10 +1,12 @@
 package com.ftn.sbnz.dto.reports;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ftn.sbnz.model.ObjectIdSerializer;
 import com.ftn.sbnz.model.models.Feedback;
 import org.bson.types.ObjectId;
 
 public class FeedbackUserDTO {
-
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId userId;
 
     private String email;

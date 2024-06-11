@@ -2,6 +2,7 @@ package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.user.AdminDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
+import com.ftn.sbnz.dto.user.UserReportDTO;
 import com.ftn.sbnz.model.models.Gift;
 import com.ftn.sbnz.model.models.Ingredient;
 import com.ftn.sbnz.model.models.enums.SkinType;
@@ -123,5 +124,14 @@ public class UserServiceImpl implements UserDetailsService {
         return allergens.stream()
                 .map(Ingredient::getName)
                 .collect(Collectors.toList());
+    }
+
+    public List<UserReportDTO> getAllUsers(){
+        List<UserReportDTO> userReportDTOS = new ArrayList<>();
+        for(User user : userRepository.findAll()){
+            UserReportDTO userReportDTO = new UserReportDTO(user);
+            userReportDTOS.add(userReportDTO);
+        }
+        return  userReportDTOS;
     }
 }
