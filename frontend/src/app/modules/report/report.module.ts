@@ -10,11 +10,12 @@ import { FeedbackReportsThresholdComponent } from './feedback-reports-threshold/
 import { FeedbackReportsWmyComponent } from './feedback-reports-wmy/feedback-reports-wmy.component';
 import { PurchaseReportsComponent } from './purchase-reports/purchase-reports.component';
 import { ReportUserShoppingComponent } from './report-user-shopping/report-user-shopping.component';
+import { ReportDiscountUsageComponent } from './report-discount-usage/report-discount-usage.component';
 
 
 
 @NgModule({
-  declarations: [ReportUserShoppingComponent ,PurchaseReportsComponent,ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
+  declarations: [ReportDiscountUsageComponent, ReportUserShoppingComponent ,PurchaseReportsComponent,ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
     FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent
   ],
   imports: [
@@ -22,6 +23,6 @@ import { ReportUserShoppingComponent } from './report-user-shopping/report-user-
     MaterialModule,
     SharedModule
   ],
-  exports:[ReportFeedbackPageComponent,ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
+  exports:[ReportFeedbackPageComponent, ReportDiscountUsageComponent, ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
 })
 export class ReportModule { }

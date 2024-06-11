@@ -15,8 +15,8 @@ export class PurchaseReportsComponent {
   navigateToReport(option: string) {
     if (option === 'user-shopping-report') {
       this.router.navigate(['/user-shopping-report']);
-    } else if (option === 'feedbackCountLast30Days') {
-      this.router.navigate(['/feedback-reports-count']);
+    } else if (option === 'discount-usage') {
+      this.router.navigate(['/discount-usage']);
     }else if (option === 'feedbackCountAndAverageRatingPerProduct') {
       this.router.navigate(['/feedback-reports-countave-product']);
     }else if (option === 'productsAboveRatingThreshold') {

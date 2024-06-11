@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ProductFeedbackDTO } from '../../dto/Product';
 import { UserReportDTO, UserResponseReportDTO } from '../../dto/User';
+import { DicountUsageReportDTO } from '../../dto/Discount';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class ReportService {
 
   constructor(private http: HttpClient) { }
 
-
+  getDiscountUsageReport(userId: string): Observable<DicountUsageReportDTO> {
+    return this.http.get<DicountUsageReportDTO>(`${environment.apiHost}api/reports/discounts?userId=${userId}`);
+  }
 
   getFeedbackReportsThreshold(threshold:number) : Observable<FeedbackReportThreshold[]> {
     return this.http.get<FeedbackReportThreshold[]>(environment.apiHost + 'api/reports/products-threshold?threshold=' + threshold);

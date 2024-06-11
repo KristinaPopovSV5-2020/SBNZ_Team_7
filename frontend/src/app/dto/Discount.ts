@@ -4,3 +4,11 @@ export interface DiscountDTO{
     dateCreated:Date,
     used:boolean
 }
+
+
+
+export interface DicountUsageReportDTO{
+    totalNumber:number;
+    totalUsed:number;
+    percentageUsed:number
+}
