@@ -13,16 +13,20 @@ import { ReportUserShoppingComponent } from './report-user-shopping/report-user-
 import { ReportDiscountUsageComponent } from './report-discount-usage/report-discount-usage.component';
 import { ReportGiftsComponent } from './report-gifts/report-gifts.component';
 import { ReportGiftsNameComponent } from './report-gifts-name/report-gifts-name.component';
+import { CardReportFeedbackComponent } from './card-report-feedback/card-report-feedback.component';
+import { AllFeedbackComponent } from './all-feedback/all-feedback.component';
+
+
 
 @NgModule({
-  declarations: [ReportDiscountUsageComponent, ReportUserShoppingComponent ,PurchaseReportsComponent,ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
-    FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent, ReportGiftsComponent, ReportGiftsNameComponent
+  declarations: [ReportFeedbackPageComponent,  ReportGiftsNameComponent, ReportGiftsComponent,  ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
+    FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent,CardReportFeedbackComponent,ReportDiscountUsageComponent, ReportDiscountUsageComponent,ReportDiscountUsageComponent,PurchaseReportsComponent, ReportUserShoppingComponent, AllFeedbackComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     SharedModule
   ],
-  exports:[ReportFeedbackPageComponent,ReportGiftsComponent, ReportGiftsNameComponent,  ReportDiscountUsageComponent, ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
+  exports:[ReportFeedbackPageComponent, ReportGiftsComponent, ReportGiftsNameComponent,  ReportDiscountUsageComponent, ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
 })
 export class ReportModule { }

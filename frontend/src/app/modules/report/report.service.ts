@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FeedbackReportThreshold, ThresholdValueDTO, UserShoppingReportDTO } from '../../dto/FeedbackReportThreshold';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -7,11 +6,16 @@ import { ProductFeedbackDTO } from '../../dto/Product';
 import { UserReportDTO, UserResponseReportDTO } from '../../dto/User';
 import { DicountUsageReportDTO } from '../../dto/Discount';
 import { GiftNameDTO, UserGiftReportDTO } from '../../dto/Gift';
+import { FeedbackDTO, FeedbackReportDTO, FeedbackReportThreshold } from '../../dto/Report';
+import { ThresholdValueDTO, UserShoppingReportDTO } from '../../dto/FeedbackReportThreshold';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
+
+  feedbacks: FeedbackDTO[] | undefined;
+  productName: string | undefined;
 
 
 
@@ -35,6 +39,10 @@ export class ReportService {
 
   getFeedbackReportPerUser(userId: string | undefined) : Observable<UserResponseReportDTO> {
     return this.http.get<UserResponseReportDTO>(environment.apiHost + 'api/reports/feedback-user?userId=' + userId);
+  }
+
+  getFeedbackReportWMY(period: string | undefined) : Observable<FeedbackReportDTO[]> {
+    return this.http.get<FeedbackReportDTO[]>(environment.apiHost + 'api/reports/feedback?period=' + period);
   }
 
   getAllProducts() : Observable<ProductFeedbackDTO[]> {

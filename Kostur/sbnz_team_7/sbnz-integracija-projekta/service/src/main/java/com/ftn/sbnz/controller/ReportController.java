@@ -1,11 +1,22 @@
 package com.ftn.sbnz.controller;
 
 
+<<<<<<< HEAD
 import com.ftn.sbnz.dto.ThresholdValueDTO;
+=======
+>>>>>>> 3428cf95d20e7e52e8c1a097b9f7a9864f885d8a
 import com.ftn.sbnz.dto.reports.*;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.model.models.reports.FeedbackReport;
 import com.ftn.sbnz.service.ReportService;
+<<<<<<< HEAD
+=======
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import com.ftn.sbnz.dto.ThresholdValueDTO;
+import com.ftn.sbnz.service.ReportService;
+>>>>>>> 3428cf95d20e7e52e8c1a097b9f7a9864f885d8a
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,9 +41,15 @@ public class ReportController {
 
 
     @RequestMapping(path = "/feedback", method = RequestMethod.GET)
+<<<<<<< HEAD
     public ResponseEntity<List<FeedbackReport>> getFeedbackPeriodReport(@RequestParam String period) {
         List<FeedbackReport> feedbackReports = reportService.getFeedbackReport(period);
         if (feedbackReports == null) {
+=======
+    public ResponseEntity<List<FeedbackReportDTO>> getFeedbackPeriodReport(@RequestParam String period){
+        List<FeedbackReportDTO> feedbackReports = reportService.getFeedbackReport(period);
+        if (feedbackReports == null){
+>>>>>>> 3428cf95d20e7e52e8c1a097b9f7a9864f885d8a
             throw new BadRequestException("There need to be at least five reviews for a report to be generated!");
         } else {
             return ResponseEntity.ok(feedbackReports);

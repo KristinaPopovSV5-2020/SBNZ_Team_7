@@ -49,10 +49,10 @@ export class ForwardChaining2Component {
           setTimeout(() => {
             this.loading = false;
             this.generateRecommendations();
-          }, 1000);
-        }, 1000);
-      }, 1000);
-    }, 1000);
+          }, 1100);
+        }, 1100);
+      }, 1100);
+    }, 1100);
   }
 
   generateRecommendations() {

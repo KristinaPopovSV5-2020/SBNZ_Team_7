@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.implementation;
 
+import com.ftn.sbnz.dto.reports.FeedbackDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingResponseDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingUserDTO;
 import com.ftn.sbnz.exception.BadRequestException;
@@ -15,10 +16,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
@@ -91,6 +89,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             ShoppingUserDTO shoppingUserDTO = new ShoppingUserDTO(shopping, product);
             response.add(shoppingUserDTO);
         }
+        Collections.sort(response, new Comparator<ShoppingUserDTO>() {
+            @Override
+            public int compare(ShoppingUserDTO f1, ShoppingUserDTO f2) {
+                return f1.getDate().compareTo(f2.getDate());
+            }
+        });
         return response;
     }
 

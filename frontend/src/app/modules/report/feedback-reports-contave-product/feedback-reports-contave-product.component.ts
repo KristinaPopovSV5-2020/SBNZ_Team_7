@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ReportService } from '../report.service';
 import { ProductFeedbackDTO } from '../../../dto/Product';
-import { FeedbackReportThreshold } from '../../../dto/FeedbackReportThreshold';
+import { FeedbackReportThreshold } from '../../../dto/Report';
 
 @Component({
   selector: 'app-feedback-reports-contave-product',
