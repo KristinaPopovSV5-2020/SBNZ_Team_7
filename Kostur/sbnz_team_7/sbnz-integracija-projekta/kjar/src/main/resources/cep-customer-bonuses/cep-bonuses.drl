@@ -17,18 +17,21 @@ import java.time.temporal.ChronoUnit;
 import com.ftn.sbnz.model.models.Discount;
 import java.util.Random;
 import java.util.Arrays;
+
+
 declare RecentShopping
     userId: ObjectId
     shoppingEvents: List
 end
 
+
 global java.util.List matchingProductList;
 global com.ftn.sbnz.service.DiscountService discountService;
 global com.ftn.sbnz.service.implementation.UserServiceImpl userService;
 global java.util.List allProducts;
-
 global java.util.List<Discount> generatedDiscounts;
 global java.util.List<Gift> generatedGifts;
+
 
 
 rule "Create 5% discount for at least 3 feedbacks in last 7 days"
@@ -52,6 +55,7 @@ rule "Create 5% discount for at least 3 feedbacks in last 7 days"
 end
 
 
+
 rule "Collect recent purchases"
     ruleflow-group "collection-rules"
     salience 100
@@ -63,6 +67,7 @@ rule "Collect recent purchases"
     then
         insert(new RecentShopping($userId, $recentShoppingEvents));
 end
+
 
 
 rule "Collect products with shared benefits"
@@ -80,7 +85,7 @@ rule "Collect products with shared benefits"
         matchingProductList.add($product);   
 end
 
-// dodati provjeru za usera!!
+
 
 rule "Create 50% discount when buying a product that has a matching benefit with previous purchases in last 30 days"
     ruleflow-group "discount-rules"
@@ -104,6 +109,7 @@ rule "Create 50% discount when buying a product that has a matching benefit with
         discountService.save(discount);
         System.out.println("User " + $shopping.getUserId() + " received 50% discount");
 end
+
 
 
 rule "Provide randomn testers for frequent high-value shoppers"
@@ -138,6 +144,7 @@ rule "Provide randomn testers for frequent high-value shoppers"
         insert($user);
         System.out.println("Gifted " + selectedGiftName + " to user.");
 end
+
 
 
 function boolean haveCommonBenefit(List benefits1, List benefits2) {

@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { ProductFeedbackDTO } from '../../dto/Product';
 import { UserReportDTO, UserResponseReportDTO } from '../../dto/User';
 import { DicountUsageReportDTO } from '../../dto/Discount';
+import { GiftNameDTO, UserGiftReportDTO } from '../../dto/Gift';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class ReportService {
 
 
   constructor(private http: HttpClient) { }
+
+  getGiftsReport(giftNameDTO: GiftNameDTO): Observable<UserGiftReportDTO[]> {
+    return this.http.post<UserGiftReportDTO[]>(`${environment.apiHost}api/reports/gifts`, giftNameDTO);
+  }
 
   getDiscountUsageReport(userId: string): Observable<DicountUsageReportDTO> {
     return this.http.get<DicountUsageReportDTO>(`${environment.apiHost}api/reports/discounts?userId=${userId}`);

@@ -11,18 +11,18 @@ import { FeedbackReportsWmyComponent } from './feedback-reports-wmy/feedback-rep
 import { PurchaseReportsComponent } from './purchase-reports/purchase-reports.component';
 import { ReportUserShoppingComponent } from './report-user-shopping/report-user-shopping.component';
 import { ReportDiscountUsageComponent } from './report-discount-usage/report-discount-usage.component';
-
-
+import { ReportGiftsComponent } from './report-gifts/report-gifts.component';
+import { ReportGiftsNameComponent } from './report-gifts-name/report-gifts-name.component';
 
 @NgModule({
   declarations: [ReportDiscountUsageComponent, ReportUserShoppingComponent ,PurchaseReportsComponent,ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
-    FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent
+    FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent, ReportGiftsComponent, ReportGiftsNameComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     SharedModule
   ],
-  exports:[ReportFeedbackPageComponent, ReportDiscountUsageComponent, ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
+  exports:[ReportFeedbackPageComponent,ReportGiftsComponent, ReportGiftsNameComponent,  ReportDiscountUsageComponent, ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
 })
 export class ReportModule { }

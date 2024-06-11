@@ -17,10 +17,10 @@ export class PurchaseReportsComponent {
       this.router.navigate(['/user-shopping-report']);
     } else if (option === 'discount-usage') {
       this.router.navigate(['/discount-usage']);
-    }else if (option === 'feedbackCountAndAverageRatingPerProduct') {
-      this.router.navigate(['/feedback-reports-countave-product']);
-    }else if (option === 'productsAboveRatingThreshold') {
-      this.router.navigate(['/feedback-reports-threshold']);
+    }else if (option === 'gifts-name') {
+      this.router.navigate(['/gifts-name']);
+    }else if (option === 'gifts') {
+      this.router.navigate(['/gifts']);
     }
   }
 }

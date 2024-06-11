@@ -1,0 +1,110 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .report-form-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    width: 470px;
+  }
+  
+  form {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    background-color: rgba(63, 81, 181, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: rgba(63, 81, 181, 1);
+  }
+  
+  .report-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width:400px;
+    margin: auto;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: #333;
+  }
+  
+  .report-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 250px;
+  }
+  
+  .report-card {
+    background-color: rgba(247, 202, 201, 0.87);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    
+    margin-bottom: 20px;
+    min-width: 200px;
+  }
+  
+  .report-card p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .page {
+    padding: 150px;
+  }
+  
+  #btn {
+    border: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    background-color: rgba(247, 202, 201, 0.87);
+    font-weight: 400;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  #btn:hover {
+    background-color: rgba(247, 202, 201, 0.753);
+    transform: scale(1.05);
+  }
+  
+  #btn:active {
+    transform: scale(1);
+  }
+  

@@ -76,7 +76,7 @@ public class ReportController {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @GetMapping("/gifts")
+    @PostMapping("/gifts")
     public ResponseEntity<List<UserGiftReportDTO>> getGiftsReport(@RequestBody GiftNameDTO giftNameDTO) {
         List<UserGiftReportDTO> dto = reportService.generateGiftReport(giftNameDTO.getGiftName());
         return new ResponseEntity<>(dto, HttpStatus.OK);

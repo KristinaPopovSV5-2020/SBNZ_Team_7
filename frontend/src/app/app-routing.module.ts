@@ -22,6 +22,8 @@ import { FeedbackReportsThresholdComponent } from './modules/report/feedback-rep
 import { PurchaseReportsComponent } from './modules/report/purchase-reports/purchase-reports.component';
 import { ReportUserShoppingComponent } from './modules/report/report-user-shopping/report-user-shopping.component';
 import { ReportDiscountUsageComponent } from './modules/report/report-discount-usage/report-discount-usage.component';
+import { ReportGiftsComponent } from './modules/report/report-gifts/report-gifts.component';
+import { ReportGiftsNameComponent } from './modules/report/report-gifts-name/report-gifts-name.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -47,7 +49,8 @@ const routes: Routes = [
   {path: 'purchase-reports', component: PurchaseReportsComponent},
   {path:'user-shopping-report', component: ReportUserShoppingComponent},
   {path:'discount-usage', component: ReportDiscountUsageComponent},
-  
+  {path:'gifts-name', component: ReportGiftsNameComponent},
+  {path:'gifts', component: ReportGiftsComponent},
 ];
 
 @NgModule({
