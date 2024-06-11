@@ -1,12 +1,12 @@
 package com.ftn.sbnz.service.implementation;
 
+import com.ftn.sbnz.dto.shoppings.ShoppingResponseDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingUserDTO;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.kafka.EventHandler;
 import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.products.Shopping;
-import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.repository.DiscountRepository;
 import com.ftn.sbnz.repository.ProductRepository;
 import com.ftn.sbnz.repository.ShoppingRepository;
@@ -41,7 +41,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 
     @Override
-    public Shopping save(String productId, ObjectId userId, String discountId) {
+    public ShoppingResponseDTO save(String productId, ObjectId userId, String discountId) {
+        System.out.println("save method called");
         ObjectId productObjectId;
         try {
             productObjectId = new ObjectId(productId);
@@ -61,17 +62,18 @@ public class ShoppingServiceImpl implements ShoppingService {
         Shopping shopping = new Shopping(productObjectId, userId, new Date());
 
         // Process shopping event
-        Shopping shoppingEvent = eventHandler.processShoppingEvent(shopping);
+        ShoppingResponseDTO shoppingEvent = eventHandler.processShoppingEvent(shopping);
 
         // Apply discount if present
         if (discount.isPresent()) {
             double discountValue = discount.get().getValue();
-            shoppingEvent.setValue(shoppingEvent.getValue() * (1 - discountValue));
+            shoppingEvent.getShopping().setValue(shoppingEvent.getShopping().getValue() * (1 - discountValue));
             discount.get().setUsed(true);
             discountRepository.save(discount.get());
         }
 
-        return shoppingRepository.save(shoppingEvent);
+        shoppingRepository.save(shoppingEvent.getShopping());
+        return shoppingEvent;
     }
 
 
@@ -84,7 +86,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     public List<ShoppingUserDTO> findShoppingsByUser(ObjectId userId) {
         List<Shopping> userShoppings = shoppingRepository.findByUserId(userId);
         List<ShoppingUserDTO> response = new ArrayList<>();
-        for (Shopping shopping: userShoppings){
+        for (Shopping shopping : userShoppings) {
             Product product = productRepository.findById(shopping.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
             ShoppingUserDTO shoppingUserDTO = new ShoppingUserDTO(shopping, product);
             response.add(shoppingUserDTO);

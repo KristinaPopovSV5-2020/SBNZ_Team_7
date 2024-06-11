@@ -1,8 +1,12 @@
 package com.ftn.sbnz.kafka;
 
+import com.ftn.sbnz.dto.DiscountDTO;
+import com.ftn.sbnz.dto.GiftDTO;
+import com.ftn.sbnz.dto.shoppings.ShoppingResponseDTO;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.Gift;
 import com.ftn.sbnz.model.models.RatingHelper;
 import com.ftn.sbnz.model.models.products.Product;
 import com.ftn.sbnz.model.models.products.Shopping;
@@ -21,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -56,22 +60,18 @@ public class EventHandler {
         this.productService = productService;
     }
 
-    public Shopping processShoppingEvent(Shopping shoppingEvent) {
+    public ShoppingResponseDTO processShoppingEvent(Shopping shoppingEvent) {
         KieSession kieSession = kieContainer.newKieSession("cepBonusKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
-        List<String> gifts = Arrays.asList(
-                "Sunscreen Tester",
-                "Hydration Serum Tester",
-                "Anti-Ageing Cream Tester",
-                "Exfoliating Scrub Tester",
-                "Brightening Mask Tester"
-        );
 
         List<Product> matchingProductList = new ArrayList<>();
         kieSession.setGlobal("matchingProductList", matchingProductList);
         kieSession.setGlobal("discountService", discountService);
         kieSession.setGlobal("userService", userService);
-        kieSession.setGlobal("gifts", gifts);
+        List<Discount> generatedDiscounts = new ArrayList<>();
+        kieSession.setGlobal("generatedDiscounts", generatedDiscounts);
+        List<Gift> generatedGifts = new ArrayList<>();
+        kieSession.setGlobal("generatedGifts", generatedGifts);
         insertDataIntoSession(kieSession, shoppingEvent.getUserId(), clock, shoppingEvent);
 
         kieSession.getAgenda().getAgendaGroup("collection-rules").setFocus();
@@ -91,11 +91,25 @@ public class EventHandler {
         }
 
         kieSession.dispose();
+        ShoppingResponseDTO responseDTO = new ShoppingResponseDTO(shoppingEvent, convertDiscountsToDTO(generatedDiscounts), getGiftDTO(generatedGifts));
+        return responseDTO;
 
-        return shoppingEvent;
     }
 
-    public boolean processCheckFeedbackReport(){
+    private List<DiscountDTO> convertDiscountsToDTO(List<Discount> discounts) {
+        return discounts.stream()
+                .map(discount -> new DiscountDTO(discount.getId(), discount.getValue(), discount.getDateCreated(), discount.isUsed()))
+                .collect(Collectors.toList());
+    }
+
+    private GiftDTO getGiftDTO(List<Gift> gifts) {
+        if (gifts.size() > 0) {
+            return new GiftDTO(gifts.get(0));
+        }
+        return null;
+    }
+
+    public boolean processCheckFeedbackReport() {
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
         try {
             SessionPseudoClock clock = kieSession.getSessionClock();
@@ -103,7 +117,7 @@ public class EventHandler {
             List<Product> allProducts = productService.findAll();
             allProducts.forEach(kieSession::insert);
 
-            RatingHelper ratingHelper = insertDataCepReportFeedbackIntoSession(kieSession,clock);
+            RatingHelper ratingHelper = insertDataCepReportFeedbackIntoSession(kieSession, clock);
             kieSession.getAgenda().getAgendaGroup("report-rules").setFocus();
             int reportRulesFired = kieSession.fireAllRules();
             System.out.println("Number of report rules fired: " + reportRulesFired);
@@ -111,25 +125,25 @@ public class EventHandler {
 
             Boolean canGenerateReport = ratingHelper.getCanGenerateReport();
             System.out.println("Can generate report: " + canGenerateReport);
-            if (canGenerateReport){
+            if (canGenerateReport) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
-        }finally {
+        } finally {
             kieSession.dispose();
         }
 
     }
 
-    public Feedback processFeedbackEvent(Feedback feedbackEvent){
+    public Feedback processFeedbackEvent(Feedback feedbackEvent) {
         KieSession kieSession = kieContainer.newKieSession("cepKsession");
         try {
             SessionPseudoClock clock = kieSession.getSessionClock();
             List<Product> allProducts = productService.findAll();
             allProducts.forEach(kieSession::insert);
             kieSession.setGlobal("productService", productService);
-            RatingHelper ratingHelper = insertDataCepFeedbackIntoSession(kieSession,feedbackEvent.getUserId(),clock,feedbackEvent);
+            RatingHelper ratingHelper = insertDataCepFeedbackIntoSession(kieSession, feedbackEvent.getUserId(), clock, feedbackEvent);
             kieSession.getAgenda().getAgendaGroup("feedback-rules").setFocus();
             int feedbackRulesFired = kieSession.fireAllRules();
             System.out.println("Number of feedback rules fired: " + feedbackRulesFired);
@@ -142,7 +156,7 @@ public class EventHandler {
             } else {
                 return null;
             }
-        }finally {
+        } finally {
             kieSession.dispose();
         }
     }
@@ -159,9 +173,9 @@ public class EventHandler {
 
     }
 
-    public RatingHelper insertDataCepFeedbackIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock, Feedback feedbackEvent){
+    public RatingHelper insertDataCepFeedbackIntoSession(KieSession kieSession, ObjectId userId, SessionPseudoClock clock, Feedback feedbackEvent) {
         kieSession.insert(userService.findOne(userId));
-        insertFeedbackEventIntoSession(kieSession,feedbackEvent,clock);
+        insertFeedbackEventIntoSession(kieSession, feedbackEvent, clock);
         insertAllFeedbacksIntoSession(kieSession, clock);
         insertShoppingsIntoSession(kieSession, userId, clock);
         RatingHelper ratingHelper = new RatingHelper(feedbackEvent.getProductId());
@@ -170,7 +184,7 @@ public class EventHandler {
 
     }
 
-    public RatingHelper insertDataCepReportFeedbackIntoSession(KieSession kieSession, SessionPseudoClock clock){
+    public RatingHelper insertDataCepReportFeedbackIntoSession(KieSession kieSession, SessionPseudoClock clock) {
         insertAllFeedbacksIntoSession(kieSession, clock);
         insertAllShoppingsIntoSession(kieSession, clock);
         RatingHelper ratingHelper = new RatingHelper(null);
@@ -187,7 +201,7 @@ public class EventHandler {
         System.out.println("Inserted shopping event at: " + shoppingEvent.getDateTime());
     }
 
-    private void insertFeedbackEventIntoSession(KieSession kieSession, Feedback feedbackEvent, SessionPseudoClock clock){
+    private void insertFeedbackEventIntoSession(KieSession kieSession, Feedback feedbackEvent, SessionPseudoClock clock) {
         long feedbackTimeDiff = feedbackEvent.getDateTime().getTime() - clock.getCurrentTime();
         clock.advanceTime(feedbackTimeDiff, TimeUnit.MILLISECONDS);
         feedbackEvent.setNew(true); //Postavljam novi utisak na true
@@ -226,7 +240,7 @@ public class EventHandler {
         });
     }
 
-    private void insertAllShoppingsIntoSession(KieSession kieSession,SessionPseudoClock clock) {
+    private void insertAllShoppingsIntoSession(KieSession kieSession, SessionPseudoClock clock) {
         List<Shopping> shoppings = getAllShoppings();
         shoppings.forEach(shopping -> {
             long timeDiff = shopping.getDateTime().getTime() - clock.getCurrentTime();
@@ -235,7 +249,6 @@ public class EventHandler {
             kieSession.insert(shopping);
         });
     }
-
 
 
     private void insertProductsIntoSession(KieSession kieSession) {

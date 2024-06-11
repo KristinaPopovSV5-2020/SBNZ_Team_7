@@ -1,0 +1,82 @@
+h1.mat-dialog-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    width: 90%;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+
+  button[mat-button] {
+    background-color: rgba(247, 202, 201, 0.87);
+  }
+  
+  button[mat-button]:hover {
+    background-color: rgba(247, 202, 201, 0.75);
+  }
+  
+  button:disabled {
+    background-color: rgba(247, 202, 201, 0.5);
+    cursor: not-allowed;
+  }
+  
+  .no-discounts {
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .title{
+    color:#333;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 5px;
+  }
+
+
+  button[mat-button].mat-warn2 {
+    background-color: rgba(152, 152, 152, 0.437);
+  }
+  
+  button[mat-button].mat-warn2:hover {
+    background-color: rgba(152, 152, 152, 0.307);
+  }
+
+
+  .card{
+    padding: 10px;
+  }
