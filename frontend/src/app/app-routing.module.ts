@@ -19,6 +19,8 @@ import { FeedbackReportsWmyComponent } from './modules/report/feedback-reports-w
 import { FeedbackReportsContaveProductComponent } from './modules/report/feedback-reports-contave-product/feedback-reports-contave-product.component';
 import { FeedbackReportsCountComponent } from './modules/report/feedback-reports-count/feedback-reports-count.component';
 import { FeedbackReportsThresholdComponent } from './modules/report/feedback-reports-threshold/feedback-reports-threshold.component';
+import { PurchaseReportsComponent } from './modules/report/purchase-reports/purchase-reports.component';
+import { ReportUserShoppingComponent } from './modules/report/report-user-shopping/report-user-shopping.component';
 
 
 const routes: Routes = [
@@ -41,7 +43,9 @@ const routes: Routes = [
   {path:'feedback-reports-wmy', component:FeedbackReportsWmyComponent},
   {path:'feedback-reports-count', component:FeedbackReportsCountComponent},
   {path:'feedback-reports-countave-product', component: FeedbackReportsContaveProductComponent},
-  {path:'feedback-reports-threshold', component: FeedbackReportsThresholdComponent}
+  {path:'feedback-reports-threshold', component: FeedbackReportsThresholdComponent},
+  {path: 'purchase-reports', component: PurchaseReportsComponent},
+  {path:'user-shopping-report', component: ReportUserShoppingComponent}
 ];
 
 @NgModule({

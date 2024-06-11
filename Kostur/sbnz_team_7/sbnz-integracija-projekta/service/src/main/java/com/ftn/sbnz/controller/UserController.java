@@ -1,5 +1,5 @@
 package com.ftn.sbnz.controller;
-import com.ftn.sbnz.dto.product.ProductFeedbackDTO;
+
 import com.ftn.sbnz.dto.DiscountDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.dto.user.UserReportDTO;
@@ -39,6 +39,15 @@ public class UserController {
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/api/users")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<UserReportDTO>> getUsers() {
+        List<UserReportDTO> dtos = userService.getAllUsers();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+
     @GetMapping(value = "/api/user/allergens")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<String>> getUserAllergens() {
@@ -68,9 +77,10 @@ public class UserController {
 
 
     @GetMapping(value = "api/users/report")
-    public ResponseEntity<List<UserReportDTO>> getAllProducts(){
+    public ResponseEntity<List<UserReportDTO>> getAllProducts() {
         List<UserReportDTO> userReportDTOS = userService.getAllUsers();
         return new ResponseEntity<>(userReportDTOS, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/api/user/discounts")
     @PreAuthorize("isAuthenticated()")

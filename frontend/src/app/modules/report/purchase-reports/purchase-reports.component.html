@@ -1,0 +1,23 @@
+<div class="homepage-container">
+    <section class="content">
+      <div class="info-box">
+        <div class="info-card" (click)="navigateToReport('user-shopping-report')">
+          <h2 class="info-title">User Purchase Report</h2>
+          <p class="info-text">View user's total spending, number of purchases, and average purchase value.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('feedbackCountLast30Days')">
+          <h2 class="info-title">Feedback Count in the Last 30 Days</h2>
+          <p class="info-text">View the number of feedbacks left by users in the last 30 days.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('feedbackCountAndAverageRatingPerProduct')">
+          <h2 class="info-title">Feedback Count and Average Rating Per Product</h2>
+          <p class="info-text">See the number of feedbacks and the average rating for each product.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('productsAboveRatingThreshold')">
+          <h2 class="info-title">Products Above Rating Threshold</h2>
+          <p class="info-text">Return products with an average rating above a specified threshold.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  

@@ -1,0 +1,38 @@
+<!-- user-shopping-report.component.html -->
+ <div class = "page">
+<div class="report-form-container">
+    <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="userId" required>
+          <mat-option *ngFor="let user of users" [value]="user.userId">{{ user.username }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Threshold Value</mat-label>
+        <input matInput formControlName="value" type="number" required>
+      </mat-form-field>
+      <mat-checkbox formControlName="checkDate">Check Last 30 Days</mat-checkbox>
+      <button id="btn" >Generate Report</button>
+    </form>
+  </div>
+  
+  <div class="report-container" *ngIf="report">
+    <h2>Shopping Report for {{ report.userEmail }}</h2>
+    <div class="report-cards">
+      <div class="report-card">
+        <h3>Total Value</h3>
+        <p>{{ report.totalValue | number:'1.2-2' }} din</p>
+      </div>
+      <div class="report-card">
+        <h3>Total Count</h3>
+        <p>{{ report.totalCount }}</p>
+      </div>
+      <div class="report-card">
+        <h3>Average Value</h3>
+        <p>{{ report.average | number:'1.2-2' }} din</p>
+      </div>
+    </div>
+  </div>
+  
+</div>

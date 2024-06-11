@@ -8,11 +8,13 @@ import { FeedbackReportsContaveProductComponent } from './feedback-reports-conta
 import { FeedbackReportsCountComponent } from './feedback-reports-count/feedback-reports-count.component';
 import { FeedbackReportsThresholdComponent } from './feedback-reports-threshold/feedback-reports-threshold.component';
 import { FeedbackReportsWmyComponent } from './feedback-reports-wmy/feedback-reports-wmy.component';
+import { PurchaseReportsComponent } from './purchase-reports/purchase-reports.component';
+import { ReportUserShoppingComponent } from './report-user-shopping/report-user-shopping.component';
 
 
 
 @NgModule({
-  declarations: [ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
+  declarations: [ReportUserShoppingComponent ,PurchaseReportsComponent,ReportFeedbackPageComponent, ReportMainPageComponent,FeedbackReportsContaveProductComponent,FeedbackReportsCountComponent,
     FeedbackReportsThresholdComponent,FeedbackReportsWmyComponent
   ],
   imports: [
@@ -20,6 +22,6 @@ import { FeedbackReportsWmyComponent } from './feedback-reports-wmy/feedback-rep
     MaterialModule,
     SharedModule
   ],
-  exports:[ReportFeedbackPageComponent, ReportMainPageComponent]
+  exports:[ReportFeedbackPageComponent,ReportUserShoppingComponent, ReportMainPageComponent, PurchaseReportsComponent]
 })
 export class ReportModule { }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FeedbackReportThreshold } from '../../dto/FeedbackReportThreshold';
+import { FeedbackReportThreshold, ThresholdValueDTO, UserShoppingReportDTO } from '../../dto/FeedbackReportThreshold';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -35,5 +35,10 @@ export class ReportService {
 
   getAllUsers() : Observable<UserReportDTO[]> {
     return this.http.get<UserReportDTO[]>(environment.apiHost + 'api/users/report');
+  }
+
+
+  getUserShoppingReport(userId: string, threshold: ThresholdValueDTO): Observable<UserShoppingReportDTO> {
+    return this.http.post<UserShoppingReportDTO>(`${environment.apiHost}api/reports/userShopping?userId=${userId}`, threshold);
   }
 }

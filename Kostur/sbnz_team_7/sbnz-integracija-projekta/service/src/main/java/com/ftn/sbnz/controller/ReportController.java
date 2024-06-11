@@ -1,20 +1,10 @@
 package com.ftn.sbnz.controller;
 
 
-import com.ftn.sbnz.dto.reports.FeedbackNADto;
-import com.ftn.sbnz.dto.reports.FeedbackUserDTO;
-import com.ftn.sbnz.dto.reports.ThresholdDTO;
+import com.ftn.sbnz.dto.ThresholdValueDTO;
+import com.ftn.sbnz.dto.reports.*;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.model.models.reports.FeedbackReport;
-import com.ftn.sbnz.service.ReportService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import com.ftn.sbnz.dto.ThresholdValueDTO;
-import com.ftn.sbnz.dto.reports.DicountUsageReportDTO;
-import com.ftn.sbnz.dto.reports.GiftNameDTO;
-import com.ftn.sbnz.dto.reports.UserGiftReportDTO;
-import com.ftn.sbnz.dto.reports.UserShoppingReportDTO;
 import com.ftn.sbnz.service.ReportService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,18 +30,18 @@ public class ReportController {
 
 
     @RequestMapping(path = "/feedback", method = RequestMethod.GET)
-    public ResponseEntity<List<FeedbackReport>> getFeedbackPeriodReport(@RequestParam String period){
+    public ResponseEntity<List<FeedbackReport>> getFeedbackPeriodReport(@RequestParam String period) {
         List<FeedbackReport> feedbackReports = reportService.getFeedbackReport(period);
-        if (feedbackReports == null){
+        if (feedbackReports == null) {
             throw new BadRequestException("There need to be at least five reviews for a report to be generated!");
-        }else{
+        } else {
             return ResponseEntity.ok(feedbackReports);
         }
 
     }
 
     @RequestMapping(path = "/feedback-user", method = RequestMethod.GET)
-    public ResponseEntity<FeedbackUserDTO> getFeedbackUserReport(@RequestParam String userId){
+    public ResponseEntity<FeedbackUserDTO> getFeedbackUserReport(@RequestParam String userId) {
 
         FeedbackUserDTO feedbackReports = reportService.getUserFeedbackReport(userId);
         return ResponseEntity.ok(feedbackReports);
@@ -62,21 +49,21 @@ public class ReportController {
     }
 
     @RequestMapping(path = "/feedback-product", method = RequestMethod.GET)
-    public ResponseEntity<FeedbackNADto> getFeedbackPerProductReport(@RequestParam String productId){
+    public ResponseEntity<FeedbackNADto> getFeedbackPerProductReport(@RequestParam String productId) {
 
         FeedbackNADto feedbackReports = reportService.getFeedbackProductReport(productId);
         return ResponseEntity.ok(feedbackReports);
 
     }
 
-    @GetMapping( "/products-threshold")
-    public ResponseEntity<List<FeedbackNADto>> getHighRatedProductsReport(@RequestParam("threshold") String threshold){
+    @GetMapping("/products-threshold")
+    public ResponseEntity<List<FeedbackNADto>> getHighRatedProductsReport(@RequestParam("threshold") String threshold) {
         List<FeedbackNADto> feedbackReports = reportService.getHighRatedProductsReport(threshold);
         return ResponseEntity.ok(feedbackReports);
 
     }
 
-    @GetMapping("/userShopping")
+    @PostMapping("/userShopping")
     public ResponseEntity<UserShoppingReportDTO> getUserShoppingReport(@RequestParam String userId, @RequestBody ThresholdValueDTO thresholdDTO) {
         UserShoppingReportDTO report = reportService.generateUserShoppingReport(new ObjectId(userId), thresholdDTO);
         return new ResponseEntity<>(report, HttpStatus.OK);

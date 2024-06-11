@@ -126,12 +126,13 @@ public class UserServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserReportDTO> getAllUsers(){
+
+    public List<UserReportDTO> getAllUsers() {
         List<UserReportDTO> userReportDTOS = new ArrayList<>();
-        for(User user : userRepository.findAll()){
+        for (User user : userRepository.findAll()) {
             UserReportDTO userReportDTO = new UserReportDTO(user);
             userReportDTOS.add(userReportDTO);
         }
-        return  userReportDTOS;
+        return userReportDTOS;
     }
 }
