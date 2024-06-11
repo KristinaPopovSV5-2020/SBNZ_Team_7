@@ -18,6 +18,9 @@
     </form>
      
     </div>
-    <div class="container" *ngIf="generate">
+    <div class="product-list">
+      <div *ngFor="let report of reports">
+        <app-card-report-feedback class="product-card" [report]="report"></app-card-report-feedback >
+      </div>
     </div>
   </div>

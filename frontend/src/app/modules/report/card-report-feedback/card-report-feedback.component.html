@@ -1,34 +1,19 @@
 <mat-card class="product-card">
     <div class="card-content">
-    <h1>{{product.name}}</h1>
+    <h1>{{report?.productName}}</h1>
     <mat-card-content>
       <div class="product-details">
         <div class="product-detail">
-          <strong>Price:</strong> {{ product.price }} din 
+          <strong>Number of Feedback left:</strong> {{ report?.feedbacks?.length }}
         </div>
         <div class="product-detail">
-          <strong>Instruction:</strong> {{ product.instruction }}
-        </div>
-        <div class="product-detail">
-          <strong>Vegan:</strong> {{ product.vegan ? 'Yes' : 'No' }}
-        </div>
-        <div class="product-detail">
-          <strong>Skin Types:</strong> {{ product.skinTypes.join(', ') }}
-        </div>
-        <div class="product-detail">
-          <strong>Benefits:</strong> 
-          <ng-container *ngFor="let benefit of product.benefits">
-          {{ formatEnumString(benefit) }}<span *ngIf="benefit !== product.benefits[product.benefits.length - 1]">, </span>
-          </ng-container>
-        </div>
-        <div class="product-detail">
-          <strong>Ingredients:</strong> {{ product.ingredientNames.join(', ') }}
-        </div>
-        <div class="product-detail">
-          <strong style="color: blueviolet;">{{ product.popular ? 'POPULAR' : '' }}</strong>
+          <strong>Average rating:</strong> {{ report?.averageRating | number:'1.2-2'}}
         </div>
       </div>
     </mat-card-content>
     </div>
+    <mat-card-actions>
+        <button mat-button color="primary" (click)="view(report?.feedbacks,report?.productName)">View All Feedback</button>
+      </mat-card-actions>
   </mat-card>
   

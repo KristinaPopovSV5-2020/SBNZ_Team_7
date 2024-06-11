@@ -4,8 +4,9 @@
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.703); 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 350px; 
-    min-height: 350px;
+    max-width: 400px; 
+    min-height: 200px;
+    max-height: 200px;
     height: 350px;
   }
   
@@ -15,11 +16,16 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: #dc8b99;
+    text-align: center;
   }
   
   mat-card-subtitle {
     font-size: 1rem;
     color: #666;
+  }
+
+  button{
+    margin-top: 30px;
   }
   
   mat-card-content {
@@ -42,8 +48,14 @@
   }
   
 .card-content{
-    max-height: 270px;
-    min-height: 270px;
+    max-height: 100px;
+    min-height: 100px;
+    font-size: large;
+}
+
+.card-content h1{
+    text-align: center;
+    justify-items: center;
 }
 
 mat-card-actions {
@@ -63,3 +75,5 @@ mat-card-actions {
   button[mat-button]:hover {
     background-color: rgba(247, 202, 201, 0.753); 
   }
+
+  

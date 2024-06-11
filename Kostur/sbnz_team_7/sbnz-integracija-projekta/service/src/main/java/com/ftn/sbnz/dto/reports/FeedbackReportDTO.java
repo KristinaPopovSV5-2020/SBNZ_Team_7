@@ -8,14 +8,14 @@ import java.util.List;
 
 public class FeedbackReportDTO {
 
-    private String productId;
+    private String productName;
 
     private List<FeedbackDTO> feedbacks;
 
     private double averageRating;
 
-    public FeedbackReportDTO(String productId, List<FeedbackDTO> feedbacks, double averageRating) {
-        this.productId = productId;
+    public FeedbackReportDTO(String productName, List<FeedbackDTO> feedbacks, double averageRating) {
+        this.productName = productName;
         this.feedbacks = feedbacks;
         this.averageRating = averageRating;
     }
@@ -23,12 +23,12 @@ public class FeedbackReportDTO {
     public FeedbackReportDTO(){}
 
 
-    public String getProductId() {
-        return productId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public List<FeedbackDTO> getFeedbacks() {

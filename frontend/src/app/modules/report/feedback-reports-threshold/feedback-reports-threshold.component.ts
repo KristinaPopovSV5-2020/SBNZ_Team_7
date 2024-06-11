@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReportService } from '../report.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
-import { FeedbackReportThreshold } from '../../../dto/FeedbackReportThreshold';
+import { FeedbackReportThreshold } from '../../../dto/Report';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 

@@ -375,7 +375,8 @@ public class ReportServiceImpl implements ReportService {
         List<FeedbackReportDTO> feedbackReportDTOS = new ArrayList<>();
         for(FeedbackReport feedbackReport : feedbackReports){
             FeedbackReportDTO  feedbackReportDTO = new FeedbackReportDTO();
-            feedbackReportDTO.setProductId(feedbackReport.getProductId().toString());
+            Product product = productRepository.findById(feedbackReport.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+            feedbackReportDTO.setProductName(product.getName());
             List<FeedbackDTO> feedbackDTOS = new ArrayList<>();
             for (Feedback feedback: feedbackReport.getFeedbacks()){
                 User user = userRepository.findById(feedback.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
