@@ -45,6 +45,10 @@ export class ReportService {
     return this.http.get<UserReportDTO[]>(environment.apiHost + 'api/users/report');
   }
 
+  getLastMonthGiftsReport(): Observable<UserGiftReportDTO[]> {
+    return this.http.get<UserGiftReportDTO[]>(`${environment.apiHost}api/reports/gifts/lastMonth`);
+  }
+
 
   getUserShoppingReport(userId: string, threshold: ThresholdValueDTO): Observable<UserShoppingReportDTO> {
     return this.http.post<UserShoppingReportDTO>(`${environment.apiHost}api/reports/userShopping?userId=${userId}`, threshold);

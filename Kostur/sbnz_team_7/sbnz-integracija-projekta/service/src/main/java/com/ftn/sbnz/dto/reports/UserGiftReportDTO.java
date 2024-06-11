@@ -17,7 +17,7 @@ public class UserGiftReportDTO {
         this.giftNames = giftNames;
     }
 
-    public UserGiftReportDTO(String username, List<String> giftNames) {
+    public UserGiftReportDTO(String username, List<String> giftNames, int size) {
         this.username = username;
         if (giftNames.size() > 0) {
             this.giftNames = giftNames;
@@ -25,6 +25,7 @@ public class UserGiftReportDTO {
             this.giftNames = new ArrayList<>();
 
         }
+        this.giftCount = size;
     }
 
     public UserGiftReportDTO(String username, int giftCount) {
