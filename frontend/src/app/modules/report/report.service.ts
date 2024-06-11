@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { FeedbackDTO, FeedbackReportDTO, FeedbackReportThreshold } from '../../dto/Report';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ProductFeedbackDTO } from '../../dto/Product';
 import { UserReportDTO, UserResponseReportDTO } from '../../dto/User';
+import { DicountUsageReportDTO } from '../../dto/Discount';
+import { GiftNameDTO, UserGiftReportDTO } from '../../dto/Gift';
+import { FeedbackDTO, FeedbackReportDTO, FeedbackReportThreshold } from '../../dto/Report';
+import { ThresholdValueDTO, UserShoppingReportDTO } from '../../dto/FeedbackReportThreshold';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,13 @@ export class ReportService {
 
   constructor(private http: HttpClient) { }
 
+  getGiftsReport(giftNameDTO: GiftNameDTO): Observable<UserGiftReportDTO[]> {
+    return this.http.post<UserGiftReportDTO[]>(`${environment.apiHost}api/reports/gifts`, giftNameDTO);
+  }
 
+  getDiscountUsageReport(userId: string): Observable<DicountUsageReportDTO> {
+    return this.http.get<DicountUsageReportDTO>(`${environment.apiHost}api/reports/discounts?userId=${userId}`);
+  }
 
   getFeedbackReportsThreshold(threshold:number) : Observable<FeedbackReportThreshold[]> {
     return this.http.get<FeedbackReportThreshold[]>(environment.apiHost + 'api/reports/products-threshold?threshold=' + threshold);
@@ -42,5 +51,14 @@ export class ReportService {
 
   getAllUsers() : Observable<UserReportDTO[]> {
     return this.http.get<UserReportDTO[]>(environment.apiHost + 'api/users/report');
+  }
+
+  getLastMonthGiftsReport(): Observable<UserGiftReportDTO[]> {
+    return this.http.get<UserGiftReportDTO[]>(`${environment.apiHost}api/reports/gifts/lastMonth`);
+  }
+
+
+  getUserShoppingReport(userId: string, threshold: ThresholdValueDTO): Observable<UserShoppingReportDTO> {
+    return this.http.post<UserShoppingReportDTO>(`${environment.apiHost}api/reports/userShopping?userId=${userId}`, threshold);
   }
 }

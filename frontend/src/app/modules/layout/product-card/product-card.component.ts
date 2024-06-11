@@ -45,9 +45,9 @@ export class ProductCardComponent {
             }
             if (response.giftDTO) {
             
-              message += `You received the following gift: ${response.giftDTO.giftName}. `;
+              message += ` You received the following gift: ${response.giftDTO.giftName}. `;
             }
-            message += `Your product will arrive in the next 3 days`;
+            message += ` Your product will arrive in the next 3 days`;
 
             // Prikazivanje snack bar obaveštenja
             this.snackBar.open(message, 'Close', {

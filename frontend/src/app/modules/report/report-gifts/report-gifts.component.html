@@ -1,0 +1,21 @@
+<div class="page">
+    <div class="report-container" *ngIf="report.length > 0">
+      <h2>Gifts Report for Last Month</h2>
+      <div class="report-cards">
+        <div *ngFor="let userReport of report" class="report-card">
+          <h3>{{ userReport.username | uppercase }}</h3>
+          <p>Total Gifts: {{ userReport.giftCount }}</p>
+          <div *ngIf="userReport.giftNames && userReport.giftNames.length > 0">
+            <p>Gift Names:</p>
+            <ul>
+              <li *ngFor="let giftName of userReport.giftNames">{{ giftName }}</li>
+            </ul>
+          </div>
+          <p *ngIf="!userReport.giftNames || userReport.giftNames.length === 0">
+            No gifts received.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,49 +1,31 @@
 package com.ftn.sbnz.service.implementation;
 
-import com.ftn.sbnz.dto.reports.FeedbackGlobal;
-import com.ftn.sbnz.dto.reports.FeedbackNADto;
-import com.ftn.sbnz.dto.reports.FeedbackUserDTO;
+import com.ftn.sbnz.dto.ThresholdValueDTO;
+import com.ftn.sbnz.dto.reports.*;
 import com.ftn.sbnz.facts.FeedbackStatus;
+import com.ftn.sbnz.facts.ShoppingStatus;
 import com.ftn.sbnz.kafka.EventHandler;
+import com.ftn.sbnz.model.models.Discount;
 import com.ftn.sbnz.model.models.Feedback;
-import com.ftn.sbnz.model.models.RatingHelper;
 import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.products.Shopping;
 import com.ftn.sbnz.model.models.reports.FeedbackReport;
 import com.ftn.sbnz.model.models.user.User;
-import com.ftn.sbnz.repository.FeedbackRepository;
-import com.ftn.sbnz.repository.ProductRepository;
-import com.ftn.sbnz.repository.UserRepository;
+import com.ftn.sbnz.repository.*;
 import com.ftn.sbnz.service.ProductService;
 import com.ftn.sbnz.service.ReportService;
 import org.bson.types.ObjectId;
 import org.drools.core.ClassObjectFilter;
 import org.drools.core.time.SessionPseudoClock;
-import com.ftn.sbnz.dto.ThresholdValueDTO;
-import com.ftn.sbnz.dto.reports.*;
-import com.ftn.sbnz.facts.ShoppingStatus;
-import com.ftn.sbnz.model.models.Discount;
-import com.ftn.sbnz.model.models.products.Shopping;
-import com.ftn.sbnz.model.models.user.User;
-import com.ftn.sbnz.repository.DiscountRepository;
-import com.ftn.sbnz.repository.ShoppingRepository;
-import com.ftn.sbnz.repository.UserRepository;
-import com.ftn.sbnz.service.ReportService;
-import org.bson.types.ObjectId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -181,7 +163,7 @@ public class ReportServiceImpl implements ReportService {
             System.out.println("User: " + user.getUsername());
             List<String> names = new ArrayList<>();
             userGifts.getGifts().forEach(gift -> names.add(gift.getGiftName()));
-            dtos.add(new UserGiftReportDTO(user.getUsername(), names));
+            dtos.add(new UserGiftReportDTO(user.getUsername(), names, names.size()));
 
         });
 
@@ -194,14 +176,14 @@ public class ReportServiceImpl implements ReportService {
     public List<FeedbackReportDTO> getFeedbackReport(String period) {
         boolean canGenerateWeekly = false;
         List<FeedbackReport> rankedReports = new ArrayList<>();
-        if (period.equals("7d")){
+        if (period.equals("7d")) {
             boolean canGenerateReport = eventHandler.processCheckFeedbackReport();
             canGenerateWeekly = canGenerateReport;
         }
         if (canGenerateWeekly || !period.equals("7d")) {
             KieSession kieSession = kieContainer.newKieSession("reportsKsession");
             SessionPseudoClock clock = kieSession.getSessionClock();
-            eventHandler.insertAllFeedbacksIntoSession(kieSession,clock);
+            eventHandler.insertAllFeedbacksIntoSession(kieSession, clock);
             insertProductsIntoSession(kieSession);
 
             String queryName;
@@ -248,7 +230,7 @@ public class ReportServiceImpl implements ReportService {
         SessionPseudoClock clock = kieSession.getSessionClock();
         insertFeedbackIntoSession(kieSession, clock);
         List<Integer> allRatings = new ArrayList<>();
-        kieSession.setGlobal("allRatings",allRatings);
+        kieSession.setGlobal("allRatings", allRatings);
         kieSession.setGlobal("globalProductId", productId);
         kieSession.getAgenda().getAgendaGroup("report-fpp-rules").setFocus();
         Integer num = kieSession.fireAllRules();
@@ -271,7 +253,7 @@ public class ReportServiceImpl implements ReportService {
         KieSession kieSession = kieContainer.newKieSession("reportsKsession");
         SessionPseudoClock clock = kieSession.getSessionClock();
         insertFeedbackIntoSession(kieSession, clock);
-        kieSession.setGlobal("globalUserId",user.getId().toString());
+        kieSession.setGlobal("globalUserId", user.getId().toString());
         kieSession.setGlobal("feedbackGlobal", new FeedbackGlobal());
         kieSession.getAgenda().getAgendaGroup("user-feedback-report-rules").setFocus();
 
@@ -279,7 +261,7 @@ public class ReportServiceImpl implements ReportService {
         System.out.println(num);
 
         FeedbackGlobal countersResult = (FeedbackGlobal) kieSession.getGlobal("feedbackGlobal");
-        FeedbackUserDTO feedbackUserDTO = new FeedbackUserDTO(user.getId(),user.getUsername(),countersResult.getFeedbackCount());
+        FeedbackUserDTO feedbackUserDTO = new FeedbackUserDTO(user.getId(), user.getUsername(), countersResult.getFeedbackCount());
 
         kieSession.dispose();
 
@@ -397,7 +379,6 @@ public class ReportServiceImpl implements ReportService {
 
 
     }
-
 
 
 }

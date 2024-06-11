@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DiscountDTO } from '../../dto/Discount';
+import { UserReportDTO } from '../../dto/User';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,9 @@ export class UserService {
   }
 
 
+  getUsers(): Observable<UserReportDTO[]> {
+    return this.http.get<UserReportDTO[]>(`${environment.apiHost}api/users`);
+  }
   
   getUnusedUserDiscounts(): Observable<DiscountDTO[]> {
     return this.http.get<DiscountDTO[]>(environment.apiHost + 'api/user/discounts/unused');

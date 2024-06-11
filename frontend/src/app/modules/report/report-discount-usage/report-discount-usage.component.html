@@ -1,0 +1,33 @@
+<div class = "page">
+    <div class="report-form-container">
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>User</mat-label>
+            <mat-select formControlName="userId" required>
+              <mat-option *ngFor="let user of users" [value]="user.userId">{{ user.username }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+       
+          <button id="btn" >Generate Report</button>
+        </form>
+      </div>
+      
+  <div class="report-container" *ngIf="report">
+    <h2>Discount Usage Report for</h2>
+    <div class="report-cards">
+      <div class="report-card">
+        <h3>Total Discounts</h3>
+        <p>{{ report.totalNumber }}</p>
+      </div>
+      <div class="report-card">
+        <h3>Total Used Discounts</h3>
+        <p>{{ report.totalUsed }}</p>
+      </div>
+      <div class="report-card">
+        <h3>Percentage Used</h3>
+        <p>{{ report.percentageUsed | number:'1.2-2' }}%</p>
+      </div>
+    </div>
+  </div>
+  
+  </div>

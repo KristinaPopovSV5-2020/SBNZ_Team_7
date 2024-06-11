@@ -19,6 +19,11 @@ import { FeedbackReportsWmyComponent } from './modules/report/feedback-reports-w
 import { FeedbackReportsContaveProductComponent } from './modules/report/feedback-reports-contave-product/feedback-reports-contave-product.component';
 import { FeedbackReportsCountComponent } from './modules/report/feedback-reports-count/feedback-reports-count.component';
 import { FeedbackReportsThresholdComponent } from './modules/report/feedback-reports-threshold/feedback-reports-threshold.component';
+import { PurchaseReportsComponent } from './modules/report/purchase-reports/purchase-reports.component';
+import { ReportUserShoppingComponent } from './modules/report/report-user-shopping/report-user-shopping.component';
+import { ReportDiscountUsageComponent } from './modules/report/report-discount-usage/report-discount-usage.component';
+import { ReportGiftsComponent } from './modules/report/report-gifts/report-gifts.component';
+import { ReportGiftsNameComponent } from './modules/report/report-gifts-name/report-gifts-name.component';
 import { AllFeedbackComponent } from './modules/report/all-feedback/all-feedback.component';
 
 
@@ -43,6 +48,11 @@ const routes: Routes = [
   {path:'feedback-reports-count', component:FeedbackReportsCountComponent},
   {path:'feedback-reports-countave-product', component: FeedbackReportsContaveProductComponent},
   {path:'feedback-reports-threshold', component: FeedbackReportsThresholdComponent},
+  {path: 'purchase-reports', component: PurchaseReportsComponent},
+  {path:'user-shopping-report', component: ReportUserShoppingComponent},
+  {path:'discount-usage', component: ReportDiscountUsageComponent},
+  {path:'gifts-name', component: ReportGiftsNameComponent},
+  {path:'gifts', component: ReportGiftsComponent},
   {path:'feedbacks', component:AllFeedbackComponent}
 ];
 

@@ -57,7 +57,11 @@ public class UserShoppingReportDTO implements Serializable {
 
 
     public void calculateAverage() {
-        this.average = totalValue / totalCount;
+        if (totalCount > 0) {
+            this.average = totalValue / totalCount;
+        } else {
+            this.average = 0.0;
+        }
     }
 
     public double getAverage() {
