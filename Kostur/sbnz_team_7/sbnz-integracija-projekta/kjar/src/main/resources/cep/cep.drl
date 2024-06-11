@@ -1,0 +1,162 @@
+package cep;
+
+import com.ftn.sbnz.model.models.products.Shopping;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.model.models.Feedback;
+import com.ftn.sbnz.model.models.RatingHelper;
+import com.ftn.sbnz.model.models.reports.FeedbackReport;
+import com.ftn.sbnz.model.models.products.Product;
+import java.time.LocalDateTime;
+import org.bson.types.ObjectId;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.time.ZoneId;
+
+
+global com.ftn.sbnz.service.ProductService productService;
+
+rule "Check Review Eligibility"
+ruleflow-group "feedback-rules"
+salience 100
+when
+    $feedback: Feedback(isNew() == true)
+    $shopping: Shopping(userId == $feedback.userId, productId == $feedback.productId, this before[72h,30d] $feedback)
+    $rating: RatingHelper(canRate: getCanRate() == false)
+then
+    modify($rating){
+        setCanRate(true);
+    }
+    modify($feedback){
+            setNew(false);
+    }
+    update($feedback)
+end
+
+
+rule "Check if the user rated the product only once"
+ruleflow-group "feedback-rules"
+salience 99
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $user: User($idUser: id)
+     $feedbacks: List() from collect(
+        Feedback(userId == $idUser, productId == $productId)
+     )
+     eval($feedbacks.size() >= 2)
+then
+    modify($rating){
+            setCanRate(false);
+    }
+    System.out.println("NE MOZE - vec je ocenjeno");
+end
+
+
+
+rule "Check if the product is popular based on the number of feedback"
+ruleflow-group "feedback-rules"
+salience 98
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $feedbacks: List() from collect(
+        Feedback(productId == $productId) over window:time(30d)
+     )
+     Number(intValue >= 3) from accumulate(
+             $feedback: Feedback(
+             ) from $feedbacks,
+             count($feedback)
+         )
+     $product: Product(id == $productId)
+then
+    modify($product){
+        setPopular(true);
+    }
+    System.out.println("Broj: " + $feedbacks.size());
+    System.out.println("Product ID: " + $product.getId() + " is popular");
+end
+
+rule "Check if the product is not popular based on the number of feedback"
+ruleflow-group "feedback-rules"
+salience 97
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $feedbacks: List() from collect(
+        Feedback(productId == $productId) over window:time(30d)
+     )
+     Number(intValue < 3) from accumulate(
+             $feedback: Feedback(
+             ) from $feedbacks,
+             count($feedback)
+         )
+     $product: Product(id == $productId)
+then
+    modify($product){
+        setPopular(false);
+    }
+    System.out.println("Broj: " + $feedbacks.size());
+    System.out.println("Product ID: " + $product.getId() + " is not popular");
+    productService.save($product);
+    System.out.println("The product is saved.");
+end
+
+
+rule "Check if the product is popular based on the average rating"
+ruleflow-group "feedback-rules"
+salience 96
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $product: Product(id == $productId, isPopular() == true)
+     $averageRating: Double() from accumulate(
+         Feedback(productId == $productId, $ratingFeedback : rating) over window:time(30d),
+         average($ratingFeedback)
+     )
+     eval($averageRating >= 4.5)
+then
+    System.out.println("Average: " + $averageRating);
+    productService.save($product);
+    System.out.println("The product is saved.");
+end
+
+rule "Check if the product is not popular based on the average rating"
+ruleflow-group "feedback-rules"
+salience 95
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $product: Product(id == $productId, isPopular() == true)
+     $averageRating: Double() from accumulate(
+         Feedback(productId == $productId, $ratingFeedback : rating) over window:time(30d),
+         average($ratingFeedback)
+     )
+     eval($averageRating < 4.5)
+then
+    modify($product){
+            setPopular(false);
+    }
+    System.out.println("Average: " + $averageRating);
+    productService.save($product);
+    System.out.println("The product is saved.");
+end
+
+
+rule "Check if user has at least 5 ratings in the last 7 days"
+ruleflow-group "report-rules"
+salience 100
+when
+    $rating: RatingHelper(canGenerateReport: getCanGenerateReport() == false)
+    $feedbacks: List() from collect(
+            Feedback() over window:time(7d)
+    )
+    Number(intValue >= 5) from accumulate(
+        $feedback: Feedback(
+        ) from $feedbacks,
+        count($feedback)
+    )
+then
+    System.out.println("Ima vise od 5 utisaka");
+    modify($rating){
+        setCanGenerateReport(true);
+    }
+end
+
+
+

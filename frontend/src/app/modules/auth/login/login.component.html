@@ -1,0 +1,24 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="form-container">
+      <p class="title">Login into your account</p>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <mat-error *ngIf="hasError">Wrong username or password.</mat-error>
+          <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input formControlName="username" name="username"  id="emailLogin" placeholder="Enter username" matInput>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input formControlName="password" name="password" matInput [type]="hide ? 'password' : 'text'" placeholder="Enter password">
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="background-color: white;">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+          </mat-form-field>
+          <!--<app-button text="Login" typeButton="submit"></app-button>-->
+          <button mat-raised-button type="submit">Login</button>
+      </form>
+  </div>
+</body>

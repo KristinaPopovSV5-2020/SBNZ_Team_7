@@ -1,0 +1,32 @@
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p id="msg">{{ loadingMessage }}</p>
+  </div>
+  <div class="recommendations-container" *ngIf="!loading">
+    <div class="recommendations-header">
+      <h2 class="title">Recommendations Based On</h2>
+      <div class="info-card">
+        <h3>Skin Type:</h3>
+        <p>{{skinType}}</p>
+      </div>
+      <div class="info-card">
+        <h3>Budget:</h3>
+        <p>{{budget!.minValue}} din - {{budget!.maxValue}}  din</p>
+      </div>
+      <div class="info-card">
+        <h3>Allergens:</h3>
+        <ng-container *ngIf="allergens.length > 0; else noAllergens">
+            <p *ngFor="let allergen of allergens">{{ allergen }}</p>
+          </ng-container>
+          <ng-template #noAllergens>
+            <p>None specified</p>
+          </ng-template>
+      </div>
+    </div>
+    <div class="product-list">
+      <div *ngFor="let product of recommendations">
+        <app-product-card class="product-card" [product]="product"></app-product-card>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,19 @@
+<mat-card class="product-card">
+    <div class="card-content">
+    <h1>{{report?.productName}}</h1>
+    <mat-card-content>
+      <div class="product-details">
+        <div class="product-detail">
+          <strong>Number of Feedback left:</strong> {{ report?.feedbacks?.length }}
+        </div>
+        <div class="product-detail">
+          <strong>Average rating:</strong> {{ report?.averageRating | number:'1.2-2'}}
+        </div>
+      </div>
+    </mat-card-content>
+    </div>
+    <mat-card-actions>
+        <button mat-button color="primary" (click)="view(report?.feedbacks,report?.productName)">View All Feedback</button>
+      </mat-card-actions>
+  </mat-card>
+  

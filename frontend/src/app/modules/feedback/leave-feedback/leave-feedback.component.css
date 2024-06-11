@@ -1,0 +1,75 @@
+.product-name {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+  }
+
+
+  h2{
+    font-size: x-large;
+  }
+
+.feedback-container {
+    display: flex;
+    padding-left: 100px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--main-color); /* Ako koristiš varijable za boje */
+  }
+  
+form {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.833);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+.rating-group {
+    margin-top: 15px;
+    display: flex;
+    width: 250px;
+    text-align: center;
+    margin: o auto;
+  }
+  
+.rating-value{
+    background-color: pink;
+    color: rgb(248, 15, 92);
+    width: 70px;
+    
+ }
+
+ .rating-label{
+    font-size: large;
+    font-weight: bolder;
+    margin-top: 20px;
+ }
+
+
+ .button{
+    margin-top: 20px;
+    width: 100%;
+    background-color: #F7CAC9;
+ }
+
+
+mat-error{
+    color: purple;
+    margin: 5px auto;
+    text-align: center;
+}
+
+/* FOCUS */
+*:focus {
+    outline: none !important;
+    border: 0 !important;
+}
+  

@@ -1,0 +1,23 @@
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="bwBase" packages="backward">
+        <ksession name="bwKsession"/>
+    </kbase>
+    <kbase name="cepKbase" eventProcessingMode="stream" packages="cep">
+        <ksession name="cepKsession" clockType="pseudo"/>
+    </kbase>
+    <kbase name="cepBonusKbase" eventProcessingMode="stream" packages="cep_customer_bonuses">
+        <ksession name="cepBonusKsession" clockType="pseudo"/>
+    </kbase>
+    <kbase name="forwardkBase" eventProcessingMode="stream" packages="forward">
+        <ksession name="forwardKsession"/>
+    </kbase>
+    <kbase name="forwardBudgetKbase" eventProcessingMode="stream" packages="forward_budget">
+        <ksession name="forwardBudgetKsession"/>
+    </kbase>
+    <kbase name="reportsKbase" eventProcessingMode="stream" packages="reports">
+        <ksession name="reportsKsession" clockType="pseudo"/>
+    </kbase>
+    <kbase name="reportsKbase2" eventProcessingMode="stream" packages="reports2">
+        <ksession name="reportsKsession2" clockType="pseudo"/>
+    </kbase>
+</kmodule>

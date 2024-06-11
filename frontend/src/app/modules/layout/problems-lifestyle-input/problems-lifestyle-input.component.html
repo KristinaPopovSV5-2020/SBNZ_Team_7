@@ -1,0 +1,39 @@
+<div class="budget-container">
+    <form [formGroup]="habitsForm">
+        <div class="flex-container">
+            <div class="flex-item">
+                <h2>Skin Problems</h2>
+                <div class="problem-checkboxes">
+                    <mat-checkbox formControlName="PROBLEM_ACNE">Acne</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_SPOTS">Spots</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_SCARS">Scars</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_ENLARGED_PORES">Enlarged pores</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_REDNESS">Redness</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_ITCHINESS">Itchiness</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_WRINKLES">Wrinkles</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_FRECKLES">Freckles</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_BLACKHEADS">Blackheads</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_LACK_OF_FIRMNESS">Lack of firmness</mat-checkbox>
+                    <mat-checkbox formControlName="PROBLEM_ECZEMA">Eczema</mat-checkbox>
+                </div>
+            </div>
+            <hr width="1" size="480" style="margin: 0 auto" />
+            <div class="flex-item">
+                <h2>Lifestyle Habits</h2>
+                <div class="habit-checkboxes">
+                    <mat-checkbox formControlName="HABIT_UNHEALTHY_DIET">Unhealthy Diet</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_SMOKING">Smoking</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_ALCOHOL_CONSUMPTION">Alcohol Consumption</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_SUN_EXPOSURE">Sun exposure</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_LACK_OF_SLEEP">Lack of sleep</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_STRESS">Stress</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_INTENSE_PHYSICAL_ACTIVITY">Intense physical activity</mat-checkbox>
+                    <mat-checkbox formControlName="HABIT_HORMONAL_CHANGES">Hormonal changes</mat-checkbox>
+                </div>
+            </div>
+        </div>
+        <button mat-button (click)="submitForm()" class="button">Submit</button>
+    </form>
+    
+    
+</div>

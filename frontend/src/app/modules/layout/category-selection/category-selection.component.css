@@ -1,0 +1,119 @@
+.category-selection-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; 
+  padding: 20px; /* Dodaj padding */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px; 
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: rgba(247, 202, 201, 0.87); 
+  font-weight: 400;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: rgba(247, 202, 201, 0.753); 
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(1);
+}
+
+.full-width {
+  width: 100%;
+  min-width: 400px;
+}
+
+.results-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.product-card {
+  margin-bottom: 20px;
+}
+
+.info-card {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #fff0f5;
+  border: 1px solid #dc8b99;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h3 {
+  margin: 0;
+  color: #dc8b99;
+}
+
+.info-card p {
+  margin: 5px 0 0 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.product-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #dc8b99;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card {
+  flex: 1 1 calc(50% - 40px); 
+  margin: 20px;
+  max-width: 300px; 
+}
+
+#title {
+  margin: 0px auto;
+  font-size: 21px;
+  padding: 10px;
+  font-weight: 400;
+  width: 90%; /* Povećaj širinu */
+  background-color: rgba(255, 255, 255, 0.703);
+  color: #333;
+  text-align: center;
+  border-radius: 10px;
+}
+
+
+.results-container{
+  margin-top: 50px;
+}
+@media (max-width: 768px) {
+  .product-card {
+    flex: 1 1 100%; 
+  }
+}

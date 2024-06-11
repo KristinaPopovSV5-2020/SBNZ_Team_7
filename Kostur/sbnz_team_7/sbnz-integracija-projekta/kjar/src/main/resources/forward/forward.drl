@@ -1,0 +1,33 @@
+package forward;
+import com.ftn.sbnz.model.models.products.Product;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.facts.RecommendedProduct;
+import java.util.List;
+import java.util.Set;
+import java.util.Collections;
+
+global java.util.List recommendedProducts;
+
+
+rule "Remove products with allergens"
+    salience 50
+    when
+        $user : User($allergenIds : getAllergenIds() != null && !getAllergenIds().isEmpty())
+        $rp : RecommendedProduct($product : getProduct())
+        eval(!Collections.disjoint($product.getIngredientIds(), $allergenIds))
+    then
+        System.out.println("0");
+        delete($rp);
+end
+
+
+
+rule "Add remaining recommended products"
+    salience 4
+    when
+        $rp : RecommendedProduct()
+    then
+        System.out.println("01");
+        recommendedProducts.add($rp);
+        delete($rp);
+end

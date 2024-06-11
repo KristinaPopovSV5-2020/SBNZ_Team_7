@@ -1,0 +1,23 @@
+<div class="homepage-container">
+    <section class="content">
+      <div class="info-box">
+        <div class="info-card" (click)="navigateToReport('weeklyMonthlyYearlyFeedback')">
+          <h2 class="info-title">Weekly, Monthly, and Yearly Feedback</h2>
+          <p class="info-text">Track user feedback on products on a weekly, monthly, and yearly basis, including rankings of the best-rated products.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('feedbackCountLast30Days')">
+          <h2 class="info-title">Feedback Count in the Last 30 Days</h2>
+          <p class="info-text">View the number of feedbacks left by users in the last 30 days.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('feedbackCountAndAverageRatingPerProduct')">
+          <h2 class="info-title">Feedback Count and Average Rating Per Product</h2>
+          <p class="info-text">See the number of feedbacks and the average rating for each product.</p>
+        </div>
+        <div class="info-card" (click)="navigateToReport('productsAboveRatingThreshold')">
+          <h2 class="info-title">Products Above Rating Threshold</h2>
+          <p class="info-text">Return products with an average rating above a specified threshold.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  

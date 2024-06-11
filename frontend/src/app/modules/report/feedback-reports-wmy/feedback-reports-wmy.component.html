@@ -1,0 +1,26 @@
+<div class="recommendations-container">
+    <div class="recommendations-header">
+      <h2 class="title">Weekly, Monthly, and Yearly Feedback Reports</h2>
+      <form class="form" [formGroup]="wmyReportForm">
+        <div class="form-group">
+            <mat-button-toggle-group
+              formControlName="period"
+              class="period-group"
+              aria-label="Period"
+              [value]="wmyReportForm.get('period')?.value">
+              <mat-button-toggle class="period-value" value="7d">7d</mat-button-toggle>
+              <mat-button-toggle class="period-value" value="30d">30d</mat-button-toggle>
+              <mat-button-toggle class="period-value" value="365d">365d</mat-button-toggle>
+        
+            </mat-button-toggle-group>
+            <button mat-button (click)="generateReport()" class="button">Generate Report</button>
+          </div>
+    </form>
+     
+    </div>
+    <div class="product-list">
+      <div *ngFor="let report of reports">
+        <app-card-report-feedback class="product-card" [report]="report"></app-card-report-feedback >
+      </div>
+    </div>
+  </div>

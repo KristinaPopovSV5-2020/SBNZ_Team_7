@@ -1,0 +1,20 @@
+<div class="card">
+<h1 mat-dialog-title class="title"> Purchase Product - {{productName}} <br> price: {{price}}</h1>
+<div mat-dialog-content class="dialog-content">
+  <p *ngIf="discounts.length === 0" class="no-discounts">You have no discounts.</p>
+  <div *ngIf="discounts.length > 0">
+    <mat-form-field appearance="outline">
+      <mat-label>Select a Discount</mat-label>
+      <mat-select [(value)]="selectedDiscountId">
+        <mat-option  *ngFor="let discount of discounts" [value]="discount.id">
+            {{ formatDiscountValue(discount.value) }} - {{ discount.dateCreated | date:'medium' }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div class="actions">
+  <button mat-button class="mat-warn2" (click)="closeDialog()">Cancel</button>
+  <button mat-button (click)="confirmPurchase()">Confirm</button>
+</div>
+</div>  

@@ -1,0 +1,13 @@
+<div class="centered-container">
+    <mat-card *ngFor="let item of obs | async" class="purchase-card">
+        <mat-card-content>
+            <p style="color: gray;">{{ item.date | date: 'medium' }}</p> 
+          <p>  You purchased <b>{{ item.name }}</b> with the following benefits:  
+            <ng-container *ngFor="let benefit of item.benefits">
+              {{ formatEnumString(benefit) }}<span *ngIf="benefit !== item.benefits[item.benefits.length - 1]">, </span>
+            </ng-container>. 
+            Price: <b>{{ item.price | number:'1.1-2'}} din</b><button mat-button (click)="leaveFeedback(item)"  class="button">Leave Feedback</button></p>
+        </mat-card-content>
+      </mat-card>
+  <mat-paginator style="background-color: #F7CAC9;" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

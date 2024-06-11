@@ -1,0 +1,56 @@
+<body>
+    <div class="form-container">
+      <p class="title">Sign Up</p>
+      <form class="form" [formGroup]="signupForm">
+        <mat-error *ngIf="hasError">Please complete all fields!</mat-error>
+        <mat-error *ngIf="hasErrorUser">User with email already exists!</mat-error>
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input style=" text-indent: 10px;" formControlName="username" type="text" matInput>
+            <mat-error *ngIf="signupForm.get('username')?.hasError('required')">
+                Username is Required!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" >
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="background-color: transparent;">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+                Password is Required!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Confirm password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmpsw" >
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="background-color: transparent;">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('required')">
+                Confirm password is Required!
+            </mat-error>
+            <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('passDontMatch')">
+                Passwords do not match!
+            </mat-error>
+        </mat-form-field>
+        <h2>Select skin type: </h2>
+        <div class="skin-type-container">
+            <mat-radio-group formControlName="skinType">
+                <mat-radio-button value="NORMAL">Normal</mat-radio-button>
+                <mat-radio-button value="DRY">Dry</mat-radio-button>
+                <mat-radio-button value="OILY">Oily</mat-radio-button>
+                <mat-radio-button value="COMBINATION">Combination</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <h2>Select allergen(s): </h2>
+        <section class="example-section" >
+            <ng-container *ngFor="let allergen of allergensFromDatabase; let i = index">
+                <mat-checkbox class="example-margin" (change)="onAllergenChange($event, allergen)">{{ allergen.name }}</mat-checkbox>
+            </ng-container>
+        </section>
+    </form>
+    <button class="button" style="margin-top: 10px;" mat-button (click)="signup()">Confirm</button>
+  </div>
+</body>
+

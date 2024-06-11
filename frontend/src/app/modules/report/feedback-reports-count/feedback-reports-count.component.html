@@ -1,0 +1,33 @@
+<div class="recommendations-container">
+    <div class="recommendations-header">
+      <h2 class="title">Feedback Count per User in the Last 30 Days</h2>
+      <form class="form" [formGroup]="feedbackUserForm">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>User</mat-label>
+                <mat-select formControlName="user">
+                  <mat-option *ngFor="let item of users" [value]="item.username">{{ item.username}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="feedbackUserForm.get('user')?.hasError('required')">
+                    This Field is Required!
+                  </mat-error>
+              </mat-form-field>
+            <button mat-button (click)="generateReport()" class="button">Generate Report</button>
+          </div>
+    </form>
+     
+    </div>
+    <div class="container" *ngIf="generate">
+        <mat-card class="product-card" *ngIf="user != null">
+            <mat-card-content>
+              <div class="product-info">
+                <h2 class="title">{{ user.email }}</h2>
+                <div class="product-info">
+                    <p><strong>ID:</strong> {{ user.userId }}</p>
+                    <p><strong>Number of Feedbacks left:</strong> {{ user.amountOfFeedback }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+    </div>
+  </div>

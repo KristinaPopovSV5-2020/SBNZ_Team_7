@@ -1,0 +1,57 @@
+package reports2;
+import com.ftn.sbnz.model.models.user.User;
+import com.ftn.sbnz.model.models.Gift;
+import java.util.Map;
+import java.util.HashMap;
+import com.ftn.sbnz.dto.reports.UserGifts;
+import java.util.ArrayList;       
+global String globalGiftName;
+global Map<User, UserGifts> userGiftsMap;
+import java.time.LocalDateTime;
+
+
+
+query matchGiftName(String giftNamePar)
+    eval(globalGiftName.equals(giftNamePar))
+end
+
+
+query matchDate(LocalDateTime giftDatePar)
+    eval(giftDatePar.isAfter(LocalDateTime.now().minusDays(30)))
+end
+
+
+rule "Analyze Gifts Given with Specific Name"
+ruleflow-group "name-rule"
+when
+    $user: User($gifts: gifts)
+    $gift: Gift() from $gifts
+    matchGiftName($gift.getGiftName();)
+then
+    UserGifts userGifts = (UserGifts) userGiftsMap.get($user);
+    if (userGifts == null) {
+        userGifts = new UserGifts($user, new ArrayList<>());
+        userGiftsMap.put($user, userGifts);
+    }
+    userGifts.getGifts().add($gift);
+    System.out.println("Added gift " + $gift.getGiftName() + " to user " + $user.getUsername());
+end
+
+
+
+
+rule "Analyze Gifts Given in Last 30 days"
+ruleflow-group "date-rule"
+when
+    $user: User($gifts: gifts)
+    $gift: Gift() from $gifts
+    matchDate($gift.timeGiven;);
+then
+    UserGifts userGifts = (UserGifts) userGiftsMap.get($user);
+    if (userGifts == null) {
+        userGifts = new UserGifts($user, new ArrayList<>());
+        userGiftsMap.put($user, userGifts);
+    }
+    userGifts.getGifts().add($gift);
+    System.out.println("Added gift " + $gift.getGiftName() + " to user " + $user.getUsername());
+end

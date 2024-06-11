@@ -1,0 +1,58 @@
+.budget-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--main-color); /* Ako koristiš varijable za boje */
+  }
+  
+  form {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.833);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  mat-checkbox{
+    display: block;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #F7CAC9;
+    color: black;
+  }
+  
+  button:hover {
+    background-color: rgba(247, 202, 201, 0.753); 
+    transform: scale(1.05);
+  }
+  
+  button:active {
+    transform: scale(1);
+  }
+
+  .flex-container {
+    display: flex;
+}
+
+.flex-item {
+    flex: 1;
+    padding-left: 15px;
+}
+
+h2{
+    text-align: center;
+}
+
+
+  
