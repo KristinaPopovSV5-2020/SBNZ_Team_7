@@ -13,8 +13,9 @@ import { ForwardChaining2Component } from './forward-chaining2/forward-chaining2
 import { CategorySelectionComponent } from './category-selection/category-selection.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { PurchaseDialogComponent } from './purchase-dialog/purchase-dialog.component';
+import { DiscountsComponent } from './discounts/discounts.component';
 @NgModule({
-  declarations: [ToolbarComponent,  PurchaseDialogComponent ,CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component, CreateProductComponent],
+  declarations: [ToolbarComponent,DiscountsComponent,  PurchaseDialogComponent ,CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component, CreateProductComponent],
   imports: [
     CommonModule,
     MaterialModule,

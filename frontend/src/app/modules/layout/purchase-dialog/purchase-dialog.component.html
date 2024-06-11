@@ -7,7 +7,7 @@
       <mat-label>Select a Discount</mat-label>
       <mat-select [(value)]="selectedDiscountId">
         <mat-option  *ngFor="let discount of discounts" [value]="discount.id">
-            {{ formatDiscountValue(discount.value) }} - {{ discount.dateCreated | date }}
+            {{ formatDiscountValue(discount.value) }} - {{ discount.dateCreated | date:'medium' }}
         </mat-option>
       </mat-select>
     </mat-form-field>

@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.implementation;
 
+import com.ftn.sbnz.dto.GiftDTO;
 import com.ftn.sbnz.dto.user.AdminDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.dto.user.UserReportDTO;
@@ -126,6 +127,11 @@ public class UserServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public List<GiftDTO> getGifts(User user) {
+        return user.getGifts().stream()
+                .map(GiftDTO::new)
+                .collect(Collectors.toList());
+    }
 
     public List<UserReportDTO> getAllUsers() {
         List<UserReportDTO> userReportDTOS = new ArrayList<>();

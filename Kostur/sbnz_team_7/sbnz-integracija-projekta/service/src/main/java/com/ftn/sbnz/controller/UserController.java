@@ -1,6 +1,7 @@
 package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.DiscountDTO;
+import com.ftn.sbnz.dto.GiftDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
 import com.ftn.sbnz.dto.user.UserReportDTO;
 import com.ftn.sbnz.exception.BadRequestException;
@@ -92,6 +93,21 @@ public class UserController {
         }
 
         List<DiscountDTO> discountDTOS = discountService.getUserDiscount(user);
+        return new ResponseEntity<>(discountDTOS, HttpStatus.OK);
+
+    }
+
+
+    @GetMapping(value = "/api/user/gifts")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<GiftDTO>> getGifts() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        if (user == null) {
+            throw new NotFoundException("User does not exist!");
+        }
+
+        List<GiftDTO> discountDTOS = userService.getGifts(user);
         return new ResponseEntity<>(discountDTOS, HttpStatus.OK);
 
     }
