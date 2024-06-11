@@ -25,6 +25,7 @@ import { ReportDiscountUsageComponent } from './modules/report/report-discount-u
 import { ReportGiftsComponent } from './modules/report/report-gifts/report-gifts.component';
 import { ReportGiftsNameComponent } from './modules/report/report-gifts-name/report-gifts-name.component';
 import { AllFeedbackComponent } from './modules/report/all-feedback/all-feedback.component';
+import { DiscountsComponent } from './modules/layout/discounts/discounts.component';
 
 
 const routes: Routes = [
@@ -53,7 +54,8 @@ const routes: Routes = [
   {path:'discount-usage', component: ReportDiscountUsageComponent},
   {path:'gifts-name', component: ReportGiftsNameComponent},
   {path:'gifts', component: ReportGiftsComponent},
-  {path:'feedbacks', component:AllFeedbackComponent}
+  {path:'feedbacks', component:AllFeedbackComponent},
+  {path:'discounts', component:DiscountsComponent}
 ];
 
 @NgModule({
