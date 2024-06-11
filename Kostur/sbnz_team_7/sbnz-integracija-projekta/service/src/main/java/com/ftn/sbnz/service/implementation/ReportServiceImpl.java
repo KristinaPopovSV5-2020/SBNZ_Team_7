@@ -191,7 +191,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<FeedbackReport> getFeedbackReport(String period) {
+    public List<FeedbackReportDTO> getFeedbackReport(String period) {
         boolean canGenerateWeekly = false;
         List<FeedbackReport> rankedReports = new ArrayList<>();
         if (period.equals("7d")){
@@ -235,7 +235,8 @@ public class ReportServiceImpl implements ReportService {
             return null;
         } else {
             rankedReports.sort(Comparator.comparingDouble(FeedbackReport::getAverageRating).reversed());
-            return rankedReports;
+            List<FeedbackReportDTO>  feedbackReportDTOS = convertToReportDTO(rankedReports);
+            return feedbackReportDTOS;
         }
 
     }
@@ -368,6 +369,33 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return (double) sum / ratings.size();
+    }
+
+    private List<FeedbackReportDTO> convertToReportDTO(List<FeedbackReport> feedbackReports){
+        List<FeedbackReportDTO> feedbackReportDTOS = new ArrayList<>();
+        for(FeedbackReport feedbackReport : feedbackReports){
+            FeedbackReportDTO  feedbackReportDTO = new FeedbackReportDTO();
+            Product product = productRepository.findById(feedbackReport.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+            feedbackReportDTO.setProductName(product.getName());
+            List<FeedbackDTO> feedbackDTOS = new ArrayList<>();
+            for (Feedback feedback: feedbackReport.getFeedbacks()){
+                User user = userRepository.findById(feedback.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+                FeedbackDTO feedbackDTO = new FeedbackDTO(feedback, user.getUsername());
+                feedbackDTOS.add(feedbackDTO);
+            }
+            Collections.sort(feedbackDTOS, new Comparator<FeedbackDTO>() {
+                @Override
+                public int compare(FeedbackDTO f1, FeedbackDTO f2) {
+                    return f1.getDate().compareTo(f2.getDate());
+                }
+            });
+            feedbackReportDTO.setFeedbacks(feedbackDTOS);
+            feedbackReportDTO.setAverageRating(feedbackReport.getAverageRating());
+            feedbackReportDTOS.add(feedbackReportDTO);
+        }
+        return feedbackReportDTOS;
+
+
     }
 
 

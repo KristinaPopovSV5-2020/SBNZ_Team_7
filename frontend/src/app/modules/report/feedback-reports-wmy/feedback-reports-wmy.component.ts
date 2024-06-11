@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ReportService } from '../report.service';
+import { FeedbackReportDTO } from '../../../dto/Report';
 
 @Component({
   selector: 'app-feedback-reports-wmy',
@@ -13,6 +14,8 @@ export class FeedbackReportsWmyComponent implements OnInit {
 
   generate: boolean = false;
 
+
+  reports: FeedbackReportDTO[] = [];
 
   
   
@@ -36,6 +39,14 @@ export class FeedbackReportsWmyComponent implements OnInit {
 
   generateReport(){
     if (this.wmyReportForm.valid){
+      this.reportService.getFeedbackReportWMY(this.wmyReportForm.value.period)
+      .subscribe({
+        next: (response) =>{
+          this.generate = true;
+          this.reports = response;    
+          },
+      })
+      
       
     }
 

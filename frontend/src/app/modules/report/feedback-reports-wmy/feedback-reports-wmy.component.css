@@ -76,5 +76,23 @@
     justify-content: center;
     margin: 0 auto;
   }
+
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .product-card {
+    flex: 1 1 calc(50% - 40px); 
+    margin: 20px;
+    max-width: 300px; 
+  }
+  
+  @media (max-width: 768px) {
+    .product-card {
+      flex: 1 1 100%; 
+    }
+  }
  
   

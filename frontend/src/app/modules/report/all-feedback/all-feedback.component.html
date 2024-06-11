@@ -1,0 +1,13 @@
+<div class="container" >
+    <div class="product-name">
+        <h1>{{productName}}</h1>
+    </div>
+    <mat-card *ngFor="let item of obs | async" class="product-card">
+        <mat-card-content>
+            <p>
+              <b>{{ item.username }}</b> left feedback on {{ item.date | date:'shortDate' }} with a rating of <b>{{ item.rating | number:'1.0-1' }}</b>.
+            </p>
+          </mat-card-content>
+      </mat-card>
+  <mat-paginator style="background-color: #F7CAC9;" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

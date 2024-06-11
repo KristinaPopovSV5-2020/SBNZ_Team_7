@@ -68,9 +68,10 @@ public class UserController {
 
 
     @GetMapping(value = "api/users/report")
-    public ResponseEntity<List<UserReportDTO>> getAllProducts(){
+    public ResponseEntity<List<UserReportDTO>> getAllProducts() {
         List<UserReportDTO> userReportDTOS = userService.getAllUsers();
         return new ResponseEntity<>(userReportDTOS, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/api/user/discounts")
     @PreAuthorize("isAuthenticated()")
