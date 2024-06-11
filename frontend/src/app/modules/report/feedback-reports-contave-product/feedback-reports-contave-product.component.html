@@ -1,0 +1,36 @@
+<div class="recommendations-container">
+    <div class="recommendations-header">
+      <h2 class="title">Feedback Count and Average Rating Per Product</h2>
+      <form class="form" [formGroup]="caProductForm">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Product</mat-label>
+                <mat-select formControlName="product">
+                  <mat-option *ngFor="let item of products" [value]="item.name">{{ item.name | titlecase }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="caProductForm.get('product')?.hasError('required')">
+                    This Field is Required!
+                  </mat-error>
+              </mat-form-field>
+            <button mat-button (click)="generateReport()" class="button">Generate Report</button>
+          </div>
+    </form>
+     
+    </div>
+    <div class="container" *ngIf="generate">
+        <mat-card class="product-card" *ngIf="product != null">
+            <mat-card-content>
+              <div class="product-info">
+                <h2 class="title">{{ product.name }}</h2>
+                <div class="product-info">
+                    <p><strong>ID:</strong> {{ product.productId }}</p>
+                    <p><strong>Number of Feedbacks left:</strong> {{ product.numberOfProducts }}</p>
+                    <p><strong>Average:</strong> {{ product.average }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+    </div>
+  </div>
+  
+

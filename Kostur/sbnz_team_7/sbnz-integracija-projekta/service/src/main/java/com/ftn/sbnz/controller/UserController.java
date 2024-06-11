@@ -1,7 +1,8 @@
 package com.ftn.sbnz.controller;
-
+import com.ftn.sbnz.dto.product.ProductFeedbackDTO;
 import com.ftn.sbnz.dto.DiscountDTO;
 import com.ftn.sbnz.dto.user.UserDTO;
+import com.ftn.sbnz.dto.user.UserReportDTO;
 import com.ftn.sbnz.exception.BadRequestException;
 import com.ftn.sbnz.exception.NotFoundException;
 import com.ftn.sbnz.model.models.user.User;
@@ -64,6 +65,12 @@ public class UserController {
         String skinType = userService.getUserSkinType(user);
         return new ResponseEntity<>(skinType, HttpStatus.OK);
     }
+
+
+    @GetMapping(value = "api/users/report")
+    public ResponseEntity<List<UserReportDTO>> getAllProducts(){
+        List<UserReportDTO> userReportDTOS = userService.getAllUsers();
+        return new ResponseEntity<>(userReportDTOS, HttpStatus.OK);
 
     @GetMapping(value = "/api/user/discounts")
     @PreAuthorize("isAuthenticated()")

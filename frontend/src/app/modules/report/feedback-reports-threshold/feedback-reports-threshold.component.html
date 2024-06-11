@@ -1,0 +1,29 @@
+<div class="recommendations-container">
+    <div class="recommendations-header">
+      <h2 class="title">Products Above Rating Threshold</h2>
+      <form class="form" [formGroup]="thresholdForm">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Threshold</mat-label>
+              <input style="text-indent: 10px;" formControlName="threshold" type="number" matInput>
+              <mat-error *ngIf="thresholdForm.get('threshold')?.hasError('required')">
+                Threshold is Required!
+              </mat-error>
+            </mat-form-field>
+            <button mat-button (click)="generateReport()" class="button">Generate Report</button>
+          </div>
+    </form>
+     
+    </div>
+    <div class="container" *ngIf="generate">
+        <mat-card *ngFor="let item of obs | async" class="product-card">
+            <mat-card-content>
+              <p>
+                <b>{{ item.name }}</b> (ID: {{ item.productId }}) has an average rating of <b>{{ item.average | number: '1.2-2' }}</b>.
+            </mat-card-content>
+          </mat-card>
+      <mat-paginator style="background-color: #F7CAC9;" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      
+    </div>
+  </div>
+  

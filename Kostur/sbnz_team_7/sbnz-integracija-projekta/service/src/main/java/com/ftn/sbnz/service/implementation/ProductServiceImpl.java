@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.implementation;
 
 import com.ftn.sbnz.dto.product.ProductDTO;
+import com.ftn.sbnz.dto.product.ProductFeedbackDTO;
 import com.ftn.sbnz.dto.product.ProductSearchDTO;
 import com.ftn.sbnz.model.models.products.Category;
 import com.ftn.sbnz.model.models.products.Product;
@@ -15,6 +16,7 @@ import org.kie.api.runtime.KieContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -109,6 +111,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<ProductFeedbackDTO> getAllProducts() {
+        List<ProductFeedbackDTO> productFeedbackDTOS = new ArrayList<>();
+        for (Product product: productRepository.findAll()){
+            ProductFeedbackDTO productFeedbackDTO = new ProductFeedbackDTO(product);
+            productFeedbackDTOS.add(productFeedbackDTO);
+        }
+        return productFeedbackDTOS;
     }
 
 
