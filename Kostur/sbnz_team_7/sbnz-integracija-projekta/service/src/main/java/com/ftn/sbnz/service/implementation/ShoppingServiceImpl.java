@@ -1,6 +1,5 @@
 package com.ftn.sbnz.service.implementation;
 
-import com.ftn.sbnz.dto.reports.FeedbackDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingResponseDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingUserDTO;
 import com.ftn.sbnz.exception.BadRequestException;
@@ -92,7 +91,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         Collections.sort(response, new Comparator<ShoppingUserDTO>() {
             @Override
             public int compare(ShoppingUserDTO f1, ShoppingUserDTO f2) {
-                return f1.getDate().compareTo(f2.getDate());
+                return f2.getDate().compareTo(f1.getDate());
             }
         });
         return response;

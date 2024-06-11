@@ -66,7 +66,7 @@ export class LeaveFeedbackComponent implements OnInit, OnDestroy {
           if (error instanceof HttpErrorResponse){
             console.log(error.error)
             this.hasError = true;
-            this.messageError = error.error + ". Already rated.";
+            this.messageError = error.error;
           }
         }, 
   
