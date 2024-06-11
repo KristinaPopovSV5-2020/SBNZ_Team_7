@@ -16,7 +16,6 @@ import java.time.ZoneId;
 
 global com.ftn.sbnz.service.ProductService productService;
 
-
 rule "Check Review Eligibility"
 ruleflow-group "feedback-rules"
 salience 100
@@ -76,10 +75,34 @@ then
     System.out.println("Product ID: " + $product.getId() + " is popular");
 end
 
+rule "Check if the product is not popular based on the number of feedback"
+ruleflow-group "feedback-rules"
+salience 97
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $feedbacks: List() from collect(
+        Feedback(productId == $productId) over window:time(30d)
+     )
+     Number(intValue < 3) from accumulate(
+             $feedback: Feedback(
+             ) from $feedbacks,
+             count($feedback)
+         )
+     $product: Product(id == $productId)
+then
+    modify($product){
+        setPopular(false);
+    }
+    System.out.println("Broj: " + $feedbacks.size());
+    System.out.println("Product ID: " + $product.getId() + " is not popular");
+    productService.save($product);
+    System.out.println("The product is saved.");
+end
+
 
 rule "Check if the product is popular based on the average rating"
 ruleflow-group "feedback-rules"
-salience 97
+salience 96
 when
      $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
      $product: Product(id == $productId, isPopular() == true)
@@ -89,6 +112,26 @@ when
      )
      eval($averageRating >= 4.5)
 then
+    System.out.println("Average: " + $averageRating);
+    productService.save($product);
+    System.out.println("The product is saved.");
+end
+
+rule "Check if the product is not popular based on the average rating"
+ruleflow-group "feedback-rules"
+salience 95
+when
+     $rating: RatingHelper(canRate: getCanRate() == true, $productId: productId)
+     $product: Product(id == $productId, isPopular() == true)
+     $averageRating: Double() from accumulate(
+         Feedback(productId == $productId, $ratingFeedback : rating) over window:time(30d),
+         average($ratingFeedback)
+     )
+     eval($averageRating < 4.5)
+then
+    modify($product){
+            setPopular(false);
+    }
     System.out.println("Average: " + $averageRating);
     productService.save($product);
     System.out.println("The product is saved.");
