@@ -1,8 +1,8 @@
 package com.ftn.sbnz.controller;
 
+import com.ftn.sbnz.dto.shoppings.ShoppingResponseDTO;
 import com.ftn.sbnz.dto.shoppings.ShoppingUserDTO;
 import com.ftn.sbnz.exception.NotFoundException;
-import com.ftn.sbnz.model.models.products.Shopping;
 import com.ftn.sbnz.model.models.user.User;
 import com.ftn.sbnz.service.ShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,14 @@ public class ShoppingController {
 
     @PostMapping(value = "")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Shopping> buyProduct(@RequestParam String productId, @RequestParam(required = false) String discountId) {
+    public ResponseEntity<ShoppingResponseDTO> buyProduct(@RequestParam String productId, @RequestParam(required = false) String discountId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         if (user == null) {
             throw new NotFoundException("User does not exist!");
         }
 
-        Shopping shopping = shoppingService.save(productId, user.getId(), discountId);
+        ShoppingResponseDTO shopping = shoppingService.save(productId, user.getId(), discountId);
         return new ResponseEntity<>(shopping, HttpStatus.OK);
     }
 
@@ -52,7 +52,7 @@ public class ShoppingController {
 
     @GetMapping("/user")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<ShoppingUserDTO>> getPurchasesByUser(){
+    public ResponseEntity<List<ShoppingUserDTO>> getPurchasesByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         if (user == null) {

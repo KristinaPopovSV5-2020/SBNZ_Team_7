@@ -12,4 +12,7 @@ public interface DiscountRepository extends MongoRepository<Discount, ObjectId> 
 
 
     public List<Discount> findByUserId(ObjectId userId);
+
+
+    List<Discount> findByUserIdAndUsedFalse(ObjectId userId);
 }

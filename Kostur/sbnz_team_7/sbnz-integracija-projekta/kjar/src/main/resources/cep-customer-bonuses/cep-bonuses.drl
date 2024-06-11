@@ -16,7 +16,7 @@ import org.bson.types.ObjectId;
 import java.time.temporal.ChronoUnit;
 import com.ftn.sbnz.model.models.Discount;
 import java.util.Random;
-
+import java.util.Arrays;
 declare RecentShopping
     userId: ObjectId
     shoppingEvents: List
@@ -26,7 +26,9 @@ global java.util.List matchingProductList;
 global com.ftn.sbnz.service.DiscountService discountService;
 global com.ftn.sbnz.service.implementation.UserServiceImpl userService;
 global java.util.List allProducts;
-global List<String> gifts;
+
+global java.util.List<Discount> generatedDiscounts;
+global java.util.List<Gift> generatedGifts;
 
 
 rule "Create 5% discount for at least 3 feedbacks in last 7 days"
@@ -44,6 +46,7 @@ rule "Create 5% discount for at least 3 feedbacks in last 7 days"
     
         Discount discount = new Discount($shopping.getUserId(), 0.05, new Date(), false);
         insert(discount);
+        generatedDiscounts.add(discount);
         discountService.save(discount);
         System.out.println("User " + $shopping.getUserId() + " received 5% discount");
 end
@@ -97,6 +100,7 @@ rule "Create 50% discount when buying a product that has a matching benefit with
         // }    
         Discount discount = new Discount($shopping.getUserId(), 0.5, new Date(), false);
         insert(discount);
+        generatedDiscounts.add(discount);
         discountService.save(discount);
         System.out.println("User " + $shopping.getUserId() + " received 50% discount");
 end
@@ -118,11 +122,19 @@ rule "Provide randomn testers for frequent high-value shoppers"
         )        
     then
         Random random = new Random();
+        List<String> gifts = Arrays.asList(
+                    "Sunscreen Tester",
+                    "Hydration Serum Tester",
+                    "Anti-Ageing Cream Tester",
+                    "Exfoliating Scrub Tester",
+                    "Brightening Mask Tester"
+            );
         int randomIndex = random.nextInt(gifts.size());
         String selectedGiftName = gifts.get(randomIndex);
 
         Gift randomTester = new Gift(selectedGiftName, LocalDateTime.now(), "High-value purchases");
         userService.rewardUser($user, randomTester);
+        generatedGifts.add(randomTester);
         insert($user);
         System.out.println("Gifted " + selectedGiftName + " to user.");
 end

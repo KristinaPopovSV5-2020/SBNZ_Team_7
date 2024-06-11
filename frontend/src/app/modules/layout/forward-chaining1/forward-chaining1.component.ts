@@ -60,9 +60,9 @@ export class ForwardChaining1Component implements OnInit {
               this.loading = false;
             }
           );
-        }, 2000);
-      }, 2000);
-    }, 2000);
+        }, 500);
+      }, 500);
+    }, 500);
   }
 
   // generateRecommendations() {
