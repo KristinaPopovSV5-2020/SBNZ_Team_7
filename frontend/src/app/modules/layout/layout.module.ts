@@ -12,13 +12,14 @@ import { ProblemsLifestyleInputComponent } from './problems-lifestyle-input/prob
 import { ForwardChaining2Component } from './forward-chaining2/forward-chaining2.component';
 import { CategorySelectionComponent } from './category-selection/category-selection.component';
 import { CreateProductComponent } from './create-product/create-product.component';
+import { PurchaseDialogComponent } from './purchase-dialog/purchase-dialog.component';
 @NgModule({
-  declarations: [ToolbarComponent, CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component, CreateProductComponent],
+  declarations: [ToolbarComponent,  PurchaseDialogComponent ,CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component, CreateProductComponent],
   imports: [
     CommonModule,
     MaterialModule,
     SharedModule,
   ],
-  exports: [ToolbarComponent, CreateProductComponent, CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component]
+  exports: [ToolbarComponent, PurchaseDialogComponent, CreateProductComponent, CategorySelectionComponent, UserToolbarComponent, AdminToolbarComponent, BudgetInputComponent, ProductCardComponent, ForwardChaining1Component,ProblemsLifestyleInputComponent,ForwardChaining2Component]
 })
 export class LayoutModule { }

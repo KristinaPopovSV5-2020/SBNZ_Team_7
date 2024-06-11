@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DiscountDTO } from '../../dto/Discount';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,16 @@ export class UserService {
     );
   }
 
+
+  getUserDiscounts(): Observable<DiscountDTO[]> {
+    return this.http.get<DiscountDTO[]>(environment.apiHost + 'api/user/discounts');
+  }
+
+
+  
+  getUnusedUserDiscounts(): Observable<DiscountDTO[]> {
+    return this.http.get<DiscountDTO[]>(environment.apiHost + 'api/user/discounts/unused');
+  }
 
   
   private handleError(error: HttpErrorResponse) {
